@@ -6,6 +6,8 @@ Beginning in 2012, the Float Predictor started as a collaborative project with A
 
 In late 2017, [Studio Folder](http://www.studiofolder.it) from Milan, Italy, continued MIT's work by developing a new visualisation environment coupled with modern programming standards. Since then, the Float Predictor has been continuously developed by the Aerocene community. 
 
+The new FP has been designed with the idea of being an evolutionary platform: a scalable, open system providing a canvas for many layers of visualisation. The new aesthetics and the new way in which data are displayed push towards this direction: they’re more engaging in order to drive users and potential developers to it; they’re vector-based, which means utterly scalable, fast and responsive.
+
 # APIs
 
 To make sure API responses are easier to handle, Aeroglyphs are organised in pages of 30 items, ordered chronologically.
