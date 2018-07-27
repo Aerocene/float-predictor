@@ -40,9 +40,7 @@ npm test
 For a detailed explanation on how things work, check out the [guide](http://vuejs-templates.github.io/webpack/) and [docs for vue-loader](http://vuejs.github.io/vue-loader).
 
 ## Credits
-- Developed by the Aerocene Foundation
-With support from Aerocene community members around the world
-(Tomás Saraceno, Joaquin Ezcurra, Yelta Kom, Erik Vogler, Camilla Berggren Lundell, Alice Lamperti, Gwilym Faulkner, Saverio Cantoni, Jaime Norambuena Christiansen,  Radioamateurs DE & UK, UK High Altitude Society)
+- Developed by the Aerocene Foundation with support from Aerocene community members around the world (Tomás Saraceno, Joaquín Ezcurra, Yelta Kom, Erik Vogler, Camilla Berggren Lundell, Alice Lamperti, Gwilym Faulkner, Saverio Cantoni, Jaime Norambuena Christiansen,  Radioamateurs DE & UK, UK High Altitude Society)
 - Trajectories calculation by MIT Department of Earth, Atmospheric and Planetary Sciences (Lodovica Illari, Glenn Flierl, Bill McKenna)
 - Designed and coded by Studio Folder (Marco Ferrari, Elisa Pasqual, Luca Ferrario, Iacopo Leardini) + Angelo Semeraro
 
