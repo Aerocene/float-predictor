@@ -1,12 +1,15 @@
 # Aerocene Float Predictor
 
+Aerocene is a multidisciplinary endeavor that devises new modes of sensitivity, reactivating a common imaginary towards achieving an ethical collaboration with the atmosphere and the environment. Its activities manifest in the testing and dissemination of lighter-than-air sculptures that become buoyant only by the heat of the Sun and infrared radiation from the surface of Earth. 
+
 The Aerocene Float Predictor is a global forecasting system that utilises open meteorological data to predict flight paths of aerosolar powered Sculptures circling around the globe without CO2 emissions. Incorporating real-time information from 16-day forecasts of wind speeds at different altitudes, the Float Predictor is a navigational tool used to plan journeys in the Aerocene epoch.
 
-Beginning in 2012, the Float Predictor started as a collaborative project with Aerocene community members, artist Tomás Saraceno and meteorologist Lodovica Illari at the MIT Department of Earth, Atmospheric and Planetary Sciences (EAPS). Together they wanted to explore how to circumnavigate the world using no other resource than the sun. Soon joined by oceanographer Glenn Flierl and research assistant Bill McKenna, they begun examining data from MIR (Montgolfières InfraRouges) solar balloon float conducted by the Centre Nationale d’Etudes Spatiales (CNES), and computing float paths for balloons floating for several weeks at particular heights (or undergoing day-night cycles of rising and falling). After simulating the evolving wind patterns around the globe based on wind forecast data from the U.S. National Oceanic and Atmospheric Administration, the EAPS team created an interactive web interface and thus the Float Predictor was born. You can read more about this collaboration here.
-
-In late 2017, [Studio Folder](http://www.studiofolder.it) from Milan, Italy, continued MIT's work by developing a new visualisation environment coupled with modern programming standards. Since then, the Float Predictor has been continuously developed by the Aerocene community. 
-
-The new FP has been designed with the idea of being an evolutionary platform: a scalable, open system providing a canvas for many layers of visualisation. The new aesthetics and the new way in which data are displayed push towards this direction: they’re more engaging in order to drive users and potential developers to it; they’re vector-based, which means utterly scalable, fast and responsive.
+Credits:
+Developed by the Aerocene Foundation
+With support from Aerocene community members around the world
+(Tomás Saraceno, Joaquin Ezcurra, Yelta Kom, Erik Vogler, Camilla Breggen, Alice Lamperti, Gwilym Faulkner, Saverio Cantoni, Jaime Norambuena Christiansen,  Radioamateurs DE & UK, UK High Altitude Society)
+Designed and coded by Studio Folder (Marco Ferrari, Elisa Pasqual, Luca Ferrario, Iacopo Leardini) + Angelo Semeraro
+Trajectories calculation by MIT Department of Earth, Atmospheric and Planetary Sciences (Lodovica Illari, Glenn Flierl, Bill McKenna)
 
 # APIs
 
