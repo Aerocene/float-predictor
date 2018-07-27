@@ -4,13 +4,6 @@ Aerocene is a multidisciplinary endeavor that devises new modes of sensitivity, 
 
 The Aerocene Float Predictor is a global forecasting system that utilises open meteorological data to predict flight paths of aerosolar powered Sculptures circling around the globe without CO2 emissions. Incorporating real-time information from 16-day forecasts of wind speeds at different altitudes, the Float Predictor is a navigational tool used to plan journeys in the Aerocene epoch.
 
-Credits:
-Developed by the Aerocene Foundation
-With support from Aerocene community members around the world
-(Tomás Saraceno, Joaquin Ezcurra, Yelta Kom, Erik Vogler, Camilla Berggren Lundell, Alice Lamperti, Gwilym Faulkner, Saverio Cantoni, Jaime Norambuena Christiansen,  Radioamateurs DE & UK, UK High Altitude Society)
-Designed and coded by Studio Folder (Marco Ferrari, Elisa Pasqual, Luca Ferrario, Iacopo Leardini) + Angelo Semeraro
-Trajectories calculation by MIT Department of Earth, Atmospheric and Planetary Sciences (Lodovica Illari, Glenn Flierl, Bill McKenna)
-
 # APIs
 
 To make sure API responses are easier to handle, Aeroglyphs are organised in pages of 30 items, ordered chronologically.
@@ -47,9 +40,18 @@ npm test
 For a detailed explanation on how things work, check out the [guide](http://vuejs-templates.github.io/webpack/) and [docs for vue-loader](http://vuejs.github.io/vue-loader).
 
 ## Credits
-Aerocene is an open artistic project by [Studio Tomàs Saraceno](http://tomassaraceno.com). The current Aerocene Float Predictor has been designed and develped by [Studio Folder](http://www.studiofolder.it) and [Angelo Semeraro](http://angelosemeraro.info), and is based on the work of a dedicated and enthusiastic team of community members including: Lodovica Illari, Glenn Flierl, Bill McKenna (MIT Department of Earth, Atmospheric and Planetary Sciences), Marco Ferrari, Elisa Pasqual, Luca Ferrario, Iacopo Leardini, Angelo Semeraro (Studio Folder), Imperial College London, Studio Tomás Saraceno, Joaquin Ezcurra, Radioamateurs DE & UK, and the UK High Altitude Society. 
+Developed by the Aerocene Foundation
+With support from Aerocene community members around the world
+(Tomás Saraceno, Joaquin Ezcurra, Yelta Kom, Erik Vogler, Camilla Berggren Lundell, Alice Lamperti, Gwilym Faulkner, Saverio Cantoni, Jaime Norambuena Christiansen,  Radioamateurs DE & UK, UK High Altitude Society)
+Designed and coded by Studio Folder (Marco Ferrari, Elisa Pasqual, Luca Ferrario, Iacopo Leardini) + Angelo Semeraro
+Trajectories calculation by MIT Department of Earth, Atmospheric and Planetary Sciences (Lodovica Illari, Glenn Flierl, Bill McKenna)
 
 ## Links
 - [Aerocene Float Predictor](http://floatpredictor.aerocene.org/)
 - [Aerocene project](http://aerocene.org/)
 - [Aerocene forum](https://forum.aerocene.org/)
+- [Studio Folder](http://www.studiofolder.it)
+- [Angelo Semeraro](http://angelosemeraro.info)
+- [MIT Department of Earth, Atmospheric and Planetary Sciences](https://eapsweb.mit.edu)
+
+
