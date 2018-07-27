@@ -7,7 +7,7 @@ The Aerocene Float Predictor is a global forecasting system that utilises open m
 Credits:
 Developed by the Aerocene Foundation
 With support from Aerocene community members around the world
-(Tomás Saraceno, Joaquin Ezcurra, Yelta Kom, Erik Vogler, Camilla Breggen, Alice Lamperti, Gwilym Faulkner, Saverio Cantoni, Jaime Norambuena Christiansen,  Radioamateurs DE & UK, UK High Altitude Society)
+(Tomás Saraceno, Joaquin Ezcurra, Yelta Kom, Erik Vogler, Camilla Berggren Lundell, Alice Lamperti, Gwilym Faulkner, Saverio Cantoni, Jaime Norambuena Christiansen,  Radioamateurs DE & UK, UK High Altitude Society)
 Designed and coded by Studio Folder (Marco Ferrari, Elisa Pasqual, Luca Ferrario, Iacopo Leardini) + Angelo Semeraro
 Trajectories calculation by MIT Department of Earth, Atmospheric and Planetary Sciences (Lodovica Illari, Glenn Flierl, Bill McKenna)
 
