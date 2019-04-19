@@ -3,7 +3,7 @@
         "env": {
             "ROOT_URL": "https://staging.aerocene.org",
             "MONGO_URL": "mongodb://staging:<password>@.../",
-            "MAIL_URL": "smtp://username%40hostname.com:<password>@smtp.mailgun.org:465"
+            "MAIL_URL": "smtps://username%40hostname.com:<password>@smtp.mailgun.org:465"
         }
     },
     "public": {
