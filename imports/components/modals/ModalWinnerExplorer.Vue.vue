@@ -82,7 +82,7 @@
         <ul class="bottom-links">
             <li class="share">
                 <small>Share</small>
-                <social-sharing url="http://floatpredictor.aerocene.org/"
+                <social-sharing url="https://floatpredictor.aerocene.org/"
                                 title="Aerocene Float Predictor"
                                 description="Travel around the earth lifted only by
                                  the sun, carried only by the wind, towards a clean
@@ -140,7 +140,7 @@ export default {
       },
     },
     trajectoryLink() {
-      return `http://floatpredictor.aerocene.org/scripts/api/api.php?id=${this.$store.state.flightSimulator.trajectoryId}`;
+      return `https://floatpredictor.aerocene.org/scripts/api/api.php?id=${this.$store.state.flightSimulator.trajectoryId}`;
     },
     isPlannedFlight() {
       return this.$store.state.flightSimulator.flightType === 'planned';

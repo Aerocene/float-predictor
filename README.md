@@ -8,10 +8,10 @@ The Aerocene Float Predictor is a global forecasting system that utilises open m
 
 To make sure API responses are easier to handle, Aeroglyphs are organised in pages of 30 items, ordered chronologically.
 - In order to access each page use this URL structure:
-http://floatpredictor.aerocene.org/scripts/api/api.php?page=:page
+https://floatpredictor.aerocene.org/scripts/api/api.php?page=:page
 
 - In order to access the Aeroglyphs individually use this URL structure:
-http://floatpredictor.aerocene.org/scripts/api/api.php?id=:id
+https://floatpredictor.aerocene.org/scripts/api/api.php?id=:id
 
 
 
@@ -46,7 +46,7 @@ For a detailed explanation on how things work, check out the [guide](http://vuej
 
 
 ## Links
-- [Aerocene Float Predictor](http://floatpredictor.aerocene.org/)
+- [Aerocene Float Predictor](https://floatpredictor.aerocene.org/)
 - [Aerocene project](http://aerocene.org/)
 - [Aerocene forum](https://forum.aerocene.org/)
 - [MIT Department of Earth, Atmospheric and Planetary Sciences](https://eapsweb.mit.edu)

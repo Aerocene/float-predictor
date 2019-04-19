@@ -14,7 +14,7 @@
     "deploy-production": "DEPLOY_HOSTNAME=eu-west-1.galaxy-deploy.meteor.com meteor deploy https://floatpredictor.aerocene.org --settings settings/production.json"
   },
   "dependencies": {
-    "@babel/runtime": "7.0.0-beta.55",
+    "@babel/runtime": "^7.4.3",
     "babel-runtime": "6.18.0",
     "bcrypt": "^1.0.1",
     "file-saver": "1.3.3",

@@ -91,7 +91,7 @@ export default {
       }
     },
     addPage(i) {
-      fetch(`http://floatpredictor.aerocene.org/scripts/api/gallery.php?page=${String(i)}`, {
+      fetch(`https://floatpredictor.aerocene.org/scripts/api/gallery.php?page=${String(i)}`, {
         method: 'get',
       })
         .then((response) => {
@@ -121,7 +121,7 @@ export default {
       return moment(dt).format('MMM Do, YYYY');
     },
     getSVGPath(item) {
-      return `http://floatpredictor.aerocene.org/scripts/api/svg/${String(item.id)}.svg`;
+      return `https://floatpredictor.aerocene.org/scripts/api/svg/${String(item.id)}.svg`;
     },
   },
 };
