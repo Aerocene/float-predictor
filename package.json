@@ -5,11 +5,13 @@
   "author": "Studio Folder",
   "private": true,
   "scripts": {
-    "start": "meteor run",
+    "start": "meteor run --settings settings/local.json",
     "unit": "cross-env BABEL_ENV=test karma start test/unit/karma.conf.js --single-run",
     "test": "npm run unit",
     "lint": "eslint --ext .js,.vue src test/unit",
-    "build": "node build/build.js"
+    "build": "node build/build.js",
+    "deploy-staging": "DEPLOY_HOSTNAME=eu-west-1.galaxy-deploy.meteor.com meteor deploy https://staging.aerocene.org --settings settings/staging.json",
+    "deploy-production": "DEPLOY_HOSTNAME=eu-west-1.galaxy-deploy.meteor.com meteor deploy https://floatpredictor.aerocene.org --settings settings/production.json"
   },
   "dependencies": {
     "@babel/runtime": "7.0.0-beta.55",
