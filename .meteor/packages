@@ -25,3 +25,5 @@ akryum:vue-sass
 dynamic-import
 underscore
 accounts-base
+accounts-password
+email

@@ -16,8 +16,8 @@ export default new Vuex.Store({
   modules: {
     general,
     flightSimulator,
-    // auth: authModule,
-    // users: [],
+    auth: authModule,
+    users: [],
   },
   // plugins: [createPersistedState({paths: ['filters', 'visualization']})]
   mutations: {
