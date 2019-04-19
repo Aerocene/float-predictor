@@ -21,3 +21,4 @@ yarn-error.log*
 
 /settings/*
 !settings/local-example.json
+/.cache
