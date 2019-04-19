@@ -1,14 +1,16 @@
 <template>
-<div>
   <form @submit.prevent="submitForm">
     <h3>Login</h3>
-    <label>username</label>
-    <input v-model="formData.username" />
-    <label>password</label>
-    <input v-model="formData.password" />
+    <fieldset>
+      <label>email</label>
+      <input v-model="formData.username" />
+    </fieldset>
+    <fieldset>
+      <label>password</label>
+      <input type="password" v-model="formData.password" />
+    </fieldset>
     <button>Login</button>
   </form>
-</div>
 </template>
 
 <script>

@@ -1,13 +1,12 @@
 <template>
-  <div class="session-dialog">
-    <div v-if="user">
+  <div v-if="!user" class="session-dialog">
+    <img class="logo" src="/img/float_predictor_logo.svg" alt="float predictor">
+    <!-- <div v-if="user">
       <p>You are logged in as {{user && user.emails && user.emails[0] && user.emails[0].address}}.</p>
       <logout v-if="user"></logout>
-    </div>
-    <div class="auth" v-if="!user">
-      <login></login>
-      <register></register>
-    </div>
+    </div> -->
+    <login></login>
+    <register></register>
   </div>
 </template>
 
@@ -30,9 +29,9 @@ export default {
 }
 </script>
 
-<style lang="scss" scoped>
+<style lang="scss">
   .session-dialog {
-    background: rgba(0, 0, 0, 0.8);
+    background: rgba(0, 0, 0, 0.9);
     position: fixed;
     top: 0;
     left: 0;
@@ -42,16 +41,38 @@ export default {
     display: flex;
     flex-direction: column;
     align-items: center;
-    justify-content: center;
+    justify-content: flex-start;
+
+    padding-top: 32px;
+
+    z-index: 1000;
+
+    font-size: 16px;
+
+    .logo {
+      width: 100px;
+    }
   }
 
-  .auth > div {
-    display: inline-flex;
+  form {
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    text-align: center;
   }
-  .auth > div:first-child {
-    padding-right: 1rem;
+
+  button {
+    background-color: #111;
+    color: white;
+    padding: 8px 16px;
   }
+
   input, label {
     display: block;
+  }
+
+  input {
+    font-size: 20px;
+    line-height: 32px;
   }
 </style>
