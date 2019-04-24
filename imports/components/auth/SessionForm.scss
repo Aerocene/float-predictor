@@ -1,0 +1,97 @@
+form {
+  align-items: center;
+}
+
+fieldset {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+a {
+  display: inline-block;
+}
+
+a, button {
+  text-transform: uppercase;
+  margin: 8px;
+  min-height: 44px;
+}
+
+input:invalid {
+  color: var(--red);
+}
+
+
+/*
+  Form text is used for help texts and field validation error messages next to the field.
+  These are displayed on the right of their fields on bigger viewports, and below their fields
+  on smaller viewports.
+*/
+.form-text {
+  position: relative;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  max-width: 10rem;
+  margin: 0.25rem;
+  padding: .5rem;
+  border-radius: .25rem;
+  font-size: 14px;
+  line-height: 1;
+  text-align: center;
+  align-self: center;
+  min-height: 2.5rem;
+
+  /* Style background color depending on context */
+
+  &.text-danger {
+    color: white !important;
+    background-color: var(--red);
+    &:before {
+      background-color: var(--red);
+    }
+  }
+
+  /* Add a little arrow pointing to the field */
+  &:before {
+    content: '';
+    display: block;
+    position: absolute;
+    top: -.25rem;
+    left: 50%;
+    transform: translate(-50%, 0) rotateZ(45deg);
+    z-index: -1;
+    width: .5rem;
+    height: .5rem;
+  }
+
+  /* Point to the top */
+  left: 50%;
+  transform: translate(-50%, 0);
+  flex-direction: column;
+}
+
+/* Animate field validation error messages to increase attention */
+.form-text.text-danger {
+  @keyframes reveal {
+    0% {
+      opacity: 0;
+    }
+    100% {
+      opacity: 1;
+    }
+  }
+
+  @keyframes revealText {
+    0% {
+      color: transparent;
+    }
+    100% {
+      /* color: unset; */
+    }
+  }
+
+  animation: reveal .3s ease-out both, revealText .3s .15s ease-out both;
+}

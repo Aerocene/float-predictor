@@ -18,27 +18,30 @@
         <div class="macro-section --main">
             <div class="menu-section">
                 <ul class="list-group menu-items">
+                    <li v-show="user" class="menu-item --nav" @click="closeAction">
+                        <router-link to="/profile">Profile ({{user && user.emails[0].address}})</router-link>
+                    </li>
                     <li class="menu-item --nav" @click="closeAction">
-                        <router-link to="/about">
-                            About</router-link></li>
+                        <router-link to="/about">About</router-link>
+                    </li>
                     <li class="menu-item --nav" @click="closeAction">
-                        <router-link to="/aerocene-explorer">
-                            Aerocene Sculptures</router-link></li>
+                        <router-link to="/aerocene-explorer">Aerocene Sculptures</router-link>
+                    </li>
                     <li class="menu-item --nav" @click="closeAction">
-                        <router-link to="/aeroglyphs-archive">
-                            Aeroglyphs archive</router-link></li>
+                        <router-link to="/aeroglyphs-archive">Aeroglyphs archive</router-link>
+                    </li>
                     <li class="menu-item --nav" @click="closeAction">
-                        <a href="#" @click.prevent v-b-modal.instruction-modal>
-                            How to Float</a></li>
+                        <a href="#" @click.prevent v-b-modal.instruction-modal>How to Float</a>
+                    </li>
                     <li class="menu-item --nav" @click="closeAction">
-                        <router-link to="/resources-and-api">
-                            Resources and API</router-link></li>
+                        <router-link to="/resources-and-api">Resources and API</router-link>
+                    </li>
                     <li class="menu-item --nav" >
-                        <a href="#" @click.prevent v-b-modal.impressum-modal>
-                            Impressum</a></li>
+                        <a href="#" @click.prevent v-b-modal.impressum-modal>Impressum</a>
+                    </li>
                     <li class="menu-item --nav">
-                        <a href="#" @click.prevent v-b-modal.disclaimer-modal>
-                            Disclaimer</a></li>
+                        <a href="#" @click.prevent v-b-modal.disclaimer-modal>Disclaimer</a>
+                    </li>
                 </ul>
             </div>
             <div class="menu-section">
@@ -97,6 +100,11 @@ export default {
     return {
       currentYear: new Date().getFullYear(),
     };
+  },
+  computed: {
+    user() {
+      return this.$store.state.auth.user
+    }
   },
   methods: {
     closeAction() { this.$store.commit('general/toggleMenu'); },

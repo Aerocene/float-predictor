@@ -20,7 +20,7 @@
             </div>
             <div class="main-visualization-wrapper"
                  ref="simulator"
-                 :class="{'--small': isSmall, '--bottom': isBottom}">
+                 :class="{'--small': isSmall, '--bottom': isBottom, '--logged-in': isLoggedIn}">
                 <div class="cover">
                     <router-link to="/flight-simulator" class="link-to-flight-sim">
                     </router-link>
@@ -28,7 +28,6 @@
                 <visualization v-if="isExhibitionClient" />
             </div>
         </div>
-        <signup-or-login />
         <site-footer />
     </div>
 </template>
@@ -44,24 +43,22 @@ import visualization from './components/Visualization';
 import siteHeader from './components/Header';
 import dashboard from './components/Dashboard';
 import siteFooter from './components/Footer';
-import signupOrLogin from './components/auth/SignupOrLogin'
 
 // keep this even if it seems it is not needed !!!
 // eslint-disable-next-line
 import ScrollToPlugin from 'gsap/ScrollToPlugin';
 export default {
   components: {
-    signupOrLogin,
     visualization,
     siteHeader,
     dashboard,
     siteFooter,
   },
-  meteor: {
-    meteorUser() {
-      this.$store.commit('updateUser', Meteor.user())
-    }
-  },
+  // meteor: {
+  //   meteorUser() {
+  //     this.$store.commit('updateUser', Meteor.user())
+  //   }
+  // },
   name: 'App',
   data() {
     return {
@@ -73,6 +70,12 @@ export default {
     };
   },
   computed: {
+    user() {
+      return this.$store.state.auth.user;
+    },
+    isLoggedIn() {
+      return !!this.$store.state.auth.user;
+    },
     flightToolsActive() {
       return this.$route.name === 'flight-simulator';
     },

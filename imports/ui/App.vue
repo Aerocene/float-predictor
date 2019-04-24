@@ -19,10 +19,10 @@ export default {
     auth: Auth,
     users: Users
   },
-  meteor: {
-    meteorUser() {
-      this.$store.commit('updateUser', Meteor.user())
-    }
-  }
+  // meteor: {
+  //   meteorUser() {
+  //     this.$store.commit('updateUser', Meteor.user())
+  //   }
+  // }
 }
 </script>

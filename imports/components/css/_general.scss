@@ -172,6 +172,9 @@ form {
     }
   }
   .main-visualization-wrapper {
+    &:not(.--logged-in) {
+      z-index: -1;
+    }
     position: absolute;
     height: 100%;
     overflow: hidden;

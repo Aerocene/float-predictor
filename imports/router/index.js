@@ -15,6 +15,15 @@ import FlightSimulator from '../components/pages/FlightSimulator.vue';
 import About from '../components/pages/About.vue';
 import AeroceneExplorer from '../components/pages/AeroceneExplorer.vue';
 import Resources from '../components/pages/Resources.vue';
+import Profile from '../components/pages/Profile.vue';
+import ChangePassword from '../components/pages/ChangePassword.vue';
+import ForgotPassword from '../components/pages/ForgotPassword.vue';
+import ResetPassword from '../components/pages/ResetPassword.vue';
+import SignIn from '../components/pages/SignIn.vue';
+import SignUp from '../components/pages/SignUp.vue';
+import DeleteAccount from '../components/pages/DeleteAccount.vue';
+import { Meteor } from 'meteor/meteor';
+
 
 Vue.use(Router);
 
@@ -28,6 +37,76 @@ const router = new Router({
       meta: {
         bodyClass: 'home no-scroll',
         position: 'middle',
+      },
+    },
+    {
+      path: '/sign-up',
+      name: 'signUp',
+      component: SignUp,
+      meta: {
+        bodyClass: 'sign-up upper-content',
+        position: 'top',
+        requiresLoggedOutState: true,
+      },
+    },
+    {
+      path: '/sign-in',
+      name: 'signIn',
+      component: SignIn,
+      meta: {
+        bodyClass: 'sign-in upper-content',
+        position: 'top',
+        requiresLoggedOutState: true,
+      },
+    },
+    {
+      path: '/delete-account',
+      name: 'deleteAccount',
+      component: DeleteAccount,
+      meta: {
+        bodyClass: 'delete-account upper-content',
+        position: 'top',
+        requiresAuth: true,
+      },
+    },
+    {
+      path: '/profile',
+      name: 'profile',
+      component: Profile,
+      meta: {
+        bodyClass: 'profile upper-content',
+        position: 'top',
+        requiresAuth: true,
+      },
+    },
+    {
+      path: '/change-password',
+      name: 'changePassword',
+      component: ChangePassword,
+      meta: {
+        bodyClass: 'change-password upper-content',
+        position: 'top',
+        requiresAuth: true,
+      },
+    },
+    {
+      path: '/reset-password',
+      name: 'resetPassword',
+      component: ResetPassword,
+      meta: {
+        bodyClass: 'reset-password upper-content',
+        position: 'top',
+        requiresLoggedOutState: true,
+      },
+    },
+    {
+      path: '/forgot-password',
+      name: 'forgotPassword',
+      component: ForgotPassword,
+      meta: {
+        bodyClass: 'forgot-password upper-content',
+        position: 'top',
+        requiresLoggedOutState: true,
       },
     },
     {
@@ -46,6 +125,7 @@ const router = new Router({
       meta: {
         bodyClass: 'flight-simulator no-scroll',
         position: 'middle',
+        requiresAuth: true,
       },
     },
     {
@@ -64,6 +144,7 @@ const router = new Router({
       meta: {
         bodyClass: 'aerocene-explorer upper-content',
         position: 'top',
+        requiresAuth: true,
       },
     },
     {
@@ -73,6 +154,7 @@ const router = new Router({
       meta: {
         bodyClass: 'gallery',
         position: 'bottom',
+        requiresAuth: true,
       },
     },
     {
@@ -82,6 +164,7 @@ const router = new Router({
       meta: {
         bodyClass: 'resources-and-api upper-content',
         position: 'top',
+        requiresAuth: true,
       },
     },
     {
@@ -92,6 +175,30 @@ const router = new Router({
   ],
 });
 
+
+// Ensure user is logged in before they can access routes that need authorization
+router.beforeEach((to, from, next) => {
+  if (to.matched.some(record => record.meta.requiresAuth)) {
+    if (!Meteor.userId()) {
+      next({
+        path: '/sign-up',
+        query: { redirect: to.fullPath },
+      });
+    } else {
+      next();
+    }
+  } else if (to.matched.some(record => record.meta.requiresLoggedOutState)) {
+    if (Meteor.userId()) {
+      next({
+        path: to.query.redirect || '/',
+      });
+    } else {
+      next();
+    }
+  } else {
+    next(); // make sure to always call next()!
+  }
+});
 
 router.beforeEach((to, from, next) => {
   const fromTop = from.matched.some(m => m.meta.position === 'top');
