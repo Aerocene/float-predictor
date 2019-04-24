@@ -8,5 +8,8 @@
     },
     "public": {
 
+    },
+    "emails": {
+        "support": "support@email"
     }
 }
