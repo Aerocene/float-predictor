@@ -1,7 +1,7 @@
 <template>
     <div class="main-content" :style="{ height: upperHeight }">
       <article role="article" class="article" ref="content">
-        <signUpForm />
+        <signUpForm v-on:success="redirectToFlightSimulator" />
         <router-link to="/sign-in" class="link-button">I have an account already</router-link>
       </article>
     </div>
@@ -22,6 +22,7 @@
 import { Accounts } from 'meteor/accounts-base';
 import signUpForm from '../auth/SignUpForm';
 import backToViz from '../parts/BackToViz';
+import router from '../../router';
 
 export default {
   name: 'SignUp',
@@ -44,6 +45,11 @@ export default {
   },
   mounted() {
     this.upperHeight = `${this.$refs.content.clientHeight}px`;
+  },
+  methods: {
+    redirectToFlightSimulator() {
+      router.replace('/flight-simulator');
+    }
   },
 };
 </script>

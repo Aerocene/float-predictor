@@ -4,7 +4,7 @@
         <p>Are you sure that you want to delete your account?</p>
         <p>You can’t undo this.</p>
         <p><button class="negative" @click="confirmAccountDeletion">Yes, really delete</button></p>
-        <p><button @click="cancelAccountDeletion">Go back</button></p>
+        <p><button @click="cancelAccountDeletion">Back to profile</button></p>
       </article>
     </div>
 </template>
@@ -59,11 +59,11 @@ export default {
   methods: {
     confirmAccountDeletion() {
       Meteor.call('cancelAccount', (error) => {
-        console.log(error);
+        router.replace('/');
       })
     },
     cancelAccountDeletion() {
-      router.replace('/');
+      router.replace('/profile');
     },
   }
 };

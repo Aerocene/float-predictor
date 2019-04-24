@@ -1,7 +1,8 @@
 <template>
     <div class="main-content" :style="{ height: upperHeight }">
       <article role="article" class="article" ref="content">
-        <resetPasswordForm />
+        <resetPasswordForm v-on:success="redirectToFlightSimulator" />
+        <router-link to="/sign-in" class="link-button">Back to sign-in</router-link>
       </article>
     </div>
 </template>
@@ -21,6 +22,7 @@
 import { Accounts } from 'meteor/accounts-base';
 import resetPasswordForm from '../auth/ResetPasswordForm';
 import backToViz from '../parts/BackToViz';
+import router from '../../router';
 
 export default {
   name: 'Reset password',
@@ -43,6 +45,11 @@ export default {
   },
   mounted() {
     this.upperHeight = `${this.$refs.content.clientHeight}px`;
+  },
+  methods: {
+    redirectToFlightSimulator() {
+      router.replace('/flight-simulator');
+    }
   },
 };
 </script>

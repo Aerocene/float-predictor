@@ -1,7 +1,7 @@
 <template>
     <div class="main-content" :style="{ height: upperHeight }">
       <article role="article" class="article" ref="content">
-        <forgotPasswordForm />
+        <forgotPasswordForm v-on:success="redirectToSignIn" />
         <router-link to="/sign-in" class="link-button">Back to sign in</router-link>
       </article>
     </div>
@@ -22,6 +22,7 @@
 import { Accounts } from 'meteor/accounts-base';
 import forgotPasswordForm from '../auth/ForgotPasswordForm'
 import backToViz from '../parts/BackToViz';
+import router from '../../router';
 
 export default {
   name: 'ForgotPassword',
@@ -44,6 +45,11 @@ export default {
   },
   mounted() {
     this.upperHeight = `${this.$refs.content.clientHeight}px`;
+  },
+  methods: {
+    redirectToSignIn() {
+      router.replace('/sign-in');
+    }
   },
 };
 </script>
