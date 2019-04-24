@@ -18,11 +18,6 @@ import router from '../../router';
 import { Accounts } from 'meteor/accounts-base';
 import { resetPassword } from '../../vuex/auth';
 
-let lastToken;
-Accounts.onResetPasswordLink((token, done) => {
-  lastToken = token;
-})
-
 export default {
   mounted() {
     this.$store.commit('auth/setLastSessionError', null);
@@ -35,7 +30,7 @@ export default {
   data() {
     return {
       formData: {
-        token: lastToken,
+        token: this.$store.state.auth.resetPasswordToken,
         newPassword: '',
       }
     }

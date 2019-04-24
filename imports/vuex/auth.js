@@ -14,6 +14,8 @@ const authModule = {
   state: {
     user: null,
     lastSessionError: null,
+    resetPasswordToken: null,
+    resetPasswordDoneFunction: null,
   },
   mutations: {
     updateUser(state, value) {
@@ -24,6 +26,12 @@ const authModule = {
     },
     setLastSessionError(state, value) {
       state.lastSessionError = value;
+    },
+    setResetPasswordToken(state, value) {
+      state.resetPasswordToken = value;
+    },
+    setResetPasswordDoneFunction(state, value) {
+      state.resetPasswordDoneFunction = value;
     },
   },
   actions: {

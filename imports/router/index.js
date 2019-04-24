@@ -6,6 +6,7 @@
 import Vue from 'vue';
 import Router from 'vue-router';
 import { Meteor } from 'meteor/meteor';
+import { Accounts } from 'meteor/accounts-base';
 
 import store from '../store/index';
 import HomePage from '../components/pages/HomePage.vue';
@@ -24,7 +25,6 @@ import ResetPassword from '../components/pages/ResetPassword.vue';
 import SignIn from '../components/pages/SignIn.vue';
 import SignUp from '../components/pages/SignUp.vue';
 import DeleteAccount from '../components/pages/DeleteAccount.vue';
-
 
 Vue.use(Router);
 
@@ -261,5 +261,12 @@ router.beforeEach((to, from, next) => {
 
   next();
 });
+
+Accounts.onResetPasswordLink((token, done) => {
+  store.commit('auth/setResetPasswordToken', token);
+  store.commit('auth/setResetPasswordDoneFunction', done);
+  router.push('/reset-password');
+});
+
 
 export default router;
