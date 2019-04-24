@@ -1,8 +1,8 @@
 article, .page-modal {
-
   position: relative;
   padding: $marginBase*3 0 $marginBase;
   max-width: 36rem;
+  min-height: 400px;
   margin: 0 auto;
   @include medium_down {
     max-width: 90%;

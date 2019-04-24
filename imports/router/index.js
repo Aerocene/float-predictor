@@ -5,6 +5,8 @@
 */
 import Vue from 'vue';
 import Router from 'vue-router';
+import { Meteor } from 'meteor/meteor';
+
 import store from '../store/index';
 import HomePage from '../components/pages/HomePage.vue';
 import GUI from '../components/pages/GUI.vue';
@@ -22,7 +24,6 @@ import ResetPassword from '../components/pages/ResetPassword.vue';
 import SignIn from '../components/pages/SignIn.vue';
 import SignUp from '../components/pages/SignUp.vue';
 import DeleteAccount from '../components/pages/DeleteAccount.vue';
-import { Meteor } from 'meteor/meteor';
 
 
 Vue.use(Router);
@@ -228,7 +229,7 @@ router.beforeEach((to, from, next) => {
       transitionMode = 'out-in';
       store.commit('flightSimulator/setVisualizationState', 7);
     } else {
-      transitionMode = 'in-out';
+      transitionMode = 'out-in';
     }
   } else if (fromBottom) { // From Bottom
     if (toTop) {

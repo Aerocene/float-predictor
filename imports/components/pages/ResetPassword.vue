@@ -44,16 +44,5 @@ export default {
   mounted() {
     this.upperHeight = `${this.$refs.content.clientHeight}px`;
   },
-  methods: {
-    logout() {
-      this.$store.dispatch('logout');
-    },
-    changePassword() {
-
-    },
-    deleteAccount() {
-
-    },
-  }
 };
 </script>

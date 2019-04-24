@@ -4,7 +4,7 @@
             <h1 class="entry-title">About This Tool</h1>
             <h2 class="entry-subtitle">
                 &ldquo;One of the oddest sensations of hot air balloon float
-                is the feeling of absolute stillness and extreme quiet.
+                is the feeling of absolute stillness and extreme quietness.
                 A paradox: moving with the wind eliminates the feeling
                 of wind and thus a feeling of movement.&rdquo;
                 <small>Tomás Saraceno<br>Artist and community member</small>

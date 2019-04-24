@@ -3,12 +3,12 @@
     <!-- <h3>Get started!</h3> -->
     <fieldset>
       <label>email</label>
-      <input type="email" required v-model="formData.email"/>
+      <input type="email" required v-model="formData.email" placeholder="email@example.com" />
       <footer class="form-text text-danger" v-show="lastSessionError">{{lastSessionError && lastSessionError.reason}}</footer>
     </fieldset>
     <fieldset>
       <label>password</label>
-      <input type="password" required minlength="8" v-model="formData.password" />
+      <input type="password" required minlength="8" v-model="formData.password" placeholder="min. 8 characters" />
     </fieldset>
     <button>Register</button>
   </form>
@@ -19,6 +19,9 @@
 </style>
 
 <script>
+import router from '../../router';
+import { createUser } from '../../vuex/auth';
+
 export default {
   mounted() {
     this.$store.commit('auth/setLastSessionError', null);
@@ -38,7 +41,10 @@ export default {
   },
   methods: {
     submitForm() {
-      this.$store.dispatch('auth/submitRegisterForm', this.formData);
+      this.$store.commit('auth/setLastSessionError', null);
+      createUser(this.formData)
+        .then(() => { this.$emit('success'); })
+        .catch((error) => { this.$store.commit('auth/setLastSessionError', error); })
     }
   }
 }

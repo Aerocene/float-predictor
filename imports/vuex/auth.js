@@ -2,12 +2,12 @@ import { Accounts } from 'meteor/accounts-base';
 import { Meteor } from 'meteor/meteor';
 import wrapInPromise from './wrapInPromise';
 
-const createUser = wrapInPromise(Accounts.createUser.bind(Accounts));
-const loginWithPassword = wrapInPromise(Meteor.loginWithPassword.bind(Meteor));
-const forgotPassword = wrapInPromise(Accounts.forgotPassword.bind(Accounts));
-const changePassword = wrapInPromise(Accounts.changePassword.bind(Accounts));
-const resetPassword = wrapInPromise(Accounts.resetPassword.bind(Accounts));
-const logout = wrapInPromise(Accounts.logout.bind(Accounts));
+export const createUser = wrapInPromise(Accounts.createUser.bind(Accounts));
+export const loginWithPassword = wrapInPromise(Meteor.loginWithPassword.bind(Meteor));
+export const forgotPassword = wrapInPromise(Accounts.forgotPassword.bind(Accounts));
+export const changePassword = wrapInPromise(Accounts.changePassword.bind(Accounts));
+export const resetPassword = wrapInPromise(Accounts.resetPassword.bind(Accounts));
+export const logout = wrapInPromise(Accounts.logout.bind(Accounts));
 
 const authModule = {
   namespaced: true,
@@ -27,30 +27,6 @@ const authModule = {
     },
   },
   actions: {
-    submitRegisterForm(options, formData) {
-      return createUser(formData)
-        .catch((error) => { this.commit('auth/setLastSessionError', error); });
-    },
-    submitLoginForm(options, formData) {
-      return loginWithPassword(formData.username, formData.password)
-        .catch((error) => { this.commit('auth/setLastSessionError', error); });
-    },
-    submitForgotPasswordForm(options, formData) {
-      return forgotPassword(formData)
-        .catch((error) => { this.commit('auth/setLastSessionError', error); });
-    },
-    submitResetPasswordForm(options, formData) {
-      return resetPassword(formData.token, formData.newPassword)
-        .catch((error) => { this.commit('auth/setLastSessionError', error); });
-    },
-    submitChangePasswordForm(options, formData) {
-      return changePassword(formData.oldPassword, formData.newPassword)
-        .catch((error) => { this.commit('auth/setLastSessionError', error); });
-    },
-    logout() {
-      return logout()
-        .catch((error) => { this.commit('auth/setLastSessionError', error); });
-    },
   },
 };
 

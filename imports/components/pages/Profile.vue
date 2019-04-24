@@ -1,15 +1,13 @@
 <template>
     <div class="main-content" :style="{ height: upperHeight }">
         <article role="article" class="article" ref="content">
-            <section class="entry-body">
-                <header>
-                  You are signed in as <strong>{{user && user.emails[0].address}}</strong>.
-                </header>
-                <div class="metric">
-                    <header>12,345,678</header>
-                    <footer>miles collected</footer>
-                </div>
-            </section>
+            <header>
+              You are signed in as <strong>{{user && user.emails[0].address}}</strong>.
+            </header>
+            <div class="metric">
+                <header>12,345,678</header>
+                <footer>miles collected</footer>
+            </div>
             <footer class="actions">
                 <button @click="changePassword">Change password</button>
                 <button @click="logout">Log out</button>
@@ -25,7 +23,7 @@
     text-align: center;
   }
 
-  .entry-body .metric {
+  .metric {
     text-align: center;
 
     header {
@@ -42,6 +40,7 @@
     display: flex;
     flex-direction: column;
     align-items: center;
+    margin-top: 32px;
   }
 
   button {
@@ -66,6 +65,7 @@
 import { Accounts } from 'meteor/accounts-base';
 import backToViz from '../parts/BackToViz';
 import router from '../../router';
+import { logout } from '../../vuex/auth';
 
 export default {
   name: 'Profile',
@@ -90,8 +90,11 @@ export default {
   },
   methods: {
     logout() {
-      this.$store.dispatch('logout');
-      router.push('/');
+      return logout()
+        .then(() => {
+          router.push('/');
+        })
+        .catch((error) => { this.commit('auth/setLastSessionError', error); });
     },
     changePassword() {
       router.push('/change-password');

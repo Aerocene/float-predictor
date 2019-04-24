@@ -54,11 +54,11 @@ export default {
     dashboard,
     siteFooter,
   },
-  // meteor: {
-  //   meteorUser() {
-  //     this.$store.commit('updateUser', Meteor.user())
-  //   }
-  // },
+  meteor: {
+    meteorUser() {
+      this.$store.commit('auth/updateUser', Meteor.user())
+    }
+  },
   name: 'App',
   data() {
     return {
@@ -121,13 +121,13 @@ export default {
         TweenLite.fromTo(window, this.duration * 2, { scrollTo: height }, { scrollTo: 0 });
       } else if (this.transitionName === 'fade') {
         TweenLite.to(window, this.duration, { scrollTo: 0 });
-        this.$store.commit('general/setAnimationHeight', 'small');
+        // this.$store.commit('general/setAnimationHeight', 'small');
       }
     },
     afterEnter() {
       // after enter of new element
       if (this.transitionName === 'fade-middle-to-top') {
-        this.$store.commit('general/setAnimationHeight', 'small');
+        // this.$store.commit('general/setAnimationHeight', 'small');
       } else {
         this.$store.commit('general/setAnimationHeight', 'normal');
       }

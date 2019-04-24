@@ -152,7 +152,7 @@ export default {
     toggleAnimation() {
       if (this.isFlightOver) {
         this.$store.dispatch('flightSimulator/resetVisualization');
-        this.$store.commit('flightSimulator/setVisualizationState', 8);
+        // this.$store.commit('flightSimulator/setVisualizationState', 8);
         this.$store.commit('general/setFormStatus', true);
         this.$store.commit('general/setModalShow', true);
       } else {

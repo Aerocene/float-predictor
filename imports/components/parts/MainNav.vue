@@ -121,7 +121,7 @@ export default {
     initNew() {
       this.$store.dispatch('flightSimulator/resetVisualization');
       this.$store.commit('general/toggleMenu');
-      this.$store.commit('flightSimulator/setVisualizationState', 8);
+    //   this.$store.commit('flightSimulator/setVisualizationState', 8);
       this.$store.commit('general/setFormStatus', true);
       this.$store.commit('general/setModalShow', true);
     },

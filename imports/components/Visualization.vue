@@ -403,7 +403,7 @@ export default {
       this.setScale(INITIAL_ZOOM);
       this.initWindVisualization();
       this.initFPSChecker();
-      this.visualizationState = STATE_INITIAL;
+      // this.visualizationState = STATE_INITIAL;
       this.mouse = new THREE.Vector2();
 
       rendererAA.domElement.addEventListener('mousemove', this.onMouseMove, false);

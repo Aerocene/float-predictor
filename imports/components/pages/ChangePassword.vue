@@ -2,6 +2,8 @@
     <div class="main-content" :style="{ height: upperHeight }">
       <article role="article" class="article" ref="content">
         <changePasswordForm />
+        <router-link to="/profile" class="link-button">Back to profile</router-link>
+        <backToViz />
       </article>
     </div>
 </template>
@@ -44,16 +46,5 @@ export default {
   mounted() {
     this.upperHeight = `${this.$refs.content.clientHeight}px`;
   },
-  methods: {
-    logout() {
-      this.$store.dispatch('logout');
-    },
-    changePassword() {
-
-    },
-    deleteAccount() {
-
-    },
-  }
 };
 </script>
