@@ -21,13 +21,11 @@
 */
 import { Accounts } from 'meteor/accounts-base';
 import resetPasswordForm from '../auth/ResetPasswordForm';
-import backToViz from '../parts/BackToViz';
 import router from '../../router';
 
 export default {
   name: 'Reset password',
   components: {
-    backToViz,
     resetPasswordForm,
   },
   computed: {

@@ -21,13 +21,11 @@
 */
 import { Accounts } from 'meteor/accounts-base';
 import forgotPasswordForm from '../auth/ForgotPasswordForm'
-import backToViz from '../parts/BackToViz';
 import router from '../../router';
 
 export default {
   name: 'ForgotPassword',
   components: {
-    backToViz,
     forgotPasswordForm,
   },
   computed: {

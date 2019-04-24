@@ -687,13 +687,16 @@ export default {
       camera = new THREE.PerspectiveCamera(40, rendererAA.getSize().width / rendererAA.getSize().height, 0.1, 10000);
       camera.position.set(0, radius * 0.25, radius * 1.7);
       controls = new OrbitControls(camera, document.getElementById('visualization'));
-      controls.dampingFactor = 0.017;
-      controls.autoRotateSpeed = 1;
-      controls.enablePan = false;
-      controls.zoomSpeed = 0.1;
+      controls.dampingFactor = 0.017; // The damping inertia used if .enableDamping == true.
+      controls.autoRotateSpeed = 2; // Default is 2.0, which equates to 30 seconds per rotation at 60fps.
+      controls.enablePan = false; // Enable or disable camera panning. Default is true. 
+      controls.enableRotate = true; // Enable or disable horizontal and vertical rotation of the camera. Default is true.
+      controls.rotateSpeed = 0.4; //Speed of rotation. Default is 1. 
+      // zoom speed is a bit slow for desktop (macos pinch on touchpad)
+      controls.zoomSpeed = 0.28; // Speed of zooming / dollying. Default is 1. 
       controls.enableZoom = pars.zoom_enabled;
       controls.constraint.scene = scene;
-      controls.minDistance = radius * 0.5;
+      controls.minDistance = radius * 0.5; // How far you can dolly in ( PerspectiveCamera only ). Default is 0. 
       pars.pixel_ratio = window.devicePixelRatio;
       this.setAntialias(pars.antialias);
 
@@ -791,7 +794,7 @@ export default {
     addDebugTools() {
       if (!this.guiLoaded) {
         // eslint-disable-next-line
-        const GUI = require('../../custom_modules/dat.gui/build/dat.gui.min.js').GUI;
+        const GUI = require('../custom_modules/dat.gui/build/dat.gui.min.js').GUI;
         gui = new GUI({ width: 400 });
         gui.domElement.id = 'gui';
         gui.domElement.style.left = '10px';

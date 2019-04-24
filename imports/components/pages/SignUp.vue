@@ -2,7 +2,7 @@
     <div class="main-content" :style="{ height: upperHeight }">
       <article role="article" class="article" ref="content">
         <signUpForm v-on:success="redirectToQueryLinkOrFlightSimulator" />
-        <router-link v-bind:to="`/sign-in?redirect=${$route.query.redirect}`" class="link-button">I have an account already</router-link>
+        <router-link v-bind:to="`/sign-in?redirect=${$route.query.redirect || '/flight-simulator'}`" class="link-button">I have an account already</router-link>
       </article>
     </div>
 </template>
@@ -21,13 +21,11 @@
 */
 import { Accounts } from 'meteor/accounts-base';
 import signUpForm from '../auth/SignUpForm';
-import backToViz from '../parts/BackToViz';
 import router from '../../router';
 
 export default {
   name: 'SignUp',
   components: {
-    backToViz,
     signUpForm,
   },
   computed: {

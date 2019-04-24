@@ -35,6 +35,7 @@
                           @placechanged="setDeparture"
                           @focus="setFocus"
                           @blur="removeFocus"
+                          @change="mapChanged"
                           types="(cities)"
                           rtypes="geocode">
                   </vue-google-autocomplete>
@@ -47,6 +48,7 @@
                           @placechanged="setDestination"
                           @focus="setFocus"
                           @blur="removeFocus"
+                          @change="map2Changed"
                           types="(cities)"
                           rtypes="geocode">
                         </vue-google-autocomplete>
@@ -76,7 +78,7 @@
                       Aerocene sculptures always leave at noon with sun light.
                   </p>
               </div>
-              <b-button type="submit" variant="primary">Launch</b-button>
+              <b-button type="submit" variant="primary" v-bind:disabled="!hasLocations">Launch</b-button>
           </b-form>
       </div>
   </div>
@@ -128,6 +130,9 @@ export default {
     },
     hasErrors() {
       return (this.form.errors.departure || this.form.errors.destination);
+    },
+    hasLocations() {
+      return !_.isEmpty(this.departure) && (this.isFree || (!_.isEmpty(this.destination)));
     },
     placeholder() {
       let departureStr = 'Departure';
@@ -220,13 +225,43 @@ export default {
           this.form.errors = errors;
         });
     },
+    mapChanged(text) {
+      if (text !== this.departureString) {
+        this.departure = {};
+        this.departureString = undefined;
+        const map_input = document.getElementById('map');
+        if (map_input !== undefined) {
+          map_input.value = "";
+        }
+      }
+    },
+    map2Changed(text) {
+        if (text !== this.destinationString) {
+          this.destination = {};
+          this.destinationString = undefined;
+          const map_input = document.getElementById('map2');
+          if (map_input !== undefined) {
+            map_input.value = "";
+          }
+        }
+    },
     setDeparture(e) {
+
       this.departure =
         { lat: e.latitude, lng: e.longitude, city: e.locality, country: e.country };
+
+        // get actual string from inputfield
+        const map = document.getElementById('map');
+        this.departureString = map.value;
     },
     setDestination(e) {
+
       this.destination =
         { lat: e.latitude, lng: e.longitude, city: e.locality, country: e.country };
+
+        // get actual string from inputfield
+        const map = document.getElementById('map2');
+        this.destinationString = map.value;
     },
     validateForm() {
       const errors = {};

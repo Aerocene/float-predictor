@@ -16,6 +16,7 @@
     text-transform: uppercase;
     margin: 8px;
     background-color: rgba(0, 0, 0, 0.6);
+    color: white;
     &.negative {
       border-color: var(--red);
       color: var(--red);
@@ -31,13 +32,11 @@
 */
 import { Accounts } from 'meteor/accounts-base';
 import changePasswordForm from '../auth/ChangePasswordForm'
-import backToViz from '../parts/BackToViz';
 import router from '../../router';
 
 export default {
   name: 'About',
   components: {
-    backToViz,
     changePasswordForm,
   },
   computed: {

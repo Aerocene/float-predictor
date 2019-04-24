@@ -3,7 +3,6 @@
       <article role="article" class="article" ref="content">
         <changePasswordForm v-on:success="redirectToProfile" />
         <router-link to="/profile" class="link-button">Back to profile</router-link>
-        <backToViz />
       </article>
     </div>
 </template>
@@ -22,13 +21,11 @@
 */
 import { Accounts } from 'meteor/accounts-base';
 import changePasswordForm from '../auth/ChangePasswordForm'
-import backToViz from '../parts/BackToViz';
 import router from '../../router';
 
 export default {
   name: 'About',
   components: {
-    backToViz,
     changePasswordForm,
   },
   computed: {

@@ -13,7 +13,6 @@
                 <button @click="logout">Log out</button>
                 <button @click="deleteAccount" class="negative">Delete account</button>
             </footer>
-            <!-- <back-to-viz /> -->
         </article>
     </div>
 </template>
@@ -48,7 +47,11 @@
     font-weight: 600;
     text-transform: uppercase;
     margin: 8px;
+    min-height: 44px;
+    padding: 8px;
     background-color: rgba(0, 0, 0, 0.6);
+    color: white;
+    cursor: pointer;
     &.negative {
       border-color: var(--red);
       color: var(--red);
@@ -63,14 +66,12 @@
  * @author Angelo Semeraro - @angeloseme / http://angelosemeraro.info
 */
 import { Accounts } from 'meteor/accounts-base';
-import backToViz from '../parts/BackToViz';
 import router from '../../router';
 import { logout } from '../../vuex/auth';
 
 export default {
   name: 'Profile',
   components: {
-    backToViz,
   },
   computed: {
     user() {
