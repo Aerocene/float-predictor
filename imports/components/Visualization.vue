@@ -794,7 +794,7 @@ export default {
     addDebugTools() {
       if (!this.guiLoaded) {
         // eslint-disable-next-line
-        const GUI = require('../../custom_modules/dat.gui/build/dat.gui.min.js').GUI;
+        const GUI = require('../custom_modules/dat.gui/build/dat.gui.min.js').GUI;
         gui = new GUI({ width: 400 });
         gui.domElement.id = 'gui';
         gui.domElement.style.left = '10px';
