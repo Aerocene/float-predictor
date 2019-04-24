@@ -1,8 +1,8 @@
 <template>
     <div class="main-content" :style="{ height: upperHeight }">
       <article role="article" class="article" ref="content">
-        <signUpForm v-on:success="redirectToFlightSimulator" />
-        <router-link to="/sign-in" class="link-button">I have an account already</router-link>
+        <signUpForm v-on:success="redirectToQueryLinkOrFlightSimulator" />
+        <router-link v-bind:to="`/sign-in?redirect=${$route.query.redirect}`" class="link-button">I have an account already</router-link>
       </article>
     </div>
 </template>
@@ -47,8 +47,8 @@ export default {
     this.upperHeight = `${this.$refs.content.clientHeight}px`;
   },
   methods: {
-    redirectToFlightSimulator() {
-      router.replace('/flight-simulator');
+    redirectToQueryLinkOrFlightSimulator() {
+      router.replace(this.$route.query.redirect || '/flight-simulator');
     }
   },
 };
