@@ -209,7 +209,7 @@ export default {
           }
           .gallery-item-inside {
               min-width: 85%;
-              padding: 1rem 1rem 1.5rem 1rem;
+              padding: 1rem 0 1.5rem 0;
               border: 20px solid black;
               border-top: 0;
               border-bottom: 0;
@@ -237,7 +237,7 @@ export default {
                   margin-top: 1.5rem;
                   transition: opacity .2s ease;
                   opacity: 0;
-                  font-size: .7em;
+                  font-size: .8em;
               }
               strong {
                   @extend %colfax_bold;
