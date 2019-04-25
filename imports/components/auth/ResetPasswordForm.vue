@@ -10,7 +10,7 @@
 </template>
 
 <style lang="scss" scoped>
-  @import './SessionForm.scss';
+  @import './Form.scss';
 </style>
 
 <script>
