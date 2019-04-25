@@ -9,10 +9,6 @@
   </form>
 </template>
 
-<style lang="scss">
-  @import '../css/_session_forms.scss';
-</style>
-
 <script>
 import router from '../../router';
 import { Accounts } from 'meteor/accounts-base';

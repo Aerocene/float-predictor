@@ -14,10 +14,6 @@
   </form>
 </template>
 
-<style lang="scss">
-  @import '../css/_session_forms.scss';
-</style>
-
 <script>
 import router from '../../router';
 import { loginWithPassword } from '../../vuex/auth';

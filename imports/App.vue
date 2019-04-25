@@ -236,6 +236,7 @@ export default {
 @import "./components/css/_general";
 @import "./components/css/_articles";
 @import "./components/css/_forms";
+@import "./components/css/_session_forms";
 @import "./components/css/_menus";
 @import "./components/css/_animations";
 </style>
