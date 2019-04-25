@@ -11,24 +11,6 @@ form.session-form fieldset {
   margin-bottom: 8px;
 }
 
-form.session-form a {
-  display: inline-block;
-}
-
-form.session-form a,
-form.session-form button {
-  min-height: 44px;
-  margin: 8px;
-  padding: 4px 12px;
-  border: none;
-  font-size: 16px;
-  font-weight: 600;
-  text-transform: uppercase;
-  background-color: rgba(255, 255, 255, .3);
-  color: white;
-  cursor: pointer;
-}
-
 form.session-form input:invalid {
   color: var(--red);
 }
@@ -122,13 +104,43 @@ form.session-form input {
 }
 
 .link-button {
-  display: block;
+  display: flex;
   line-height: 44px;
   margin: 8px;
+  padding: 0 12px;
   transition: opacity 0.15s ease-out, color 0.15s ease-out, background-color 0.15s ease-out;
   align-items: center;
   justify-content: center;
   flex-wrap: wrap;
   font-weight: 600;
-  color: rgba(255, 255, 255, 0.8)
+  color: rgba(255, 255, 255, 0.8);
+  background-color: rgba(0, 0, 0, 0.4);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  border-radius: 5px;
+  &:hover {
+    background-color: rgba(255, 255, 255, .1);
+  }
+}
+
+form.session-form a {
+  display: inline-block;
+}
+
+form.session-form a,
+form.session-form button {
+  min-height: 44px;
+  margin: 8px;
+  padding: 4px 12px;
+  border: none;
+  font-size: 16px;
+  font-weight: 600;
+  text-transform: uppercase;
+  background-color: rgba(255, 255, 255, .3);
+  color: white;
+  cursor: pointer;
+  border-radius: 5px;
+
+  &:hover {
+    background-color: rgba(255, 255, 255, .4);
+  }
 }

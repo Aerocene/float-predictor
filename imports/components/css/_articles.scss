@@ -1,3 +1,9 @@
+article {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
 article, .page-modal {
   position: relative;
   padding: $marginBase*3 0 $marginBase;
