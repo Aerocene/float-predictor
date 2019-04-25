@@ -1,6 +1,5 @@
 <template>
 <div>
-	<h1>Vuex + Meteor Accounts Example</h1>
 	<auth></auth>
   <users></users>
 </div>
