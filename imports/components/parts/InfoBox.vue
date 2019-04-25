@@ -14,28 +14,28 @@
                 <!--</li>-->
                 <li class="list-item --screenshot">
                     <div class="title">
-                        Take a screenshot
+                        <header>Take a screenshot</header>
                         <div class="description">Capture a moment of your float!</div>
                     </div>
                     <i class="fp"></i>
                 </li>
                 <li class="list-item --winds">
                     <div class="title">
-                        Activate winds panel
+                        <header>Activate winds panel</header>
                         <div class="description">Explore the atmosphere.</div>
                     </div>
                     <i class="fp"></i>
                 </li>
                 <li class="list-item --elapsed-days">
                     <div class="title">
-                        Total elapsed days
+                        <header>Total elapsed days</header>
                         <div class="description">Click to pause and play.</div>
                     </div>
                     <i class="fp"><svg><circle class="fake-progress"></circle></svg></i>
                 </li>
                 <li class="list-item --explorers">
                     <div class="title">
-                        Aerocene Sculptures
+                        <header>Aerocene Sculptures</header>
                         <div class="description">Click on an icon to go on board a Sculpture.</div>
                     </div>
                     <i class="fp"></i>
@@ -147,7 +147,7 @@ export default {
                 position: absolute;
                 right: $marginMobile;
                 top: 1.444rem;
-                background-image: url("/icons/ico-close-w.svg");
+                background-image: url("/assets/icons/ico-close-w.svg");
                 background-position: center;
                 background-repeat: no-repeat;
                 opacity: 1;
@@ -175,8 +175,8 @@ export default {
                     margin-right: 1em;
                     @include medium_down {
                         display: flex;
-                        align-items: center;
-                        flex-flow: row wrap;
+                        flex-direction: column;
+                        align-items: flex-start;
                     }
                 }
                 i {
@@ -204,7 +204,7 @@ export default {
                     @include medium_down {
                         order: 2;
                         i {
-                            background-image: url("/icons/ico-camera.svg");
+                            background-image: url("/assets/icons/ico-camera.svg");
                         }
                     }
                 }
@@ -212,7 +212,7 @@ export default {
                     @include medium_down {
                         order: 3;
                         i {
-                            background-image: url("/icons/winds.svg");
+                            background-image: url("/assets/icons/winds.svg");
                         }
                     }
                 }
@@ -240,7 +240,7 @@ export default {
                         order: 1;
                         i {
                             background-color: transparent;
-                            background-image: url("/icons/pause.svg");
+                            background-image: url("/assets/icons/pause.svg");
                             border: 1px solid $lightGray;
                         }
                         .title {
@@ -254,7 +254,7 @@ export default {
                     @include medium_down {
                         order:4;
                         i {
-                            background-image: url("/icons/ico-explorer.svg");
+                            background-image: url("/assets/icons/ico-explorer.svg");
                         }
                         .title {
                             display: flex;
