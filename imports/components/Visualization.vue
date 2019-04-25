@@ -31,6 +31,7 @@ import Explorer from './visualization/Explorer';
 import WindVisualization from './visualization/WindVisualization';
 import TrajectoryDataDownloader from './visualization/TrajectoryDataDownloader';
 import Labels from './visualization/Labels';
+import insertFlight from '../api/flights/client/insertFlight';
 
 import THREE from 'three';
 import OrbitControlsFrom from '../custom_modules/three-orbit-controls';
@@ -696,7 +697,7 @@ export default {
       controls.zoomSpeed = 0.28; // Speed of zooming / dollying. Default is 1. 
       controls.enableZoom = pars.zoom_enabled;
       controls.constraint.scene = scene;
-      controls.minDistance = radius * 0.5; // How far you can dolly in ( PerspectiveCamera only ). Default is 0. 
+      controls.minDistance = radius * 0.5; // How far you can dolly in ( PerspectiveCamera only ). Default is 0.
       pars.pixel_ratio = window.devicePixelRatio;
       this.setAntialias(pars.antialias);
 
@@ -1518,6 +1519,7 @@ export default {
           this.winningExplorerData = {
             minDist: this.minDist,
             minTime: this.minTime,
+            totalDistance: explorers[this.minTrack].getTotalDistance(),
             departureDate: this.startingDate,
             svg: this.toSVG(),
           };
@@ -1564,6 +1566,7 @@ export default {
           }
           const s = JSON.stringify(trajectory);
           if (s !== this.previousTrajectoryData) {
+            insertFlight(this.$store.state.flightSimulator);
             fetch('https://floatpredictor.aerocene.org/scripts/api/insert.php', {
               method: 'post',
               body: s,

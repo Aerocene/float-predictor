@@ -67,7 +67,7 @@
                                value="">
                     </div>
                     <p class="input-label">
-                        Enter your name and e-mail to get updates on Aerocene.
+                        Enter your name to get updates on Aerocene.
                     </p>
                     <b-button type="submit"
                               variant="primary"

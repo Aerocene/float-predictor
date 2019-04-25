@@ -116,6 +116,7 @@ form.session-form input {
   color: rgba(255, 255, 255, 0.8);
   background-color: rgba(0, 0, 0, 0.4);
   border: 1px solid rgba(255, 255, 255, 0.3);
+  border: 1px solid white;
   border-radius: 5px;
   &:hover {
     background-color: rgba(255, 255, 255, .1);
@@ -136,9 +137,10 @@ form.session-form button {
   font-weight: 600;
   text-transform: uppercase;
   background-color: rgba(255, 255, 255, .3);
+  border: 1px solid white;
+  border-radius: 5px;
   color: white;
   cursor: pointer;
-  border-radius: 5px;
 
   &:hover {
     background-color: rgba(255, 255, 255, .4);

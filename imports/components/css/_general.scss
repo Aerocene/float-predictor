@@ -122,9 +122,9 @@ body.flight-simulator .main-application:not(.choosing-destination){
     border-radius: 4px;
     background-color: transparent;
     color: #fff;
-    max-width: 150px;
     margin-left: auto;
     margin-right: auto;
+    max-width: auto;
 
     &:not(:disabled):hover, &:not(:disabled):active {
       background-color: #FFF;
@@ -347,6 +347,7 @@ button.dg-btn--ok,
 button.dg-btn--cancel {
   @extend .btn;
   @extend .btn-primary;
+  max-width: auto;
   border: 1px solid #fff;
   border-radius: 4px;
   background-color: transparent;

@@ -9,6 +9,9 @@
              title="Your Aerosolar Journey">
         <i slot="modal-header-close" class="fp fp-close-w"></i>
         <div class="aeroglyph" v-html="winningExplorerData.svg"></div>
+        <div class="message">
+            You earned <strong>{{earnedAerochange}} Æros</strong> with this flight.
+        </div>
         <div v-if="isPlannedFlight" class="message">
             The Aerocene Sculpture that left from <b>{{departure.city}}</b>
             on <strong>{{depDate}}</strong>
@@ -34,6 +37,9 @@
                   target="_blank"
                   novalidate>
                 <div id="mc_embed_signup_scroll" class="selector-group-wrapper">
+                    <p class="input-label">
+                        Enter your name to get updates on Aerocene.
+                    </p>
                     <div class="name-selector-group selector-group">
                         <div class="mc-field-group">
                             <b-form-input
@@ -44,19 +50,7 @@
                                     id="mce-FNAME">
                             </b-form-input>
                         </div>
-                        <div class="mc-field-group">
-                            <b-form-input
-                                    type="email"
-                                    placeholder="Your e-mail"
-                                    name="EMAIL"
-                                    class="required email"
-                                    id="mce-EMAIL">
-                            </b-form-input>
-                        </div>
-                    </div>
-                    <div id="mce-responses" class="clear">
-                        <div class="response" id="mce-error-response" style="display:none"></div>
-                        <div class="response" id="mce-success-response" style="display:none"></div>
+                        <input type="hidden" name="EMAIL" v-model="userEmail" id="mce-EMAIL" />
                     </div>
                     <!-- real people should not fill this in and expect good things
                     - do not remove this or risk form bot signups-->
@@ -66,15 +60,12 @@
                                tabindex="-1"
                                value="">
                     </div>
-                    <p class="input-label">
-                        Enter your name and e-mail to get updates on Aerocene.
-                    </p>
                     <b-button type="submit"
                               variant="primary"
                               value="Subscribe"
                               name="subscribe"
                               id="mc-embedded-subscribe"
-                              class="button">Submit</b-button>
+                              class="button">Get updates on Aerocene</b-button>
                 </div>
             </form>
         </div>
@@ -106,7 +97,7 @@
                     </div>
                 </social-sharing>
             </li>
-            <li class="separator"></li>
+            <!-- <li class="separator"></li>
             <li class="download">
                 <small>Download</small>
                 <ul>
@@ -116,7 +107,7 @@
                         </a>
                     </li>
                 </ul>
-            </li>
+            </li> -->
         </ul>
     </b-modal>
 </template>
@@ -127,9 +118,17 @@
  * @author Angelo Semeraro - @angeloseme / http://angelosemeraro.info
 */
 import moment from 'moment';
+import calculateAerochange, { formatAerochange } from '../../api/flights/calculateAerochange';
 
 export default {
   name: 'modal-winner-explorer',
+  data() {
+      const user = this.$store.state.auth.user;
+      const emailAddress = user && user.emails && user.emails[0] && user.emails[0].address;
+      return {
+        userEmail: emailAddress,
+      };
+  },
   computed: {
     modalShow: {
       get() {
@@ -139,8 +138,8 @@ export default {
         this.$store.commit('general/setModalShow', v);
       },
     },
-    trajectoryLink() {
-      return `https://floatpredictor.aerocene.org/scripts/api/api.php?id=${this.$store.state.flightSimulator.trajectoryId}`;
+    earnedAerochange() {
+        return formatAerochange(calculateAerochange(this.$store.state.flightSimulator));
     },
     isPlannedFlight() {
       return this.$store.state.flightSimulator.flightType === 'planned';

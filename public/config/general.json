@@ -5,7 +5,7 @@
 	"fps": 0,
 	"antialias": true,
 	"state": 0,
-	"speed_d_x_sec": 0.155,
+	"speed_d_x_sec": 0.125,
 	"move_in_time": false,
 	"pan_x": 0,
 	"pan_y": 0,

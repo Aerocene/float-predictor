@@ -1,0 +1,1 @@
+import '../imports/api/flights/server/insertFlight';

@@ -6,6 +6,14 @@
         <modal-winner-explorer />
     </div>
 </template>
+
+<style lang="scss" scoped>
+  .modal-contents {
+    height: 0;
+    width: 0;
+  }
+</style>
+
 <script>
 import instructions from './modals/InstructionsModal';
 import impressum from './modals/ImpressumModal';
