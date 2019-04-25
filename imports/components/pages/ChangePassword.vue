@@ -24,7 +24,7 @@ import changePasswordForm from '../auth/ChangePasswordForm'
 import router from '../../router';
 
 export default {
-  name: 'About',
+  name: 'ChangePassword',
   components: {
     changePasswordForm,
   },

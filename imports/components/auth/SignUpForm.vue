@@ -1,5 +1,5 @@
 <template>
-  <form @submit.prevent="submitForm">
+  <form class="session-form" @submit.prevent="submitForm">
     <!-- <h3>Get started!</h3> -->
     <fieldset>
       <label>email</label>
@@ -14,7 +14,7 @@
   </form>
 </template>
 
-<style lang="scss" scoped>
+<style lang="scss">
   @import './Form.scss';
 </style>
 

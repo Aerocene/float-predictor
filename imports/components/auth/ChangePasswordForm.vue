@@ -1,5 +1,5 @@
 <template>
-  <form @submit.prevent="submitForm">
+  <form class="session-form" @submit.prevent="submitForm">
     <fieldset>
       <label>old password</label>
       <input type="password" required v-model="formData.oldPassword" />
@@ -13,10 +13,9 @@
   </form>
 </template>
 
-<style lang="scss" scoped>
+<style lang="scss">
   @import './Form.scss';
 </style>
-
 
 <script>
 import router from '../../router';

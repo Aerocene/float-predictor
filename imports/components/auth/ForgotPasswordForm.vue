@@ -1,5 +1,5 @@
 <template>
-  <form @submit.prevent="submitForm">
+  <form class="session-form" @submit.prevent="submitForm">
     <fieldset>
       <label>email</label>
       <input type="email" required v-model="formData.email" placeholder="email@example.com" />
@@ -9,7 +9,7 @@
   </form>
 </template>
 
-<style lang="scss" scoped>
+<style lang="scss">
   @import './Form.scss';
 </style>
 

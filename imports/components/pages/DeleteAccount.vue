@@ -31,13 +31,11 @@
  * @author Angelo Semeraro - @angeloseme / http://angelosemeraro.info
 */
 import { Accounts } from 'meteor/accounts-base';
-import changePasswordForm from '../auth/ChangePasswordForm'
 import router from '../../router';
 
 export default {
-  name: 'About',
+  name: 'DeleteAccount',
   components: {
-    changePasswordForm,
   },
   computed: {
     user() {

@@ -1,5 +1,5 @@
 <template>
-  <form @submit.prevent="submitForm">
+  <form class="session-form" @submit.prevent="submitForm">
     <fieldset>
       <label>new password</label>
       <input type="password" required minlength="8" v-model="formData.newPassword" placeholder="min. 8 characters" />
@@ -9,7 +9,7 @@
   </form>
 </template>
 
-<style lang="scss" scoped>
+<style lang="scss">
   @import './Form.scss';
 </style>
 
