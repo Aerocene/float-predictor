@@ -355,16 +355,3 @@ button.dg-btn--cancel {
 div.dg-content-body {
   border-bottom: 1px solid $gray;
 }
-
-
-.link-button {
-  display: block;
-  min-height: 44px;
-  margin: 8px;
-  transition: opacity 0.15s ease-out, color 0.15s ease-out, background-color 0.15s ease-out;
-  align-items: center;
-  justify-content: center;
-  flex-wrap: wrap;
-  font-weight: 600;
-  color: rgba(255, 255, 255, 0.8)
-}

@@ -14,7 +14,7 @@
 </template>
 
 <style lang="scss">
-  @import './Form.scss';
+  @import '../css/_session_forms.scss';
 </style>
 
 <script>
