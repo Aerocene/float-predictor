@@ -373,12 +373,12 @@ export default {
      * Init the visualization on component mount. It setup the three.js scene, add the gui and setup the listeners.
      */
     initVis() {
-      if (process.env.NODE_ENV === 'development') {
-        pars.speed_d_x_sec = 0.09;
-        pars.skip_frame = 1;
-        pars.use_bump = false;
-        pars.antialias = false;
-      }
+      // if (process.env.NODE_ENV === 'development') {
+      //   pars.speed_d_x_sec = 0.09;
+      //   pars.skip_frame = 1;
+      //   pars.use_bump = false;
+      //   pars.antialias = false;
+      // }
 
       /* placeholder locations */
       departure = {
