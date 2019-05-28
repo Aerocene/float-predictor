@@ -16,11 +16,15 @@
                             <i :class="[isInfoBoxOpen ? 'fp-close' : 'fp-info', 'fp']"></i>
                         </a>
                     </li>
-                    <li class="nav-item --rounded" v-show="!isChoosing" @click="saveScreenshot">
+                    <!-- no screen-shot for now, use an empty filler instead -  -->
+                    <!-- <li class="nav-item --rounded" v-show="!isChoosing" @click="saveScreenshot">
                         <div class="hover-text">Take a screenshot</div>
                         <a href="#" target="_self" class="nav-link">
                             <i class="fp fp-camera"></i>
                         </a>
+                    </li> -->
+                    <li class="nav-item" v-show="!isChoosing">
+                      <div></div>
                     </li>
                 </div>
             </transition>

@@ -12,13 +12,13 @@
                     <!--</div>-->
                     <!--<i class="fp"></i>-->
                 <!--</li>-->
-                <li class="list-item --screenshot">
+                <!-- <li class="list-item --screenshot">
                     <div class="title">
                         <header>Take a screenshot</header>
                         <div class="description">Capture a moment of your float!</div>
                     </div>
                     <i class="fp"></i>
-                </li>
+                </li> -->
                 <li class="list-item --winds">
                     <div class="title">
                         <header>Activate winds panel</header>
@@ -200,14 +200,14 @@ export default {
                         display: none;
                     }
                 }
-                &.--screenshot {
+                /* &.--screenshot {
                     @include medium_down {
                         order: 2;
                         i {
                             background-image: url("/assets/icons/ico-camera.svg");
                         }
                     }
-                }
+                } */
                 &.--winds {
                     @include medium_down {
                         order: 3;
