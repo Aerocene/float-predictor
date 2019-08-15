@@ -77,7 +77,7 @@
                 <p>
                     The source code of the Aerocene Float Predictor can be accessed on
                     <a
-                        href="https://github.com/Aerocene/aerocene-float-predictor">GitHub.
+                        href="https://github.com/Aerocene/float-predictor">GitHub.
                     </a>
                 </p>
             </div>
