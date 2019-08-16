@@ -67,7 +67,7 @@ $lateralSpaceMobile: .5rem;
         }
         .title {
             flex: 0 0 auto;
-            margin: $marginItem 0;
+            margin: $marginItem*2 0 $marginItem 0;
             @include small_down {
                 margin: $marginItem*2 0 $marginItem 0;
             }

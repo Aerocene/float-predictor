@@ -152,7 +152,8 @@ export default {
     }
     .title-number {
         position: absolute;
-        margin: $marginItem 0;
+        margin: 0;
+        padding-top: #{$marginItem*2};
         @include small_down {
             margin: 0;
             padding-top: calc(#{$marginItem*2} + 2.95rem);
