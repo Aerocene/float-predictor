@@ -815,6 +815,7 @@ export default {
         general.add(pars, 'speed_d_x_sec', 0, 2);
         general.add(pars, 'pixel_ratio', 1, 3).listen().onChange((value) => { renderer.setPixelRatio(value); });
         general.add(pars, 'skip_frame', 0, 60).step(1).listen();
+        general.add(pars, 'frame_multiplier', 1, 20).step(1).listen();
         general.add(pars, 'fps', 0, 60).listen();
         general.add(pars, 'winds', 0, 4).step(1).listen().onChange((value) => { this.winds = value; });
 
@@ -1275,7 +1276,7 @@ export default {
       /* by setting pars.skip_frame it's possible to reduce computation cost, lowering fps.
       * if pars.skip_frame == 0 -> fps = 60. If == 1  -> fps = 30, if == 2 -> fps = 20  */
       if (timer % (1 + pars.skip_frame) === 0) {
-        const frames = 1 + pars.skip_frame;
+        const frames = pars.frame_multiplier * (1 + pars.skip_frame);
         this.windsLoaded = windVisualization.update(pars.elapsed_days, frames);
         /* stop if user is mouse selecting */
         if (!this.selecting) {

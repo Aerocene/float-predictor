@@ -11,6 +11,7 @@
 	"pan_y": 0,
 	"onboard": false,
 	"skip_frame": 1,
+	"frame_multiplier": 2,
 	"camera_smooth": 0.993,
 	"camera_distance": 1.3,
 	"camera_shift": 0.07,
