@@ -667,11 +667,11 @@ export default {
         antialias: true, // pars.antialias,
         preserveDrawingBuffer: true,
       });
-      rendererAA.setSize(window.innerWidth, window.innerHeight);
-      rendererAA.setClearColor(0x000000);
       rendererAA.domElement.classList.add('canvas');
       rendererAA.domElement.id = 'canvasAA';
       container.appendChild(rendererAA.domElement);
+      rendererAA.setSize(window.innerWidth, window.innerHeight);
+      rendererAA.setClearColor(0x000000);
 
       rendererNAA = new THREE.WebGLRenderer({
         antialias: false, // pars.antialias,
