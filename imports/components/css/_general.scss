@@ -147,7 +147,7 @@ body {
     .router-view {
       @include medium_down {
         margin-top: calc(80px + #{$marginMobile}); // header height + margin
-        z-index: 9;
+        z-index: 11;
         position: relative;
       }
     }
@@ -172,7 +172,6 @@ form {
     }
   }
   .main-visualization-wrapper {
-    z-index: -1;
     position: absolute;
     height: 100%;
     overflow: hidden;
