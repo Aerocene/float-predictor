@@ -64,15 +64,24 @@ export default {
   methods: {
     onClick() {
       this.$store.commit('flightSimulator/setFocusedExplorer', 0);
+      this.$store.commit('flightSimulator/setSelectedExplorer', 0);
       this.$store.commit('flightSimulator/setPlaying', true);
     },
     goNext() {
       const next = (this.id <= 7) ? this.id + 1 : 1;
-      this.$store.commit('flightSimulator/setFocusedExplorer', next);
+      if (this.isFlightOver) {
+          this.$store.commit('flightSimulator/setSelectedExplorer', next);
+      } else {
+          this.$store.commit('flightSimulator/setFocusedExplorer', next);
+      }
     },
-    goPrevious() {
+    goPrevious() {        
       const prev = (this.id > 1) ? this.id - 1 : 8;
-      this.$store.commit('flightSimulator/setFocusedExplorer', prev);
+      if (this.isFlightOver) {
+          this.$store.commit('flightSimulator/setSelectedExplorer', prev);
+      } else {
+          this.$store.commit('flightSimulator/setFocusedExplorer', prev);
+      }
     },
   },
 };
