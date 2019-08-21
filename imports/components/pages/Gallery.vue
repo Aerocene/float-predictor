@@ -19,7 +19,7 @@
       <div class="path-wrapper">
         <div class="gallery-item" v-for="item in flights" :key="item._id">
           <div class="gallery-item-inside">
-            <img :src="item.svgB64"/>
+            <img :src="item.svgB64 != undefined ? item.svgB64 : getSVGPath(item)"/>
             <div class="info">
               <div class="aer-code">
                 AER {{(flights.indexOf(item)+1).toLocaleString('en')}}
@@ -27,17 +27,17 @@
               <div class="date-created">
                 {{getDate(item.created)}}
               </div>
-              <div v-if="item.destination" class="additional-info">
-                <p>Departed from <strong>{{item.departure.city}}</strong>.</p>
+              <div v-if="item.destination_city" class="additional-info">
+                <p>Departed from <strong>{{item.departure_city}}</strong>.</p>
                 <p>Arrived within <strong>{{item.min_dist.toLocaleString('en')}}</strong> km
-                of <strong>{{item.destination.city}}</strong>
+                of <strong>{{item.destination_city}}</strong>
                     in <strong>{{item.min_time}} days</strong>.</p>
                 <p>Travelled a total of
                     <strong>{{parseInt(item.distance * 1000).toLocaleString('en')}} km</strong>.
                 </p>
               </div>
               <div v-else class="additional-info">
-                  <p>Departed from <strong>{{item.departure.city}}</strong>.</p>
+                  <p>Departed from <strong>{{item.departure_city}}</strong>.</p>
                   <p>Travelled a total of
                       <strong>{{parseInt(item.distance * 1000).toLocaleString('en')}} km</strong>
                       in <strong>{{item.min_time}} days</strong>.
