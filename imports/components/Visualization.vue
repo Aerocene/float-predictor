@@ -23,11 +23,12 @@
 
 import _ from 'lodash';
 import { saveAs } from 'file-saver';
-import Loading from './parts/Loading';
+import Loading from './parts/Loading.vue';
 import Util from './visualization/Util';
 import NightMap from './visualization/NightMap';
 import animator from './visualization/Animator';
 import Explorer from './visualization/Explorer';
+import Trajectory from './visualization/Trajectory';
 import WindVisualization from './visualization/WindVisualization';
 import TrajectoryDataDownloader from './visualization/TrajectoryDataDownloader';
 import Labels from './visualization/Labels';
@@ -1064,7 +1065,7 @@ export default {
     */
     toSVG() {
       this.svg = [];
-      let t = '<svg height="210" width="210">';
+      let t = '<svg xmlns="http://www.w3.org/2000/svg" height="210" width="210">';
       let initX = 0;
       let initY = 0;
       // t += '<rect width="210" height="210" fill="gray" />';
@@ -1525,8 +1526,6 @@ export default {
             svg: this.toSVG(),
           };
 
-          /* Fill a json with the trajectory data and push to server through post request. This will add it to the gallery */
-
           const data = [];
           for (let i = 0; i < this.api_data.length; i += 1) {
             for (let j = this.minTrack; j < this.api_data[i].length - 8; j += 8) {
@@ -1534,40 +1533,21 @@ export default {
               data.push(this.api_data[i][j][3]);
             }
           }
-          const departureDate = new Date(this.startingDate);// this.valueOf()
-          departureDate.setDate(departureDate.getDate() + this.minTrack);
-          const trajectory = {
-            departure: {
-              city: departure.city,
-              country: departure.country,
-              coordinates: {
-                latitude: departure.lat,
-                longitude: departure.lng,
-              },
-            },
-            min_dist: this.minDist,
-            min_time: this.minTime,
-            departure_date: departureDate.toISOString(),
-            speed: explorers[this.minTrack].avgSpeed,
-            altitude: altitudeLevels[this.initialAltitudeLevel],
-            distance: explorers[this.minTrack].getTotalDistance() * 0.001,
-            path: data,
-            svg: this.svg,
-            explorerIndex: this.minTrack,
-          };
-          if (this.flightType === 'planned') {
-            trajectory.destination = {
-              city: destination.city,
-              country: destination.country,
-              coordinates: {
-                latitude: destination.lat,
-                longitude: destination.lng,
-              },
-            };
-          }
+
+          // add data to winning Explorer
+          this.winningExplorerData.data = data;
+
+
+          /* Fill a json with the trajectory data and push to server through post request. This will add it to the gallery */
+          const trajectory = new Trajectory();
+          trajectory.load(this, departure, destination, data, explorers[this.minTrack], altitudeLevels[this.initialAltitudeLevel], this.winningExplorerData.svg);
+
           const s = JSON.stringify(trajectory);
           if (s !== this.previousTrajectoryData) {
-            insertFlight(this.$store.state.flightSimulator);
+
+            // add base64 svg-data
+            insertFlight(trajectory);
+
             fetch('https://floatpredictor.aerocene.org/scripts/api/insert.php', {
               method: 'post',
               body: s,

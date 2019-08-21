@@ -17,12 +17,12 @@
         </div>
       </div>
       <div class="path-wrapper">
-        <div class="gallery-item" v-for="item in flights" :key="item.id">
+        <div class="gallery-item" v-for="item in flights" :key="item._id">
           <div class="gallery-item-inside">
-            <img :src="getSVGPath(item)"/>
+            <img :src="item.svgB64"/>
             <div class="info">
               <div class="aer-code">
-                AER {{parseInt(item.id).toLocaleString('en')}}
+                AER {{(flights.indexOf(item)+1).toLocaleString('en')}}
               </div>
               <div class="date-created">
                 {{getDate(item.created)}}
@@ -63,6 +63,8 @@
 import moment from 'moment';
 import Loading from '../parts/Loading.vue';
 import BackToViz from '../parts/BackToViz.vue';
+import loadFlights from '../../api/flights/client/loadFlights';
+import Trajectory from '../visualization/Trajectory';
 
 export default {
   name: 'Gallery',
@@ -91,31 +93,20 @@ export default {
       }
     },
     addPage(i) {
-      fetch(`https://floatpredictor.aerocene.org/scripts/api/gallery.php?page=${String(i)}`, {
-        method: 'get',
-      })
-        .then((response) => {
-          if (response.status !== 200) {
-            // eslint-disable-next-line
-            console.log(`Looks like there was a problem. Status Code: ${response.status}`);
-          } else {
-            response.json().then((data) => {
-              if (data.flights) {
-                this.flights = this.flights.concat(data.flights);
-              }
-              if (data.total_distance) {
-                this.totalDistance = data.total_distance;
-              }
-              if (data.count) {
-                this.count = data.count;
-              }
-              this.busy = false;
-              this.page += 1;
-            });
-          }
-        })
-        // eslint-disable-next-line
-        .catch(err => console.log('Fetch Error :-S', err));
+      const prom = loadFlights(i);
+      prom.then((data) => {        
+        if (data.flights) {
+          this.flights = this.flights.concat(data.flights);
+        }
+        if (data.total_distance) {
+          this.totalDistance = data.total_distance;
+        }
+        if (data.count) {
+          this.count = data.count;
+        }
+        this.busy = false;
+        this.page += 1;
+      });   
     },
     getDate(dt) {
       return moment(dt).format('MMM Do, YYYY');

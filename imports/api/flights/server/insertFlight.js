@@ -11,9 +11,9 @@ Meteor.methods({
     check(flight, Object);
 
     const earnedAeros = calculateAerochange(flight);
-    const savedCO2InKilograms = calculateCO2PerKilometers(flight.winningExplorerData.minDist);
-    const totalNauticalMiles = convertKilometersToNauticalMiles(flight.winningExplorerData.totalDistance);
-    const totalKilometers = flight.winningExplorerData.totalDistance;
+    const savedCO2InKilograms = calculateCO2PerKilometers(flight.min_dist);
+    const totalNauticalMiles = convertKilometersToNauticalMiles(flight.distance * 1000);
+    const totalKilometers = flight.distance * 1000;
 
     flights.insert({
       ...flight,
