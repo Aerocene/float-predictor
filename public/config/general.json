@@ -29,7 +29,7 @@
 
 	"spot_light_intensity": 0.8,
 	"sun_light_color": "#ffffff",
-	"ambient_light_intensity": 0.15,
+	"ambient_light_intensity": 0.2,
 	"ambient_light_color": "#acdfef",
 	"auto_rotate": false,
 
