@@ -1,6 +1,6 @@
 <template>
   <div id="gallery" class="main-content gallery" v-infinite-scroll="loadMore"
-       infinite-scroll-disabled="busy" infinite-scroll-distance="100">
+       infinite-scroll-disabled="busy" infinite-scroll-distance="10">
       <h1 class="entry-title">Aeroglyphs Archive</h1>
       <h3 class="entry-subtitle">
           Each imaginary Aerocene journey is an air signature we can use to
