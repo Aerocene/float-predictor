@@ -72,8 +72,8 @@ const INITIAL_ZOOM = (window.matchMedia('(orientation: portrait)').matches) ? 0.
 const responsiveZoom = (window.matchMedia('(orientation: portrait)').matches) ? 0.5 : 0.8;
 const responsiveY = (window.matchMedia('(orientation: portrait)').matches) ? 45 : 150;
 const axesRotation = Util.getEarthPolarRotation(new Date());
-const colors = [0x003769, 0x2e6a9c, 0x0095d7, 0x587a98, 0x7eafd4, 0xb9e5fb, 0x656868, 0xffffff];
-const webColors = ['#003769', '#2e6a9c', '#0095d7', '#587a98', '#7eafd4', '#b9e5fb', '#656868', '#ffffff'];
+const colors = [0xFF060D, 0xF0E41E, 0x00FA00, 0xFFAC00, 0x8A7CEF, 0xFF81EB, 0x490073, 0xffffff];
+const webColors = ['#FF060D', '#F0E41E', '#00FA00', '#FFAC00', '#8A7CEF', '#FF81EB', '#490073', '#ffffff'];
 const raycaster = new THREE.Raycaster();
 const mouse = new THREE.Vector2();
 
