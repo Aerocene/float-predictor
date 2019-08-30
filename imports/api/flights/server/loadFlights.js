@@ -1,12 +1,12 @@
-import flights from '../flights';
 import trajectories from '../explorerTrajectories';
+
+const PAGE_SIZE = 30;
 
 Meteor.methods({
     loadFlights(page) {
         // page: 1-based page number
-        // TODO: don't use skip
-        // const db_fligths = flights.find({}, {"skip": ((page-1*10)), "limit": 10});
-        const db_fligths = trajectories.find({}, {"skip": ((page-1*10)), "limit": 10});
+        // TODO: don't use skip        
+        const db_fligths = trajectories.find({}, {"skip": ((page-1*PAGE_SIZE)), "limit": PAGE_SIZE});
 
         // get total distance from mongodb
         const agg = trajectories.aggregate(

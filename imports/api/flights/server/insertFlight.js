@@ -1,6 +1,6 @@
 import { Meteor } from 'meteor/meteor';
 import { check } from 'meteor/check';
-import flights from '../flights';
+import trajectories from '../explorerTrajectories';
 
 import calculateAerochange from '../../flights/calculateAerochange';
 import convertKilometersToNauticalMiles from '../convertKilometersToNauticalMiles';
@@ -15,7 +15,7 @@ Meteor.methods({
     const totalNauticalMiles = convertKilometersToNauticalMiles(flight.distance * 1000);
     const totalKilometers = flight.distance * 1000;
 
-    flights.insert({
+    trajectories.insert({
       ...flight,
       userId: Meteor.userId(),
       date: new Date(),
