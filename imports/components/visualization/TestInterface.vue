@@ -63,7 +63,7 @@ export default {
   name: 'TestInterface',
   data() {
     return {
-      colors: ['#003769', '#2e6a9c', '#0095d7', '#587a98', '#7eafd4', '#b9e5fb', '#656868', '#ffffff'],
+      colors: ['#FF060D', '#F0E41E', '#00FA00', '#FFAC00', '#8A7CEF', '#FF81EB', '#490073', '#ffffff'],
     };
   },
   components: {

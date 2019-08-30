@@ -282,25 +282,25 @@ export default {
                 circle.progress {
                     stroke-width: 4px;
                     &[data-explorer="0"] {
-                        stroke: #003769;
+                        stroke: #FF060D;
                     }
                     &[data-explorer="1"] {
-                        stroke: #2e6a9c;
+                        stroke: #F0E41E;
                     }
                     &[data-explorer="2"] {
-                        stroke: #0095d7;
+                        stroke: #00FA00;
                     }
                     &[data-explorer="3"] {
-                        stroke: #587a98;
+                        stroke: #FFAC00;
                     }
                     &[data-explorer="4"] {
-                        stroke: #7eafd4;
+                        stroke: #8A7CEF;
                     }
                     &[data-explorer="5"] {
-                        stroke: #b9e5fb;
+                        stroke: #FF81EB;
                     }
                     &[data-explorer="6"] {
-                        stroke: #656868;
+                        stroke: #490073;
                     }
                     &[data-explorer="7"] {
                         stroke: #ffffff;
