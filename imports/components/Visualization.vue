@@ -42,8 +42,8 @@ const OrbitControls = OrbitControlsFrom(THREE);
 
 const colorMap = '/img/colormap/4096.jpg';
 const colorMapMobile = '/img/colormap/2048.jpg';
-const bumpMap = '/img/bumpmap/8192.jpg';
-const bumpMapMobile = '/img/bumpmap/4096.jpg';
+const bumpMap = '/img/bumpmap/4096.jpg';
+const bumpMapMobile = '/img/bumpmap/2048.jpg';
 const nightModeMap = '/img/nightModeMap/4096.jpg';
 const nightModeMapMobile = '/img/nightModeMap/2048.jpg';
 const colorMapA = '/img/colormap/4096A.jpg';
