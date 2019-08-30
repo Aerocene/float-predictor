@@ -1,6 +1,6 @@
 <template>
   <div id="gallery" class="main-content gallery" v-infinite-scroll="loadMore"
-       infinite-scroll-disabled="busy" infinite-scroll-distance="10">
+       infinite-scroll-disabled="busy" infinite-scroll-distance="100">
       <h1 class="entry-title">Aeroglyphs Archive</h1>
       <h3 class="entry-subtitle">
           Each imaginary Aerocene journey is an air signature we can use to
@@ -22,7 +22,7 @@
             <img :src="item.svgB64 != undefined ? item.svgB64 : getSVGPath(item)"/>
             <div class="info">
               <div class="aer-code">
-                AER {{(flights.indexOf(item)+1).toLocaleString('en')}}
+                AER {{(count - flights.indexOf(item)).toLocaleString('en')}}
               </div>
               <div class="date-created">
                 {{getDate(item.created)}}
@@ -87,12 +87,12 @@ export default {
   },
   methods: {
     loadMore() {
-      if (!this.busy) {
-        this.busy = true;
+      if (!this.busy) {        
         this.addPage(this.page);
       }
     },
     addPage(i) {
+      this.busy = true;
       const prom = loadFlights(i);
       prom.then((data) => {        
         if (data.flights) {
