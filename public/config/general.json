@@ -22,14 +22,14 @@
 
 	"use_bump": true,
 	"use_nightmap": true,
-	"nightmap_intensity": 0.9,
+	"nightmap_intensity": 1.8,
 	"nightmap_threshold": 0.7,
 	"nightmap_color": "#ffffff",
 	"bump_scale": 0.5,
 
 	"spot_light_intensity": 0.8,
 	"sun_light_color": "#ffffff",
-	"ambient_light_intensity": 0.09,
+	"ambient_light_intensity": 0.15,
 	"ambient_light_color": "#acdfef",
 	"auto_rotate": false,
 
