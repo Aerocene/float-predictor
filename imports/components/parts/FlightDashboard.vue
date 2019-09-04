@@ -277,34 +277,37 @@ export default {
             transition: opacity .3s;
             cursor: pointer;
             background-color: rgba(255, 255, 255, 0);
+            circle.progress {
+                &[data-explorer="0"] {
+                    stroke: #FF060D;
+                }
+                &[data-explorer="1"] {
+                    stroke: #F0E41E;
+                }
+                &[data-explorer="2"] {
+                    stroke: #00FA00;
+                }
+                &[data-explorer="3"] {
+                    stroke: #FFAC00;
+                }
+                &[data-explorer="4"] {
+                    stroke: #8A7CEF;
+                }
+                &[data-explorer="5"] {
+                    stroke: #FF81EB;
+                }
+                &[data-explorer="6"] {
+                    stroke: #490073;
+                }
+                &[data-explorer="7"] {
+                    stroke: #ffffff;
+                }
+            }
+
             &:hover, &.--focused {
                 background-color: transparent;
                 circle.progress {
                     stroke-width: 4px;
-                    &[data-explorer="0"] {
-                        stroke: #FF060D;
-                    }
-                    &[data-explorer="1"] {
-                        stroke: #F0E41E;
-                    }
-                    &[data-explorer="2"] {
-                        stroke: #00FA00;
-                    }
-                    &[data-explorer="3"] {
-                        stroke: #FFAC00;
-                    }
-                    &[data-explorer="4"] {
-                        stroke: #8A7CEF;
-                    }
-                    &[data-explorer="5"] {
-                        stroke: #FF81EB;
-                    }
-                    &[data-explorer="6"] {
-                        stroke: #490073;
-                    }
-                    &[data-explorer="7"] {
-                        stroke: #ffffff;
-                    }
                 }
             }
             &:first-child {
