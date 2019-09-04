@@ -27,10 +27,10 @@
 	"nightmap_color": "#ffffff",
 	"bump_scale": 0.5,
 
-	"spot_light_intensity": 0.8,
+	"spot_light_intensity": 0.68,
 	"sun_light_color": "#ffffff",
-	"ambient_light_intensity": 0.2,
-	"ambient_light_color": "#acdfef",
+	"ambient_light_intensity": 0.43,
+	"ambient_light_color": "#c1ecf9",
 	"auto_rotate": false,
 
 	"elapsed_days": 0.001,
