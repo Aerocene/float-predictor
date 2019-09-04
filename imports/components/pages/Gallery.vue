@@ -94,18 +94,23 @@ export default {
     addPage(i) {
       this.busy = true;
       const prom = loadFlights(i);
-      prom.then((data) => {        
-        if (data.flights) {
-          this.flights = this.flights.concat(data.flights);
+      prom.then((data) => {
+
+        if (data)
+        {
+          if (data.flights) {
+            this.flights = this.flights.concat(data.flights);
+          }
+          if (data.total_distance) {
+            this.totalDistance = data.total_distance;
+          }
+          if (data.count) {
+            this.count = data.count;
+          }
+          
+          this.busy = false;
+          this.page += 1;
         }
-        if (data.total_distance) {
-          this.totalDistance = data.total_distance;
-        }
-        if (data.count) {
-          this.count = data.count;
-        }
-        this.busy = false;
-        this.page += 1;
       });   
     },
     getDate(dt) {

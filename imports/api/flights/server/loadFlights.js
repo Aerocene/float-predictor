@@ -1,12 +1,18 @@
 import trajectories from '../explorerTrajectories';
 
-const PAGE_SIZE = 30;
+const PAGE_SIZE = 60;
 
 Meteor.methods({
     loadFlights(page) {
+
+        if (page <= 0 || page === undefined) {
+            console.error("requesting invalid page: " + page);
+            return {};
+        }
+
         // page: 1-based page number
         // TODO: don't use skip        
-        const db_fligths = trajectories.find({}, {"sort": {departure_date: 1}, "skip": ((page-1*PAGE_SIZE)), "limit": PAGE_SIZE});
+        const db_fligths = trajectories.find({}, {"sort": {departure_date: 1}, "skip": ((page-1)*PAGE_SIZE), "limit": PAGE_SIZE});
 
         // get total distance from mongodb
         const agg = trajectories.aggregate(
