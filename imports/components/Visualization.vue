@@ -1540,7 +1540,14 @@ export default {
 
           /* Fill a json with the trajectory data and push to server through post request. This will add it to the gallery */
           const trajectory = new Trajectory();
-          trajectory.load(this, departure, destination, data, explorers[this.minTrack], altitudeLevels[this.initialAltitudeLevel], this.winningExplorerData.svg);
+          trajectory.load(this, 
+            departure, 
+            destination, 
+            data, 
+            explorers[this.minTrack], 
+            altitudeLevels[this.initialAltitudeLevel], 
+            this.winningExplorerData.svg
+          );
 
           const s = JSON.stringify(trajectory);
           if (s !== this.previousTrajectoryData) {
@@ -1617,8 +1624,8 @@ export default {
   -webkit-transition: opacity 0.3s 0.05s ease;
 }
 
-.labeldata{
-}
+/* .labeldata{
+} */
 
 .arrow{
   margin-top:-1px;
