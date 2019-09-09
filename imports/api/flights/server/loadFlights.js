@@ -11,8 +11,14 @@ Meteor.methods({
         }
 
         // page: 1-based page number
-        // TODO: don't use skip        
-        const db_fligths = trajectories.find({}, {"sort": {departure_date: 1}, "skip": ((page-1)*PAGE_SIZE), "limit": PAGE_SIZE});
+        // TODO: don't use skip
+        const db_fligths = trajectories.find({},
+            {
+            "sort": {departure_date: 1}, 
+            "skip": ((page-1)*PAGE_SIZE), 
+            "limit": PAGE_SIZE,
+            "fields": {"path": 0, "svg": 0}
+        });
 
         // get total distance from mongodb
         const agg = trajectories.aggregate(
