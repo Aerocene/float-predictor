@@ -1552,22 +1552,11 @@ export default {
           const s = JSON.stringify(trajectory);
           if (s !== this.previousTrajectoryData) {
 
-            // add base64 svg-data
             insertFlight(trajectory);
 
-            fetch('https://floatpredictor.aerocene.org/scripts/api/insert.php', {
-              method: 'post',
-              body: s,
-            }).then(
-              response => response.json(),
-            ).then((jsonData) => {
-              // console.log('***********************');
-              // console.log(jsonData);
-              this.trajectoryId = jsonData.id;
-            }).catch((r) => {
-              console.log('Downloader error');
-              console.log(r);
-            });
+          } else {
+            // how would this happen?
+            console.error("END: same trajectory-data! - ignore");            
           }
           this.previousTrajectoryData = s;
         },
