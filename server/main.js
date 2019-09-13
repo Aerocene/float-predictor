@@ -18,30 +18,58 @@ test = function(cmd, args, cb) {
   });
 };
 
-Meteor.methods({
-  listDir() {
 
-    var fut = new Future();  
+runCommand = function(cmd, args) {
 
-    Exec.run("ls -l", (result) => {
-      if (result) {
+  var fut = new Future();
+  var cmd_result = "";
+  var exit_code = 0;
+
+  Exec.run(cmd, args, (result) => {
+    if (result) {
+
+      if (result.startsWith("Child process exited with code: ")) {
+
+        exit_code = parseInt(result.split(": ")[1])
+        
         if (fut) {
-          fut.return(result);
+          fut.return(cmd_result);
           fut = undefined;
         }
-      }
-    }, (error) => {
-      console.log("ERROR: "  + error);
-      if (fut) {
-        fut.throw(error);
-        fut = undefined;
-      }
-    });
 
-    return fut.wait();
+      } else {
+        cmd_result += result;
+      }  
+    }
+  }, (error) => {
+    cmd_result += error;
+  });
 
-    // const testSync = Meteor.wrapAsync(test);
-    // return testSync("ls", ["-l"]);
+  fut.wait();
+  
+  if (exit_code != 0) {
+    console.error(cmd_result);
+    return;
+  }
+
+  return cmd_result;
+}
+
+doListDir = function(path) {
+
+  if (path === undefined || path === null) {
+    path = "";
+  } else {
+    path = " " + path.toString();
+  }
+
+  return runCommand("ls", ["-l", path]);
+}
+
+
+Meteor.methods({
+  listDir() {
+    return doListDir();
   },
 });
 
