@@ -71,6 +71,10 @@ Meteor.methods({
   listDir() {
     return doListDir();
   },
+  traj4multi2d(day, pressure, destLat, destLong, urls) {
+    const result = runCommand("python", [process.env.TRAJ_4_MULTI_2D_SCRIPT, day, pressure, destLat, destLong, urls]);
+    return result;
+  }
 });
 
 Meteor.startup(() => {
@@ -78,6 +82,12 @@ Meteor.startup(() => {
   Future = Npm.require('fibers/future');
 
   Exec.allowClientCalls = true;
+
+  console.log("path: " + Assets.absoluteFilePath("version.py"));  
+  
+  console.log("GFS_JSON_DATA: " + process.env.GFS_JSON_DATA);
+  console.log("GFS_NPZ_DATA: " + process.env.GFS_NPZ_DATA);
+  console.log("TRAJ_4_MULTI_2D_SCRIPT: " + process.env.TRAJ_4_MULTI_2D_SCRIPT);
 });
 
 Accounts.onCreateUser((options, user) => {

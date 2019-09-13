@@ -6,6 +6,8 @@
  * @author Iacopo Leardini - @iacopolea
 */
 
+import traj4multi2d from '../../api/flights/client/traj4multi2d';
+
 /* eslint-disable no-console */
 class TrajectoryDataDownloader {
   downloadMulti(departure, destination, pressure,
@@ -24,25 +26,30 @@ class TrajectoryDataDownloader {
   }
 
   downloadMultiS(day, urls, departure, destination, pressure) {
-    let url = `https://floatpredictor.aerocene.org/scripts/traj4multi2d.php?${day},${pressure},${destination.lat},${destination.lng} ${urls}`;
+
+    // let url = `https://floatpredictor.aerocene.org/scripts/traj4multi2d.php?${day},${pressure},${destination.lat},${destination.lng} ${urls}`;
     // console.log(`${url}`);
     /* if (departure.lat === 52.520645 && departure.lng === 13.409779 &&
       destination.lat === 35.652832 && destination.lng === 139.839478) {
       url = `static/data/gfs/test/${day}.json`;
     } */
-    fetch(url)
-      .then(r => r.json())
-      .then((json) => {
+    // fetch(url)
+    
+    traj4multi2d(day, pressure, destination.lat, destination.lng, urls)
+      .then((data) => {
+
+        const json = JSON.parse(data);
+
         if (this.active) {
           if (this.onUpdateCallback) {
             this.onUpdateCallback(json);
           }
-          url = '';
+          let url = '';
           for (let i = 0; i < 8; i += 1) {
             const index = (json.d.length - 8) + i;
             url += `${json.d[index][2]},${json.d[index][3]},`;
           }
-          if (day < 15) {
+          if (day < 15) {          
             this.downloadMultiS(day + 1, url, departure, destination, pressure);
           } else {
             console.log('Wind data download complete');
