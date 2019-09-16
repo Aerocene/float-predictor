@@ -281,12 +281,16 @@ export default {
     departure(d) {
       this.visualizationState = STATE_INITIAL;
       if (d !== undefined && d.city && d.lat && d.lng && d.country) {
+        
         departure = { lat: d.lat, lng: d.lng, country: d.country, city: d.city };
 
         const t = Util.latLon2XYZPosition(d.lat, d.lng, radius);
         if (labels.departureLabel) labels.departureLabel.set(d.city, t);
         const azimuth = ((d.lng + 90) / 360.0) * 2 * Math.PI;
-        /* compute the date that make the point light zenithal to departure location */
+
+        /* 
+          compute the date that make the point light zenithal to departure location
+        */
         const ts = (-earthRotation - azimuth) / (Math.PI * 2) % 1;
         this.targetDate.setTime(this.startingDate.getTime() + (ts * 24.0 * 60 * 60 * 1000));
         this.targetDate.setMonth(new Date().getMonth());
@@ -295,22 +299,26 @@ export default {
         const sunP = new THREE.Vector3(Math.sin(-r) * radius, Math.sin(axesRotation) * radius, Math.cos(-r) * radius);
         const angle = labels.departureLabel.getPosition().angleTo(sunP);
 
-        /* explorers need sunlight to lift. do not accept location like Iceland on the 22nd of December */
+        /* 
+          explorers need sunlight to lift. 
+          do not accept location like Iceland on the 22nd of December
+        */
         this.coordinatesValid = angle < 1.5;
       } else {
-        console.log('Invalid departure');
+        departure = undefined;
       }
     },
 
     destination(d) {
       this.visualizationState = STATE_INITIAL;
       if (d !== undefined && d.city && d.lat && d.lng && d.country) {
+
         destination = { lat: d.lat, lng: d.lng, country: d.country, city: d.city };
         // console.log(`Destination: ${d.lat} ${d.lng} ${d.city} `);
         const t = Util.latLon2XYZPosition(destination.lat, d.lng, radius);
         labels.destinationLabel.set(d.city, t);
       } else {
-        console.log('Invalid destination');
+        destination = undefined;
       }
     },
 
@@ -1466,14 +1474,20 @@ export default {
     downloadMulti() {
       downloader.downloadMulti(departure, destination, pressureLevels[this.initialAltitudeLevel],
         // this.altitudeLevel],
-        (data) => { // ON UPDATE
+        (data) => {
+
+          // ON UPDATE
+
+          // check if one explorer got closer to destination
           if (data.mindist < this.minDist) {
             this.minDist = Math.round(data.mindist);
             this.minTime = Math.round(data.mintime) - data.mintrack;
             this.minTrack = data.mintrack;
           }
+
           this.api_data.push(data.d);
           this.timestamp = data.timestamp.substring(11);
+
           for (let j = 0; j < explorers.length; j += 1) {
             const pts = [];
             for (let i = j; i < data.d.length; i += 8) { pts.push(Util.latLon2XYZPosition(data.d[i][2], data.d[i][3], radius)); }
@@ -1485,6 +1499,7 @@ export default {
             /* compute explorer movement in altitude based on the angle between the explorer and the sun position (point light) */
             const cdate = new Date(this.startingDate);
             const explorerH = pars.explorer_height_base;
+
             for (let k = 0; k < points.length - 1; k += 1) {
               const r = Util.getEarthAzimuthRotation(cdate);
               const sunP = new THREE.Vector3(Math.sin(-r) * radius, Math.sin(axesRotation) * radius, Math.cos(-r) * radius);
@@ -1502,8 +1517,14 @@ export default {
             }
           }
         },
-        () => { // ON END
-          /* set the winning explorer to the one that got closer to the destination. If the flight is planned, use the one that went farther */
+        () => { 
+
+          // ON END
+          
+          /* 
+            set the winning explorer to the one that got closer to the destination.
+            If the flight is not planned, use the one that went farther
+          */
           if (this.flightType !== 'planned') {
             let maxDistance = -1;
             let winningIndex = 0;
@@ -1518,14 +1539,7 @@ export default {
             this.minTime = 16 - this.minTrack;
           }
 
-          this.winningExplorerData = {
-            minDist: this.minDist,
-            minTime: this.minTime,
-            totalDistance: explorers[this.minTrack].getTotalDistance(),
-            departureDate: this.startingDate,
-            svg: this.toSVG(),
-          };
-
+          // setup data
           const data = [];
           for (let i = 0; i < this.api_data.length; i += 1) {
             for (let j = this.minTrack; j < this.api_data[i].length - 8; j += 8) {
@@ -1534,21 +1548,26 @@ export default {
             }
           }
 
-          // add data to winning Explorer
-          this.winningExplorerData.data = data;
-
-
-          /* Fill a json with the trajectory data and push to server through post request. This will add it to the gallery */
+          /*
+            Fill a json with the trajectory data and push to server.
+            This will add it to the gallery.
+          */
           const trajectory = new Trajectory();
           trajectory.load(this, 
-            departure, 
-            destination, 
-            data, 
-            explorers[this.minTrack], 
-            altitudeLevels[this.initialAltitudeLevel], 
-            this.winningExplorerData.svg
+            departure,
+            destination,
+            data,
+            explorers[this.minTrack],
+            altitudeLevels[this.initialAltitudeLevel],
+            this.toSVG()
           );
 
+          // setup winning explorer data
+          this.winningExplorerData = trajectory;
+          // needed for alerts
+          this.winningExplorerData.departureDate = this.startingDate;
+
+          // really?
           const s = JSON.stringify(trajectory);
           if (s !== this.previousTrajectoryData) {
 

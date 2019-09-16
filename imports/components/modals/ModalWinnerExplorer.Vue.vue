@@ -15,16 +15,16 @@
         <div v-if="isPlannedFlight" class="message">
             The Aerocene Sculpture that left from <b>{{departure.city}}</b>
             on <strong>{{depDate}}</strong>
-            arrived within <strong>{{winningExplorerData.minDist}}km</strong>
+            arrived within <strong>{{winningExplorerData.min_dist}}km</strong>
             from <strong>{{destination.city}}</strong> in
-            <strong>{{winningExplorerData.minTime}} days.</strong>
+            <strong>{{winningExplorerData.min_time}} days.</strong>
         </div>
         <div v-else class="message">
             The Aerocene Sculpture that floated the farthest
             is the one that left from <strong>{{departure.city}}</strong>
             on <strong>{{depDate}}</strong>
             and travelled <strong>{{maxDist}} km</strong>
-            in <strong>{{winningExplorerData.minTime}} days.</strong>
+            in <strong>{{winningExplorerData.min_time}} days.</strong>
         </div>
         <!-- Begin MailChimp Signup Form -->
         <div id="mc_embed_signup">
@@ -139,7 +139,7 @@ export default {
       },
     },
     earnedAerochange() {
-        return formatAerochange(calculateAerochange(this.$store.state.flightSimulator));
+        return this.$store.state.flightSimulator.winningExplorerData.earnedAeros;
     },
     isPlannedFlight() {
       return this.$store.state.flightSimulator.flightType === 'planned';
@@ -148,7 +148,7 @@ export default {
       return this.$store.state.flightSimulator.winningExplorerData;
     },
     maxDist() {
-      return parseInt(this.winningExplorerData.minDist, 10).toLocaleString('en');
+      return parseInt(this.winningExplorerData.min_dist, 10).toLocaleString('en');
     },
     depDate() {
       return moment(this.winningExplorerData.departureDate).format('MMM Do, YYYY');

@@ -1,12 +1,8 @@
 import { Meteor } from 'meteor/meteor';
 
-export default function insertFlight(flightSimulatorState) {
-  const flight = {
-    ...flightSimulatorState,
-    date: new Date(),
-  };
+export default function insertFlight(trajectory) {
   return new Promise((resolve, reject) => {
-    Meteor.call('insertFlight', flight, (error) => {
+    Meteor.call('insertFlight', trajectory, (error) => {
       if (error) {
         reject(error);
         return;

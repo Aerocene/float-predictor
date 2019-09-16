@@ -52,7 +52,7 @@ class TrajectoryDataDownloader {
           if (day < 15) {          
             this.downloadMultiS(day + 1, url, departure, destination, pressure);
           } else {
-            console.log('Wind data download complete');
+            console.log('Trajectory data download complete');
             if (this.onEndCallback) {
               this.onEndCallback();
             }

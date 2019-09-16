@@ -1,3 +1,8 @@
+import calculateAerochange from '../../api/flights/calculateAerochange';
+import convertKilometersToNauticalMiles from '../../api/flights/convertKilometersToNauticalMiles';
+import calculateCO2PerKilometers from '../../api/flights/calculateCO2PerKilometers';
+import Util from './Util';
+
 class Trajectory {
 
     constructor() {
@@ -6,7 +11,7 @@ class Trajectory {
         this.version = 2;
     }
 
-    load = function(viz, departure, destination, data, explorer, altitude, svg) {
+    load(viz, departure, destination, data, explorer, altitude, svg) {
 
         // viz: Visualisation object
         // departure: departure object
@@ -16,7 +21,9 @@ class Trajectory {
         // altitude: altitude
         // svg: svg xml string 
 
-        const departureDate = new Date(viz.startingDate);// this.valueOf()
+        let distanceToTravel = 0;
+
+        const departureDate = new Date(viz.startingDate);
         departureDate.setDate(departureDate.getDate() + viz.minTrack);
 
         this.departure_city = departure.city;
@@ -24,8 +31,8 @@ class Trajectory {
         this.departure_latitude = departure.lat;
         this.departure_longitude = departure.lng;
 
-        this.min_dist = viz.minDist;
-        this.min_time = this.minTime;
+        this.min_dist = viz.minDist; // km
+        this.min_time = viz.minTime;
         this.departure_date = departureDate.toISOString();
         this.speed = explorer.avgSpeed;
         this.altitude = altitude;
@@ -33,17 +40,35 @@ class Trajectory {
         this.path = data;
         this.svg = svg;
         this.svgB64 = "data:image/svg+xml;base64," + btoa(svg);
-        //this.explorerIndex = viz.minTrack;
+
+        this.totalKilometers = explorer.getTotalDistance();
+        this.totalNauticalMiles = convertKilometersToNauticalMiles(explorer.getTotalDistance());
 
         if (viz.flightType === 'planned') {
             this.destination_city = destination.city;
             this.destination_country = destination.country;
             this.destination_latitude = destination.lat;
             this.destination_longitude = destination.lng;
+
+            // distance we tried to travel
+            distanceToTravel = Util.getDistanceFromLatLonInKm(departure.lat, departure.lng, destination.lat, destination.lng);
+
+            if (this.min_dist <= distanceToTravel) {
+                // we got closer (ot at least as far away) to the target and saved some CO2
+                this.savedCO2InKilograms = calculateCO2PerKilometers(distanceToTravel - this.min_dist);
+            } else {
+                // we could not get closer to destination
+                // no CO2 saved
+                this.savedCO2InKilograms = 0;
+            }
         } else {
-            this.destination = undefined;
+
+            this.savedCO2InKilograms = calculateCO2PerKilometers(this.min_dist);
         }
 
+        this.earnedAeros = calculateAerochange(this);
+
+        // needed?
         this.email = null;
         this.ip = null;
     }
