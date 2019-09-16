@@ -36,7 +36,7 @@ Meteor.methods({
         const db_flights = flights.find({"_id": id});
         const arr = db_flights.fetch();
         if (arr.length > 0) {
-            return arr[0].winningExplorerData.svg;            
+            return arr[0].svg;            
         }
     },
 });
