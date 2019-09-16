@@ -14,7 +14,7 @@ Meteor.methods({
         // TODO: don't use skip
         const db_fligths = trajectories.find({},
             {
-            "sort": {departure_date: 1}, 
+            "sort": {created: -1}, 
             "skip": ((page-1)*PAGE_SIZE), 
             "limit": PAGE_SIZE,
             "fields": {"path": 0, "svg": 0}
