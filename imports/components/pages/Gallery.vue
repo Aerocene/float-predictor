@@ -187,7 +187,7 @@ export default {
           align-items: center;
       }
       .gallery-item {
-          height: 240px;
+          height: 245px;
           overflow: hidden;
           width: 18%;
           display: flex;
