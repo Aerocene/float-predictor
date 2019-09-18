@@ -31,12 +31,12 @@
                     Archive</router-link>. Aeroglyphs are stereographic polar projections of the
                     global 3D paths calculated while running the 16-day GFS model.
                 </p>
-                <p>
+                <!-- <p>
                     Aeroglyphs can be accessed (individually or in bulk) through a
                      <a target="_blank" href="https://floatpredictor.aerocene.org/scripts/api/api.php">REST API</a>
                     in JSON format. Each JSON file has a specified structure that contains
                     the following variables:
-                </p>
+                </p> -->
                 <ul>
                     <li>
                         <span>id</span>:

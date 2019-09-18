@@ -4,14 +4,6 @@ Aerocene is a multidisciplinary endeavor that devises new modes of sensitivity, 
 
 The Aerocene Float Predictor is a global forecasting system that utilises open meteorological data to predict flight paths of aerosolar powered Sculptures circling around the globe without CO2 emissions. Incorporating real-time information from 16-day forecasts of wind speeds at different altitudes, the Float Predictor is a navigational tool used to plan journeys in the Aerocene epoch.
 
-# APIs
-
-To make sure API responses are easier to handle, Aeroglyphs are organised in pages of 30 items, ordered chronologically.
-- In order to access each page use this URL structure:
-https://floatpredictor.aerocene.org/scripts/api/api.php?page=:page
-
-- In order to access the Aeroglyphs individually use this URL structure:
-https://floatpredictor.aerocene.org/scripts/api/api.php?id=:id
 
 
 
