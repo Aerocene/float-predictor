@@ -58,7 +58,7 @@ class NightMap {
       fragmentShader: fshader,
       transparent: true,
     });
-    this.sphere = new THREE.Mesh(new THREE.SphereGeometry(radius * 1.01, 32, 16), this.material);
+    this.sphere = new THREE.Mesh(new THREE.SphereGeometry(radius, 32, 16), this.material);
     scene.add(this.sphere);
   }
 

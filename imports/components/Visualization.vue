@@ -725,7 +725,7 @@ export default {
 
       /* objects: earth, sun, selection sphere */
       earthSphere = new THREE.Mesh(
-        new THREE.SphereGeometry(radius, 64, 36),
+        new THREE.SphereGeometry(radius/1.01, 64, 36),
         new THREE.MeshPhongMaterial({ color: 0xffffff,
           transparent: true,
           opacity: 1,
