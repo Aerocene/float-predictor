@@ -407,7 +407,7 @@ export default {
       this.selectedExplorer = 0;
       this.initTHREE();
       this.initStarfield();
-      this.setupExplorers();
+      this.initExplorers();
       this.initNightMap();
       labels = new Labels(scene, camera, radius);
       this.setScale(INITIAL_ZOOM);
@@ -655,12 +655,17 @@ export default {
     /**
      * Init the 8 explorers.
      */
-    setupExplorers() {
-      for (let i = 0; i < 8; i += 1) {
-        const explorer = new Explorer(scene, radius, i * 8 * CATMULL_NUM_POINTS, CATMULL_NUM_POINTS);
-        explorer.line.material.color = new THREE.Color(colors[i]);
-        explorer.animatingSphere.material.color = new THREE.Color(colors[i]);
-        explorers.push(explorer);
+    initExplorers() {
+      for (let i = 0; i < 8; i += 1) {        
+        explorers.push(
+          new Explorer(
+            scene,
+            colors[i], 
+            pars, 
+            i * 8 * CATMULL_NUM_POINTS, 
+            CATMULL_NUM_POINTS
+          )
+        );
       }
     },
 
@@ -772,6 +777,13 @@ export default {
         camera.updateProjectionMatrix();
         rendererNAA.setSize(w, h);
         rendererAA.setSize(w, h);
+
+        // update explorers
+        // (line shader needs to know size)
+        for (let i = 0; i < explorers.length; i++) {
+          explorers[i].setResolution(w, h);
+        }
+
         // labels.onResize();
       }, false);
     },
@@ -832,11 +844,27 @@ export default {
         general.add(controls.target, 'y', -1000.0, 1000.0).listen().onChange(() => {});
         general.add(pars, 'zoom', 0.1, 2.0).listen().onChange((value) => { console.log('changed'); this.setScale(value); });
         general.add(pars, 'zoom_enabled').onChange((value) => { controls.enableZoom = value; });
+
+        const explorerSettings = gui.addFolder('explorer')
+        explorerSettings.add(pars.explorerSettings, 'line_width', 0., 10.0).listen().onChange((value) => {
+          console.log("exp_ " + explorers.length);
+          
+          for (let i = 0; i < explorers.length; i++) {
+            explorers[i].setLineWidth(value);
+          }
+        });
+        explorerSettings.add(pars.explorerSettings, 'opacity', 0, 1).listen().onChange((value) => {
+          for (let i = 0; i < explorers.length; i++) {
+            explorers[i].setLineOpacity(value);
+          }
+        });
+
         const onboard = gui.addFolder('onboard');
         onboard.add(pars, 'onboard');
         onboard.add(pars, 'camera_smooth', 0.9, 1);
         onboard.add(pars, 'camera_distance', 1.0, 1.5);
         onboard.add(pars, 'camera_shift', 0, 0.5).listen();
+
         const materialf = gui.addFolder('material');
         const emisphere = gui.addFolder('emisphere');
         const bump = materialf.addFolder('bump');

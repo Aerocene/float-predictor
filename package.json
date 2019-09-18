@@ -10,7 +10,7 @@
     "test": "npm run unit",
     "lint": "eslint --ext .js,.vue src test/unit",
     "build": "node build/build.js",
-    "deploy-staging": "DEPLOY_HOSTNAME=eu-west-1.galaxy-deploy.meteor.com meteor deploy https://staging.aerocene.org --settings settings/staging.json",
+    "deploy-staging": "DEPLOY_HOSTNAME=eu-west-1.galaxy-deploy.meteor.com meteor deploy https://staging.aerocene.org --settings settings/staging.json --deploy-polling-timeout 2400000",
     "deploy-production": "DEPLOY_HOSTNAME=eu-west-1.galaxy-deploy.meteor.com meteor deploy https://floatpredictor.aerocene.org --settings settings/production.json"
   },
   "dependencies": {
@@ -27,6 +27,7 @@
     "reconnecting-websocket": "^3.2.2",
     "swiper": "^4.2.6",
     "three": "^0.88.0",
+    "three.meshline": "^1.2.0",
     "vue": "^2.5.16",
     "vue-analytics": "^5.10.6",
     "vue-body-class": "^2.0.0-beta.2",

@@ -11,6 +11,8 @@
 /* eslint-disable no-mixed-operators, no-console, no-param-reassign, max-len */
 
 const THREE = require('three');
+const MeshLine = require( 'three.meshline' );
+
 
 const USE_SPHERES = false;
 let MAX_POINTS = 128;
@@ -19,12 +21,11 @@ const EARTH_RADIUS = 6378.137;
 const SCENE_SCALE = EARTH_RADIUS / 200.0;
 
 class Explorer {
-  constructor(scene, radius, shift = 0, nPoints = 1) {
+  constructor(scene, color, pars, shift = 0, nPoints = 1) {
     this.nPoints = nPoints;
     MAX_POINTS = 128 * this.nPoints;
     // console.log(MAX_POINTS);
     this.scene = scene;
-    this.radius = radius;
     this.index = 0;
     this.destination = { lat: 0, lng: 0 };
     this.array = new Float32Array(MAX_POINTS * 3 * 2);
@@ -35,15 +36,18 @@ class Explorer {
     this.avgSpeed = 0;
     this.totalDistance = 0;
     const c = 0xffffff;
-    this.lineMaterial = new THREE.LineBasicMaterial({ transparent: true, color: c, linewidth: 4.0 });
     this.sphereMaterial = new THREE.MeshBasicMaterial({ transparent: true, color: c, opacity: 0.0 });
-    this.animatingSphereMaterial = new THREE.MeshBasicMaterial({ transparent: true, color: c, opacity: 1.0 });
+    this.animatingSphereMaterial = new THREE.MeshBasicMaterial({ transparent: true, color: color, opacity: 1.0 });
     this.facesMaterial = new THREE.MeshBasicMaterial({ color: 0xffffff, transparent: true, opacity: 0.0, side: THREE.DoubleSide });
     this.lineSegmentMaterial = new THREE.LineBasicMaterial({ transparent: true, color: 0xaaaaaa, opacity: 0.0, linewidth: 10.0 });
     this.lastPosition = new THREE.Vector3(0, 0, 0);
     this.spheres = [];
+    this.lineOpacity = pars.explorerSettings.opacity || 1;
+
     const lineIndexes = [];
     const segmentIndexes = [];
+    
+
     for (let i = 0; i < MAX_POINTS; i += 1) {
       this.distance.push(0);
       this.speed.push(0);
@@ -57,18 +61,46 @@ class Explorer {
     scene.add(this.animatingSphere);
     // this.animatingSphere.visible=false;
 
+    //-----------------------------------------------
+    // setup line segments
     let geometry = new THREE.BufferGeometry();
     geometry.addAttribute('position', new THREE.BufferAttribute(this.array, 3));
     geometry.setIndex(new THREE.BufferAttribute(new Uint16Array(segmentIndexes), 1));
     this.segments = new THREE.LineSegments(geometry, this.lineSegmentMaterial);
     this.scene.add(this.segments);
 
-    geometry = new THREE.BufferGeometry();
-    geometry.addAttribute('position', new THREE.BufferAttribute(this.array, 3));
-    geometry.setIndex(new THREE.BufferAttribute(new Uint16Array(lineIndexes), 1));
-    this.line = new THREE.Line(geometry, this.lineMaterial);
-    this.scene.add(this.line);
 
+    //-----------------------------------------------
+    // setup meshline    
+    // https://github.com/spite/THREE.MeshLine
+
+    // Create the line geometry used for storing verticies
+    this.lineGeometry = new THREE.Geometry();
+    for( var j = 0; j < MAX_POINTS * 25; j++ ) {
+      var v = new THREE.Vector3( 0, 0, 0 );
+      this.lineGeometry.vertices.push( v );
+    }
+
+    this.lineMaterial = new MeshLine.MeshLineMaterial( {
+      color: new THREE.Color( color ),
+      transparent: true,
+      opacity: this.lineOpacity,
+      resolution: new THREE.Vector2( window.innerWidth, window.innerHeight ),
+      sizeAttenuation: 1,
+      lineWidth: pars.explorerSettings.line_width,
+      near: 1,
+      far: 100000,
+      depthTest: true,
+      // blending: THREE.AdditiveBlending,
+      side: THREE.DoubleSide
+    });
+
+    this.scene = scene;
+    this.setupLine();
+
+
+    //-----------------------------------------------
+    // setup kite
     geometry = new THREE.BufferGeometry();
     geometry.addAttribute('position', new THREE.BufferAttribute(this.array, 3));
     this.mesh = new THREE.Mesh(geometry, this.facesMaterial);
@@ -100,6 +132,39 @@ class Explorer {
     this.reset();
   }
 
+  setLineWidth(value) {
+    this.lineMaterial.uniforms.lineWidth.value = value;
+  }
+
+  setLineOpacity(value) {
+    this.lineOpacity = value;
+    this.lineMaterial.uniforms.opacity.value = value;
+  }
+
+  setResolution(w, h) {
+    this.lineMaterial.uniforms.resolution.value.set(w, h);
+  }
+
+  setupLine(x, y, z) {
+
+    if (this.line) {
+      this.scene.remove(this.line);
+    }
+
+    // reset geometry
+    for( var i = 0; i < this.lineGeometry.vertices.length; i++ ) {
+      this.lineGeometry.vertices[i].set(x || 0, y || 0, z || 0);
+    }
+
+    // create a new meshline
+    this.meshLine = new MeshLine.MeshLine();
+    this.meshLine.setGeometry( this.lineGeometry );
+
+    this.line = new THREE.Mesh( this.meshLine.geometry, this.lineMaterial ); // this syntax could definitely be improved!
+    this.line.frustumCulled = false;
+    this.scene.add( this.line );
+  }
+
   /**
    * Set the style of the explorer trajectory. Options are SELECTED, UNSELECTED, MOVING, HIDDEN.
    * @param {Integer} S
@@ -112,21 +177,21 @@ class Explorer {
         this.mesh.visible = true;
         this.segments.visible = true;
         this.line.visible = true;
-        this.lineMaterial.setOpacity(1, t);
+        this.lineMaterial.setOpacity(1 * this.lineOpacity, t);
         this.lineSegmentMaterial.setOpacity(0.3, t);
         this.facesMaterial.setOpacity(0.15, t);
         break;
       case Explorer.UNSELECTED:
         this.animatingSphereMaterial.opacity = 1;
         this.line.visible = true;
-        this.lineMaterial.setOpacity(0.25, t);
+        this.lineMaterial.setOpacity(0.25 * this.lineOpacity, t);
         this.lineSegmentMaterial.setOpacity(0, t, () => { this.segments.visible = false; });
         this.facesMaterial.setOpacity(0, t, () => { this.mesh.visible = false; });
         break;
       case Explorer.MOVING:
         this.animatingSphereMaterial.opacity = 1;
         this.line.visible = true;
-        this.lineMaterial.setOpacity(1, t);
+        this.lineMaterial.setOpacity(1 * this.lineOpacity, t);
         this.lineSegmentMaterial.setOpacity(0, t, () => { this.segments.visible = false; });
         this.facesMaterial.setOpacity(0, t, () => { this.mesh.visible = false; });
         break;
@@ -149,20 +214,25 @@ class Explorer {
    * Reset and hide the explorer trajectory.
    * @param {Integer} s
    */
-  reset = function reset(departure = new THREE.Vector3(0, 0, 0)) {
+  reset = function reset(departure = new THREE.Vector3(0, 0, 0)) {   
     this.length = 0;
     this.alpha = 0;
-    this.lineMaterial.opacity = 1;// setOpacity(1,0);
+    this.last_alpha = 0;
+    this.lineMaterial.opacity = 1 * this.lineOpacity;
     this.animatingSphereMaterial.opacity = 1;
     if (departure) {
       this.animatingSphere.position.set(departure.x, departure.y, departure.z);
     }
+
     for (let i = 0; i < MAX_POINTS; i += 1) {
       this.distance[i] = 0;
       this.speed[i] = 0;
     }
+
+    this.setupLine();
+
+
     this.lineSegmentMaterial.opacity = 0;
-    this.line.geometry.setDrawRange(0, 0);
     this.mesh.geometry.setDrawRange(0, 0);
     this.segments.geometry.setDrawRange(0, 0);
 
@@ -200,24 +270,36 @@ class Explorer {
     const ipo = Math.min(this.index + 1, MAX_POINTS - 1.0);
     const a = t - this.index;
     const oma = 1 - a;
-    if (USE_SPHERES) this.spheres[this.index].visible = true;
+
+    if (USE_SPHERES) {
+      this.spheres[this.index].visible = true;
+    }
+    
     if (ipo < this.length) {
+
+      const point = new THREE.Vector3(
+        this.array[this.index * 3 * 2 + 3] * oma + this.array[ipo * 3 * 2 + 3] * a,
+        this.array[this.index * 3 * 2 + 4] * oma + this.array[ipo * 3 * 2 + 4] * a,
+        this.array[this.index * 3 * 2 + 5] * oma + this.array[ipo * 3 * 2 + 5] * a
+      );
+
       if (this.animatingSphere.visible) {
-        this.animatingSphere.position.set(
-          this.array[this.index * 3 * 2 + 3] * oma + this.array[ipo * 3 * 2 + 3] * a,
-          this.array[this.index * 3 * 2 + 4] * oma + this.array[ipo * 3 * 2 + 4] * a,
-          this.array[this.index * 3 * 2 + 5] * oma + this.array[ipo * 3 * 2 + 5] * a,
-        );
+        this.animatingSphere.position.copy(point);
       }
-      this.line.geometry.setDrawRange(0, this.index + 1);
+
       this.mesh.geometry.setDrawRange(0, (this.index + 1) * 2);
       this.segments.geometry.setDrawRange(0, (this.index + 1) * 2);
       this.mesh.frustumCulled = false;
-      this.line.frustumCulled = false;
       this.segments.frustumCulled = false;
       this.segments.geometry.attributes.position.needsUpdate = true;
-      this.line.geometry.attributes.position.needsUpdate = true;
       this.mesh.geometry.attributes.position.needsUpdate = true;
+      
+      if (this.last_alpha !== alpha)
+      {
+        this.meshLine.advance( point );
+        this.last_alpha = alpha;
+      }
+
       return true;
     }
     return false;
