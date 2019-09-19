@@ -142,7 +142,7 @@ export default {
       return parseInt(this.winningExplorerData.min_dist, 10).toLocaleString('en');
     },
     depDate() {
-      return moment(this.winningExplorerData.departureDate).format('MMM Do, YYYY');
+      return moment(this.winningExplorerData.departure_date).format('MMM Do, YYYY');
     },
     departure() {
       return this.$store.state.flightSimulator.departure;

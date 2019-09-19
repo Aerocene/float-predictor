@@ -1592,8 +1592,6 @@ export default {
 
           // setup winning explorer data
           this.winningExplorerData = trajectory;
-          // needed for alerts
-          this.winningExplorerData.departureDate = this.startingDate;
 
           // really?
           const s = JSON.stringify(trajectory);
