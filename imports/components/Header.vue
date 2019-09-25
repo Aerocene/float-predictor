@@ -157,6 +157,19 @@ export default {
                 line-height: 1.45;
             }
         }
+        .intro-devserver {
+            @extend .h4;
+            color:brown;
+            text-transform: uppercase;
+            @include medium_up {
+                max-width: 450px;
+            }
+            @include medium_down {
+                text-align: left;
+                font-size: 1em;
+                line-height: 1.45;                
+            }
+        }
         .logo {
             margin: 0 auto;
         }

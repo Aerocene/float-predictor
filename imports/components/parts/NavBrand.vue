@@ -15,6 +15,13 @@
             towards a clean and sustainable future.
         </p>
         </transition>
+
+        <p class="intro-devserver"
+          v-if="isStagingOrLocal">
+          This is staging.aerocene.org - the development server.<br><br>
+          Please consider visiting <a style="color:brown;text-decoration: underline;" href="https://floatpredictor.aerocene.org">floatpredictor.aerocene.org</a> for a better experience.
+        </p>
+        
         <transition name="fade">
         <div v-if="isDescriptionActive">
             <a href="#"
@@ -36,6 +43,12 @@ export default {
   computed: {
     isDescriptionActive() {
       return (this.isChoosing &&
+        (this.$route.name === 'flight-simulator' || this.$route.name === 'home-page'));
+    },
+    isStagingOrLocal() {
+      console.log("hostname" + window.location.hostname);
+      
+      return (window.location.hostname.startsWith("localhost") || window.location.hostname.startsWith("staging.")) &&(this.isChoosing &&
         (this.$route.name === 'flight-simulator' || this.$route.name === 'home-page'));
     },
   },

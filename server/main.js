@@ -72,6 +72,8 @@ Meteor.startup(() => {
   Future = Npm.require('fibers/future');
 
   Exec.allowClientCalls = false;
+
+  console.log("starting up.");
   
   // console.log("GFS_NPZ_DATA: " + process.env.GFS_NPZ_DATA);
   // console.log("TRAJ_4_MULTI_2D_SCRIPT: " + process.env.TRAJ_4_MULTI_2D_SCRIPT);
