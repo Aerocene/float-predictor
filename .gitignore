@@ -22,3 +22,7 @@ yarn-error.log*
 /settings/*
 !settings/local-example.json
 /.cache
+
+galaxy-image/gfsdata/**
+public/svg/**
+public/data/gfs/**

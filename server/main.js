@@ -4,20 +4,6 @@ import { Email } from 'meteor/email';
 import { Exec } from 'meteor/jchristman:exec';
 
 
-test = function(cmd, args, cb) {
-  Exec.run(cmd, args, (result) => {
-    if (result) {
-      if (!result.startsWith("Child process exited with code:")) {
-        cb(undefined, result);
-      }
-    }
-  }, (error) => {
-    if (error) {
-      cb(error);
-    }
-  });
-};
-
 
 runCommand = function(cmd, args) {
 
@@ -72,6 +58,10 @@ Meteor.methods({
     return doListDir();
   },
   traj4multi2d(day, pressure, destLat, destLong, urls) {
+
+    // log gfs.time
+    console.log("trajectory on data from: " + runCommand("more", [process.env.GFS_NPZ_DATA+"/gfs.time"]));    
+
     const result = runCommand("python", [process.env.TRAJ_4_MULTI_2D_SCRIPT, day, pressure, destLat, destLong, urls]);
     return result;
   }
@@ -81,13 +71,11 @@ Meteor.startup(() => {
   // code to run on server at startup
   Future = Npm.require('fibers/future');
 
-  Exec.allowClientCalls = true;
-
-  console.log("path: " + Assets.absoluteFilePath("version.py"));  
+  Exec.allowClientCalls = false;
   
-  console.log("GFS_JSON_DATA: " + process.env.GFS_JSON_DATA);
-  console.log("GFS_NPZ_DATA: " + process.env.GFS_NPZ_DATA);
-  console.log("TRAJ_4_MULTI_2D_SCRIPT: " + process.env.TRAJ_4_MULTI_2D_SCRIPT);
+  // console.log("GFS_NPZ_DATA: " + process.env.GFS_NPZ_DATA);
+  // console.log("TRAJ_4_MULTI_2D_SCRIPT: " + process.env.TRAJ_4_MULTI_2D_SCRIPT);
+
 });
 
 Accounts.onCreateUser((options, user) => {
