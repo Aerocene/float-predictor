@@ -60,22 +60,39 @@ RUN mkdir -p /app/bundle
 ########################
 # floatpredictor-Install
 RUN apt-get update && \
-    apt-get install -y git nano python python-numpy python-scipy cdo && \
+    apt-get install -y git nano python python-numpy python-scipy cdo cron xz-utils && \
     rm -rf /var/lib/apt/lists/*
+
+# add initial dataset (outdated)
+# dataset is used until updated data is downloaded
+ADD ./gfsdata/ /gfsdata/
+
+#!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+# edit from here
+#!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
 # pull scripts
 RUN mkdir -p /scripts
 RUN git clone https://github.com/Aerocene/float-predictor-scripts.git /scripts
 
-ADD ./gfs/ /scripts/
+# environment variables for downloader scripts
+ENV GFS_SCRIPT_PATH /scripts/
+ENV GFS_NPZ_DATA /gfsdata/
+ENV GFS_JSON_DATA /app/bundle/programs/web.browser/app/data/gfs/
 
-ENV GFS_JSON_DATA /app/bundle/programs/web.browser/app/data/gfs/data
-ENV GFS_NPZ_DATA /scripts/
+# environment variable for floatpredictor-server
 ENV TRAJ_4_MULTI_2D_SCRIPT /scripts/traj4multi2d.py
 
-# download svg archive?
 
-# setup cronjob for winddata
-# winddata getter currently not working
+# install cronjob
+COPY cron-gfs /etc/cron.d/cron-gfs
+COPY download_gfs.sh /download_gfs.sh
 
-CMD ["/app/run.sh"]
+# execution rights to cron job
+RUN chmod 0644 /etc/cron.d/cron-gfs
+
+# apply cron job
+RUN crontab /etc/cron.d/cron-gfs
+
+# start cron, start app
+ENTRYPOINT service cron restart && /app/run.sh
