@@ -165,7 +165,6 @@ export default {
                 max-width: 450px;
             }
             @include medium_down {
-                text-align: left;
                 font-size: 1em;
                 line-height: 1.45;                
             }

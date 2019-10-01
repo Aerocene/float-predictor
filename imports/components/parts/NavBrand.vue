@@ -16,11 +16,13 @@
         </p>
         </transition>
 
-        <p class="intro-devserver"
+        <div style="background-color: rgba(51, 51, 51, 0.94); padding-top: 1px; padding-bottom: 10px;"
           v-if="isStagingOrLocal">
-          This is staging.aerocene.org - the development server.<br><br>
-          Please consider visiting <a style="color:brown;text-decoration: underline;" href="https://floatpredictor.aerocene.org">floatpredictor.aerocene.org</a> for a better experience.
-        </p>
+          <p class="intro-devserver">
+            This is staging.aerocene.org, the development server.<br><br>
+            Please consider visiting <a style="color: brown; text-decoration: underline;" href="https://floatpredictor.aerocene.org">floatpredictor.aerocene.org</a> for a better experience.
+          </p>
+        </div>
         
         <transition name="fade">
         <div v-if="isDescriptionActive">
@@ -46,10 +48,8 @@ export default {
         (this.$route.name === 'flight-simulator' || this.$route.name === 'home-page'));
     },
     isStagingOrLocal() {
-      console.log("hostname" + window.location.hostname);
-      
-      return (window.location.hostname.startsWith("localhost") || window.location.hostname.startsWith("staging.")) &&(this.isChoosing &&
-        (this.$route.name === 'flight-simulator' || this.$route.name === 'home-page'));
+      return (window.location.hostname.startsWith("localhost") || window.location.hostname.startsWith("staging.")) && (this.isChoosing &&
+        (this.$route.name === 'home-page'));
     },
   },
   methods: {
