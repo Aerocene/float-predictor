@@ -7,7 +7,7 @@
         }
     },
     "public": {
-
+        "mode": "local"
     },
     "emails": {
         "support": "support@email"
