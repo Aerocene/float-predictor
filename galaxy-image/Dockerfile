@@ -63,13 +63,20 @@ RUN apt-get update && \
     apt-get install -y git nano python python-numpy python-scipy cdo cron xz-utils && \
     rm -rf /var/lib/apt/lists/*
 
+RUN apt-get update && \
+    apt-get install -y wget unzip
+
 # add initial dataset (outdated)
 # dataset is used until updated data is downloaded
-ADD ./gfsdata/ /gfsdata/
+#ADD ./gfsdata/ /gfsdata/
+RUN wget http://192.168.178.155/gfsdata.zip && unzip gfsdata.zip -d / && rm gfsdata.zip
 
 #!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 # edit from here
 #!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
+RUN apt-get update && \
+    apt-get install -y powerstat apt-utils
 
 # pull scripts
 RUN mkdir -p /scripts
@@ -78,21 +85,10 @@ RUN git clone https://github.com/Aerocene/float-predictor-scripts.git /scripts
 # environment variables for downloader scripts
 ENV GFS_SCRIPT_PATH /scripts/
 ENV GFS_NPZ_DATA /gfsdata/
-ENV GFS_JSON_DATA /app/bundle/programs/web.browser/app/data/gfs/
+ENV GFS_JSON_DATA /app/bundle/programs/web.browser/app/data/gfs/:/app/bundle/programs/web.browser.legacy/app/data/gfs/
 
 # environment variable for floatpredictor-server
 ENV TRAJ_4_MULTI_2D_SCRIPT /scripts/traj4multi2d.py
 
-
-# install cronjob
-COPY cron-gfs /etc/cron.d/cron-gfs
-COPY download_gfs.sh /download_gfs.sh
-
-# execution rights to cron job
-RUN chmod 0644 /etc/cron.d/cron-gfs
-
-# apply cron job
-RUN crontab /etc/cron.d/cron-gfs
-
 # start cron, start app
-ENTRYPOINT service cron restart && /app/run.sh
+CMD /app/run.sh

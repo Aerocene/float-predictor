@@ -1,3 +1,0 @@
-@reboot /download_gfs.sh > /proc/1/fd/1 2>/proc/1/fd/2
-10 20 * * * /download_gfs.sh > /proc/1/fd/1 2>/proc/1/fd/2
-10 08 * * * /download_gfs.sh > /proc/1/fd/1 2>/proc/1/fd/2
