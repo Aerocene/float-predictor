@@ -187,9 +187,14 @@ class WindVisualization {
   downloadData(d, onEnd) {
     if (d >= 0 && d < this.urls.length && this.downloadStatus[d] === 0) {
       this.downloadStatus[d] = DOWNLOADING;
-      fetch(this.urls[d])
-        .then(r => r.json())
+
+      fetch(this.urls[d], {
+        cache: 'reload' // *default, no-cache, reload, force-cache, only-if-cached
+      }).then(r => r.json())
         .then((json) => {
+
+          console.log("processing windata from: " + json.timestamp);
+          
           for (let i = 0; i < json.data.length; i += 3) {
             this.windData[d][i * 2] = json.data[i];
             this.windData[d][i * 2 + 1] = json.data[i + 1];
