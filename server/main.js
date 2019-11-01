@@ -213,19 +213,22 @@ Meteor.startup(() => {
   //   res.end();
   // });
 
-  if (Meteor.settings.public.mode === "staging") {    
-    Picker.route('/log/', function (params, req, res, next) {
-      
-      console.log("----- ps aux ----");  
-      console.log("ps aux: " + runCommand("ps", ["-o", "pid,comm,nice"]));
+  Picker.route('/log/ps/', function (params, req, res, next) {
+    
+    console.log("----- ps ----");  
+    console.log(runCommand("ps", ["-o", "pid,comm,nice,%cpu,%mem"]));
 
-      console.log("----- ls gfs data ----");
-      doListDir("/app/bundle/programs/web.browser/app/data/gfs/data/10/");
-      doListDir("/app/bundle/programs/web.browser.legacy/app/data/gfs/data/10/");
+    res.end();
+  });
 
-      res.end();
-    });
-  }
+  Picker.route('/log/gfsdata/', function (params, req, res, next) {
+    
+    console.log("----- ls gfs data ----");
+    doListDir("/app/bundle/programs/web.browser/app/data/gfs/data/10/");
+    doListDir("/app/bundle/programs/web.browser.legacy/app/data/gfs/data/10/");
+
+    res.end();
+  });
 
 });
 
