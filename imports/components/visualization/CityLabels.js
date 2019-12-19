@@ -41,7 +41,8 @@ const THREE = require('three');
 const NUM_LABELS = 12;
 
 class CityLabels {
-  constructor(scene, camera, radius) {
+  constructor(scene, camera, radius)
+  {
     this.cityLabels = [];
     this.rotationIndex = 0;
     this.camera = camera;
@@ -49,11 +50,23 @@ class CityLabels {
     this.radius = radius;
     this.fpsCount = 0;
     this.indexList = [];
-    for (let i = 0; i < NUM_LABELS; i += 1) {
-      const sphere = new THREE.Mesh(new THREE.SphereGeometry(radius * 0.001, 5, 5),
-        new THREE.MeshBasicMaterial({ color: 0xffffff }));
+
+    for (let i = 0; i < NUM_LABELS; i += 1)
+    {
+      const sphere = new THREE.Mesh(
+        new THREE.SphereGeometry(radius * 0.001, 5, 5),
+        new THREE.MeshBasicMaterial({ color: 0xffffff })
+      );
       scene.add(sphere);
-      const label = new THREELabel(scene, camera, 'Colfax-Medium', 11, 'rgba(30,30,30,0)', 'rgba(255,255,255,1)', sphere);
+
+      const label = new THREELabel(
+        scene, 
+        camera, 
+        'Colfax-Medium', 
+        11, 
+        'rgba(30,30,30,0)', 
+        'rgba(255,255,255,1)', 
+        sphere);        
       this.cityLabels.push(label);
     }
   }

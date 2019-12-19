@@ -213,35 +213,6 @@ class WindVisualization {
     }
   }
 
-  /*
-  downloadData(paths, day = -1, onProgress, onEnd, errorCount = 0) {
-    // if day < 0 download them all
-    const d = Math.max(0, day);
-    if (d < paths.length) {
-      fetch(paths[d])
-        .then(r => r.json())
-        .then((json) => {
-          for (let i = 0; i < json.data.length; i += 3) {
-            this.windData[d][i * 2] = json.data[i];
-            this.windData[d][i * 2 + 1] = json.data[i + 1];
-            this.windData[d][i * 2 + 2] = json.data[i + 2];
-          }
-          this.downloadStatus[d] = 1;
-          if (onProgress) onProgress(d);
-          if (day < 0) this.downloadData(paths, d + 1, onProgress, onEnd);
-          errorCount = 0;
-        }).catch((r) => {
-          errorCount += 1;
-          console.log(r);
-          console.log(`Wind data error - reconnect attempt n.${errorCount}`);
-          setInterval(() => this.downloadData(paths, d, onProgress, onEnd), 1000);
-        });
-    } else if (onEnd) {
-      onEnd();
-    }
-  }
-  */
-
   setOpacityMapping(t) {
     // 0 -> no opacity mapping
     // 1 -> opacity mapping

@@ -104,7 +104,7 @@ export default {
         errors: {
         },
         altValues: ['100 m', '1,500 m',
-          '5,5000 m', '10,000 m', '16,000 m',
+          '5,500 m', '10,000 m', '16,000 m',
           '21,500 m', '26,500 m',
         ],
       },
@@ -176,7 +176,11 @@ export default {
         this.$store.commit('flightSimulator/changeFlightType', value);
       },
     },
-    isChoosing() { return (this.$route.name === 'flight-simulator' && this.$store.state.general.isChoosingDestination); },
+    isChoosing() { 
+      return (this.$route.name === 'flight-simulator' && 
+        this.$store.state.general.isChoosingDestination) && 
+        this.$store.state.flightSimulator.loading >= 1; 
+    },
     isFree() { return (this.$store.getters['flightSimulator/isFreeFlight']); },
     isPlanned() { return (this.$store.getters['flightSimulator/isPlannedFlight']); },
   },

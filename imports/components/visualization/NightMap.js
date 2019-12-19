@@ -43,7 +43,9 @@ const fshader =
 '}';
 
 class NightMap {
-  init(radius, scene, texture) {
+
+  init(radius, scene, texture) 
+  {
     const uniforms = {
       sunPosition: { type: 'v3', value: new THREE.Vector3(200, 0, 0) },
       texture: { type: 't', value: texture },
@@ -63,25 +65,35 @@ class NightMap {
   }
 
   setVisible(c) {
+    if (this.sphere === undefined) return;
+
     this.sphere.visible = c;
   }
 
   setColor(c) {
+    if (this.sphere === undefined) return;
+
     this.sphere.material.uniforms.mapColor.value = new THREE.Color(c);
     this.sphere.material.uniforms.mapColor.needsUpdate = true;
   }
 
   setThreshold(t) {
+    if (this.sphere === undefined) return;
+
     this.sphere.material.uniforms.threshold.value = t;
     this.sphere.material.uniforms.threshold.needsUpdate = true;
   }
 
   setIntensity(i) {
+    if (this.sphere === undefined) return;
+
     this.sphere.material.uniforms.intensity.value = i;
     this.sphere.material.uniforms.intensity.needsUpdate = true;
   }
 
   update(sunPosition) {
+    if (this.sphere === undefined) return;
+    
     this.sphere.material.uniforms.sunPosition.value = sunPosition;
     this.sphere.material.uniforms.sunPosition.needsUpdate = true;
   }
