@@ -432,7 +432,7 @@ export default {
       controls.addEventListener('change', () => { labels.update(pars.onboard); });
       controls.addEventListener('start', () => { this.interacting = true; this.autoMode = false; }, false);
       controls.addEventListener('end', () => { this.interacting = false; }, false);
-      controls.addEventListener('scale', () => { this.setScale(scene.scale.x); }, false);
+      // controls.addEventListener('scale', () => { this.setScale(scene.scale.x); }, false);
 
       this.animate();
     },
@@ -637,13 +637,13 @@ export default {
       const particleCount = 1000;
       const particles = new THREE.Geometry();
       const pMaterial = new THREE.PointsMaterial({
-        color: 0xFFFFFF,
-        size: 4,
+        color: 0xbbbbbb,
+        size: 16,
       });
       // now create the individual particles
       for (let p = 0; p < particleCount; p += 1) {
-        // create a particle radius between 1000 and 3000
-        const r = 1000 + Math.random() * 2000;
+        // create a particle radius between 3000 and 5000
+        const r = 5000 + Math.random() * 3000;
         const v = Math.random() * Math.PI;
         const f = Math.random() * Math.PI * 2.0 - Math.PI;
         const pX = r * Math.sin(v) * Math.cos(f);
@@ -716,6 +716,8 @@ export default {
       //------------------------
       // controls
       controls = new OrbitControls(camera, container);
+      // controls.constraint.scene = scene;
+
       controls.dampingFactor = 0.017; // The damping inertia used if .enableDamping == true.
       controls.autoRotateSpeed = 2; // Default is 2.0, which equates to 30 seconds per rotation at 60fps.
       controls.enablePan = false; // Enable or disable camera panning. Default is true. 
@@ -724,8 +726,10 @@ export default {
       // zoom speed is a bit slow for desktop (macos pinch on touchpad)
       controls.zoomSpeed = 0.28; // Speed of zooming / dollying. Default is 1. 
       controls.enableZoom = pars.zoom_enabled;
-      controls.constraint.scene = scene;
+      
       controls.minDistance = radius * 0.5; // How far you can dolly in ( PerspectiveCamera only ). Default is 0.
+      controls.maxDistance = radius * 10;
+
       pars.pixel_ratio = window.devicePixelRatio;
       this.setAntialias(pars.antialias);
 
@@ -1525,7 +1529,23 @@ export default {
               break;
           }
         }
+
+        // update controls, rotation speed
         controls.update();
+
+        let d = camera.position.distanceTo(new THREE.Vector3()) - radius/2;
+        const max = 200;
+        if (d > max) d = max;
+        var n = (d / max) + 0.1;
+        
+        labels.setSphereScale(n);
+
+        if (Util.isMobile())
+        {
+            n = n*0.4;
+        }
+        controls.rotateSpeed = n;
+
         renderer.render(scene, camera);
         /*
         MULTI SCREEN EXAMPLE CODE

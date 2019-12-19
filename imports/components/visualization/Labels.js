@@ -15,22 +15,37 @@ const THREE = require('three');
 
 const antialias = 2;
 
-class Labels {
-  constructor(scene, camera, radius) {
+class Labels
+{
+  constructor(scene, camera, radius)
+  {
     this.daysLabels = new DaysLabels(scene, camera, radius);
     this.cityLabels = new CityLabels(scene, camera, radius);
     this.scene = scene;
     this.camera = camera;
     this.radius = radius;
-    const departureSphere = new THREE.Mesh(new THREE.SphereGeometry(radius * 0.005, 20, 20),
-      new THREE.MeshBasicMaterial({ color: 0xffffff }));
-    scene.add(departureSphere);
-    this.departureLabel = new THREELabel(scene, camera, 'Colfax-Medium', 11, 'rgba(30,30,30,1)',
-      'rgba(255,255,255,1)', departureSphere);
+
+    const sphereRadius = radius * 0.02
+
+    this.departureSphere = new THREE.Mesh(
+      new THREE.SphereGeometry(sphereRadius, 20, 20),
+      new THREE.MeshBasicMaterial({ color: 0xffffff })
+    );
+    scene.add(this.departureSphere);
+
+    this.departureLabel = new THREELabel(
+      scene, 
+      camera, 
+      'Colfax-Medium', 
+      11, 
+      'rgba(30,30,30,1)',
+      'rgba(255,255,255,1)', 
+      this.departureSphere);      
     this.departureLabel.setIcon(document.getElementById('up'));
     this.departureLabel.set('', this.departureLabel.anchorObject.position);
     this.departureLabel.setVisible(false);
     this.departureLabel.margin = 4;
+
     this.canvas = document.getElementById('labels-canvas');
     this.context = this.canvas.getContext('2d');
     this.canvas.width = window.innerWidth * antialias;
@@ -39,13 +54,24 @@ class Labels {
     this.canvas.style.height = `${window.innerHeight}px`;
     //  this.context.scale(2, 2);
 
-    const destinationSphere = new THREE.Mesh(new THREE.SphereGeometry(radius * 0.005, 20, 20),
-      new THREE.MeshBasicMaterial({ color: 0xffffff }));
-    scene.add(destinationSphere);
-    this.destinationLabel = new THREELabel(scene, camera, 'Colfax-Medium', 11, 'rgba(30,30,30,1)',
-      'rgba(255,255,255,1)', destinationSphere);
+
+    this.destinationSphere = new THREE.Mesh(
+      new THREE.SphereGeometry(sphereRadius, 20, 20),
+      new THREE.MeshBasicMaterial({ color: 0xffffff })
+    );
+    scene.add(this.destinationSphere);
+
+    this.destinationLabel = new THREELabel(
+      scene, 
+      camera, 
+      'Colfax-Medium', 
+      11, 
+      'rgba(30,30,30,1)',
+      'rgba(255,255,255,1)', 
+      this.destinationSphere);
     this.destinationLabel.setIcon(document.getElementById('down'));
     this.destinationLabel.margin = 4;
+
     window.addEventListener('resize', () => {
       this.canvas.width = window.innerWidth * antialias;
       this.canvas.height = window.innerHeight * antialias;
@@ -82,5 +108,11 @@ class Labels {
     this.destinationLabel.setScale(t);
     this.departureLabel.setScale(t);
   }
+
+  setSphereScale(v) {
+    this.departureSphere.scale.set(v, v, v);
+    this.destinationSphere.scale.set(v, v, v);
+  }
 }
+
 export default Labels;
