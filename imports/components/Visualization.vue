@@ -332,7 +332,10 @@ export default {
     winds(w) {
       pars.winds = w;
       Object.assign(pars.layers.wind, pars.wind_settings[w]);
-      windVisualization.setStyle(pars.layers.wind);
+      if (windVisualization)
+      {
+        windVisualization.setStyle(pars.layers.wind);
+      }
     },
   },
   data() {
@@ -615,12 +618,15 @@ export default {
      * index [0-6] of the altitude level
      */
     setWindVisualization(i) {
-      if (windVisualization) {
-        windVisualization.hide();
+      if (windVisualizations)
+      {
+        if (windVisualization) {
+          windVisualization.hide();
+        }
+        windVisualization = windVisualizations[i];
+        windVisualization.setActive(pars.elapsed_days);
+        windVisualization.setStyle(pars.layers.wind);
       }
-      windVisualization = windVisualizations[i];
-      windVisualization.setActive(pars.elapsed_days);
-      windVisualization.setStyle(pars.layers.wind);
     },
 
     /**
@@ -706,7 +712,10 @@ export default {
       scene = new THREE.Scene();
       camera = new THREE.PerspectiveCamera(40, rendererAA.getSize().width / rendererAA.getSize().height, 0.1, 10000);
       camera.position.set(0, radius * 0.25, radius * 1.7);
-      controls = new OrbitControls(camera, document.getElementById('visualization'));
+
+      //------------------------
+      // controls
+      controls = new OrbitControls(camera, container);
       controls.dampingFactor = 0.017; // The damping inertia used if .enableDamping == true.
       controls.autoRotateSpeed = 2; // Default is 2.0, which equates to 30 seconds per rotation at 60fps.
       controls.enablePan = false; // Enable or disable camera panning. Default is true. 
@@ -720,6 +729,7 @@ export default {
       pars.pixel_ratio = window.devicePixelRatio;
       this.setAntialias(pars.antialias);
 
+      //------------------------
       /* setup lights: 1 ambientLight 1 point light (sun) */
       pointLight = new THREE.PointLight(pars.sun_light_color);
       pointLight.intensity = pars.spot_light_intensity;
@@ -728,6 +738,8 @@ export default {
       ambientLight.intensity = pars.ambient_light_intensity;
       scene.add(ambientLight);
 
+      //------------------------
+      //------------------------
       /* objects: earth, sun, selection sphere */
 
       //------------------------
@@ -768,12 +780,22 @@ export default {
       sunSphere.visible = pars.sun_visible;
       scene.add(sunSphere);
 
-      selectSphere = new THREE.Mesh(new THREE.SphereGeometry(radius * 0.01, 20, 20), new THREE.MeshBasicMaterial({ color: 0xffffff, opacity: 0.1, transparent: true }));
+      //------------------------
+      // select sphere
+      selectSphere = new THREE.Mesh(
+        new THREE.SphereGeometry(radius * 0.01, 20, 20), 
+        new THREE.MeshBasicMaterial({ color: 0x00ffff, opacity: 0.1, transparent: true }));
       scene.add(selectSphere);
 
+      //------------------------
       /* fake emisphere setup */
       const spriteMap = new THREE.TextureLoader().load(spriteURL);
-      const spriteMaterial = new THREE.SpriteMaterial({ map: spriteMap, color: 0xffffff, depthWrite: false, depthTest: false });
+      const spriteMaterial = new THREE.SpriteMaterial({ 
+        map: spriteMap, 
+        color: 0xffffff, 
+        depthWrite: false, 
+        depthTest: false 
+      });
       emisphereSprite = new THREE.Sprite(spriteMaterial);
       emisphereSprite.scale.set(440, 440, 440);
       scene.add(emisphereSprite);
@@ -809,7 +831,9 @@ export default {
       emisphereSphere.visible = false;
       emisphereSprite.visible = false;
 
+      //------------------------
       /* events */
+      //------------------------
 
       window.addEventListener('resize', () => {
         const w = window.innerWidth;
@@ -832,22 +856,64 @@ export default {
     /**
      * Responsive texture loading.
      */
-    loadTextures() {
+    loadTextures()
+    {      
       // textures
-      const afterLoad = () => {
+      
+      const afterLoad = (texture) => {        
         /* texture loaded will be 1 after the 3 textures (bump, night, color) are loaded  */
         this.textureLoaded = Math.min(1, this.textureLoaded + 0.34);
       };
-      if (window.matchMedia('(min-width: 768px)').matches) {
-        bumpTexture = new THREE.TextureLoader().load(bumpMap, () => { /* console.log('bumb loaded'); */ afterLoad(); });
-        colorTexture = new THREE.TextureLoader().load(colorMap, () => { /* console.log('color loaded'); */ afterLoad(); });
-        nightMapTexture = new THREE.TextureLoader().load(nightModeMap, () => { /* console.log('alpha loaded'); */ afterLoad(); });
-        /* the viewport is at least 768 pixels wide */
-      } else {
-        bumpTexture = new THREE.TextureLoader().load(bumpMapMobile, () => { /* console.log('bumb loaded'); */ afterLoad(); });
-        colorTexture = new THREE.TextureLoader().load(colorMapMobile, () => { /* console.log('color loaded'); */ afterLoad(); });
-        nightMapTexture = new THREE.TextureLoader().load(nightModeMapMobile, () => { /* console.log('alpha loaded'); */ afterLoad(); });
+
+      if (window.matchMedia('(min-width: 768px)').matches) 
+      {
+        /* the viewport is at least 768 pixels wide */  
+        bumpTexture = new THREE.TextureLoader().load(bumpMap, 
+          (texture) => { 
+            /* console.log('bumb loaded'); */ 
+            afterLoad(texture);
+          }
+        );
+
+        colorTexture = new THREE.TextureLoader().load(colorMap, 
+          (texture) => { 
+            /* console.log('color loaded'); */ 
+            afterLoad(texture); 
+          }
+        );
+
+        nightMapTexture = new THREE.TextureLoader().load(nightModeMap, 
+          (texture) => { 
+            /* console.log('alpha loaded'); */ 
+            afterLoad(texture); 
+          }
+        );
+
+      } 
+      else
+      {
         /* the viewport is less than 768 pixels wide */
+
+        bumpTexture = new THREE.TextureLoader().load(bumpMapMobile, 
+          (texture) => {
+            /* console.log('bumb loaded'); */ 
+            afterLoad(texture); 
+          }
+        );
+
+        colorTexture = new THREE.TextureLoader().load(colorMapMobile,
+          (texture) => { 
+            /* console.log('color loaded'); */ 
+            afterLoad(texture); 
+          }
+        );
+
+        nightMapTexture = new THREE.TextureLoader().load(nightModeMapMobile, 
+          (texture) => { 
+            /* console.log('alpha loaded'); */ 
+            afterLoad(texture); 
+          }
+        );        
       }
     },
 
@@ -1007,8 +1073,22 @@ export default {
             labels.destinationLabel.setVisible(false);
           }
           pars.auto_rotate = false;
+          // download trajectories
           this.downloadMulti();
-          this.resetTo({ lat: departure.lat, lng: departure.lng, time: 0.5, date: this.targetDate, onAnimationEnd: () => { this.visualizationState = STATE_ANIMATION_ACTIVE; } });
+          // move to lat/lan at noon
+          this.resetTo({lat: departure.lat, 
+                        lng: departure.lng, 
+                        time: 0.5, 
+                        date: this.targetDate, 
+                        onAnimationEnd: () => { 
+                          // only set this to animation_active if we got at least one trajectory!
+                          // otherwise wait until we got trajectory-data
+                          if (explorers[0].getLength() > 0)
+                          {
+                            this.visualizationState = STATE_ANIMATION_ACTIVE;
+                          }
+                        } 
+                      });
           break;
         }
         /* animation active */
@@ -1355,7 +1435,7 @@ export default {
       * if pars.skip_frame == 0 -> fps = 60. If == 1  -> fps = 30, if == 2 -> fps = 20  */
       if (timer % (1 + pars.skip_frame) === 0) {
         const frames = pars.frame_multiplier * (1 + pars.skip_frame);
-        this.windsLoaded = windVisualization.update(pars.elapsed_days, frames);
+        this.windsLoaded = windVisualization ? windVisualization.update(pars.elapsed_days, frames) : false;
         /* stop if user is mouse selecting */
         if (!this.selecting) {
           /* update animator */
