@@ -67,6 +67,7 @@ const pressureLevels = [1000, 850, 500, 250, 100, 30, 10];
 const altitudeLevels = [0.0, 1.467, 5.574, 10.363, 15.790, 70.962, 84.998];
 const CATMULL_NUM_POINTS = 3;
 const radius = 200;
+const earthSphereRadius = radius/1.01;
 // const EARTH_RADIUS = 6378.137
 const INITIAL_ZOOM = (window.matchMedia('(orientation: portrait)').matches) ? 0.4 : 0.5;
 const responsiveZoom = (window.matchMedia('(orientation: portrait)').matches) ? 0.5 : 0.8;
@@ -80,6 +81,8 @@ const mouse = new THREE.Vector2();
 // eslint-disable-next-line
 let bumpTexture, labels, colorTexture, nightMapTexture, container, renderer, rendererAA, rendererNAA, scene, camera, controls, gui, pointLight, ambientLight, earthSphere, sunSphere, selectSphere, earthRotation, loaded, timer, explorers, explorerHS, fps, emisphereSprite, emisphereSphere, departure, destination, windVisualization, windVisualizations, downloader, particleSystem;
 let pars = {};
+
+const WEBGL_VERSION = Util.getWebGlVersion();
 
 export default {
   name: 'visualization',
@@ -404,6 +407,8 @@ export default {
         country: 'B State',
       };
 
+      console.log("webgl version: " + WEBGL_VERSION);      
+
       this.selectedExplorer = 0;
       this.initTHREE();
       this.initStarfield();
@@ -724,15 +729,34 @@ export default {
       scene.add(ambientLight);
 
       /* objects: earth, sun, selection sphere */
-      earthSphere = new THREE.Mesh(
-        new THREE.SphereGeometry(radius/1.01, 64, 36),
-        new THREE.MeshPhongMaterial({ color: 0xffffff,
-          transparent: true,
-          opacity: 1,
-          map: colorTexture,
-          shininess: 1,
-        }),
-      );
+
+      //------------------------
+      // earth
+      if (WEBGL_VERSION === 2)
+      {
+        earthSphere = new THREE.Mesh(
+          new THREE.SphereGeometry(earthSphereRadius, 64, 36),
+          new THREE.MeshPhongMaterial({ color: 0xffffff,
+            transparent: true,
+            opacity: 1,
+            map: colorTexture,
+            shininess: 1,
+          }),
+        );
+      }
+      else
+      {
+        // use lambert material
+        earthSphere = new THREE.Mesh(
+          new THREE.SphereGeometry(earthSphereRadius, 64, 36),
+          new THREE.MeshLambertMaterial({ color: 0xffffff,
+            transparent: true,
+            opacity: 1,
+            map: colorTexture,
+            shininess: 1,
+          }),
+        );
+      }
       scene.add(earthSphere);
 
       if (pars.use_bump) { earthSphere.material.bumpMap = bumpTexture; } else { earthSphere.material.bumpMap = undefined; }
@@ -754,16 +778,33 @@ export default {
       emisphereSprite.scale.set(440, 440, 440);
       scene.add(emisphereSprite);
 
-      emisphereSphere = new THREE.Mesh(
-        new THREE.SphereGeometry(radius * 1.04, 64, 36),
-        new THREE.MeshPhongMaterial({
-          color: 0xffffff,
-          transparent: true,
-          opacity: 0.4,
-          depthTest: false,
-          depthWrite: false,
-        }),
-      );
+      if (WEBGL_VERSION === 2)
+      {
+        emisphereSphere = new THREE.Mesh(
+          new THREE.SphereGeometry(radius * 1.04, 64, 36),
+          new THREE.MeshPhongMaterial({
+            color: 0xffffff,
+            transparent: true,
+            opacity: 0.4,
+            depthTest: false,
+            depthWrite: false,
+          }),
+        );
+      }
+      else
+      {
+        // use lambert material
+        emisphereSphere = new THREE.Mesh(
+          new THREE.SphereGeometry(radius * 1.04, 64, 36),
+          new THREE.MeshLambertMaterial({
+            color: 0xffffff,
+            transparent: true,
+            opacity: 0.4,
+            depthTest: false,
+            depthWrite: false,
+          }),
+        );
+      }
       scene.add(emisphereSphere);
       emisphereSphere.visible = false;
       emisphereSprite.visible = false;

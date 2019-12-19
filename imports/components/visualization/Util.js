@@ -23,6 +23,22 @@ const IS_MOBILE = window.mobilecheck();
 
 export default {
 
+  getWebGlVersion() {
+    const testCanvas = document.createElement('canvas');
+    let gl = testCanvas.getContext("webgl2");
+    if (gl) { 
+      return 2;
+    }
+    else {
+      gl = testCanvas.getContext("webgl");
+      if (gl) { 
+        return 1;
+      }
+    }
+    // no webgl
+    return 0;
+  },
+
   isMobile() {
     return IS_MOBILE;
   },
