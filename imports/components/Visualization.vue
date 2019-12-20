@@ -64,10 +64,11 @@ const STATE_UNFOCUSED_GALLERY = 7;
 const STATE_INITIAL = 8;
 
 const pressureLevels = [1000, 850, 500, 250, 100, 30, 10];
-const altitudeLevels = [0.0, 1.467, 5.574, 10.363, 15.790, 70.962, 84.998];
+const altitudeLevels = [100, 1500, 5500, 10000, 16000, 21500, 26500];
 const CATMULL_NUM_POINTS = 3;
 const radius = 200;
 const earthSphereRadius = radius/1.01;
+const altMultiplier = radius / 6371000;
 // const EARTH_RADIUS = 6378.137
 const INITIAL_ZOOM = (window.matchMedia('(orientation: portrait)').matches) ? 0.4 : 0.5;
 const responsiveZoom = (window.matchMedia('(orientation: portrait)').matches) ? 0.5 : 0.8;
@@ -80,6 +81,7 @@ const mouse = new THREE.Vector2();
 
 // eslint-disable-next-line
 let bumpTexture, labels, colorTexture, nightMapTexture, container, renderer, rendererAA, rendererNAA, scene, camera, controls, gui, pointLight, ambientLight, earthSphere, sunSphere, selectSphere, earthRotation, loaded, timer, explorers, explorerHS, fps, emisphereSprite, emisphereSphere, departure, destination, windVisualization, windVisualizations, downloader, particleSystem;
+let dropOffMarker;
 let pars = {};
 
 const WEBGL_VERSION = Util.getWebGlVersion();
@@ -268,7 +270,7 @@ export default {
       } else {
         this.focusedExplorerSpeed = explorers[selected - 1].getSpeed().toFixed(0);
         this.focusedExplorerDistance = explorers[selected - 1].getDistance().toFixed(0);
-        this.focusedExplorerAltitude = (explorers[selected - 1].getAltitudeRatio() * 1000.0 * altitudeLevels[this.initialAltitudeLevel]).toFixed(2);
+        this.focusedExplorerAltitude = explorers[selected - 1].getAltitude().toFixed(2);
         labels.daysLabels.show(selected - 1, explorers);
         labels.update(pars.onboard);
         _.each(explorers, (e, index) => {
@@ -696,6 +698,7 @@ export default {
           new Explorer(
             scene,
             colors[i], 
+            i,
             pars, 
             i * 8 * CATMULL_NUM_POINTS, 
             CATMULL_NUM_POINTS
@@ -804,6 +807,21 @@ export default {
 
       earthSphere.material.needsUpdate = true;
 
+      //------------------------
+      // drop off marker
+      dropOffMarker = new THREE.Mesh(
+        new THREE.SphereGeometry(2, 64, 36),
+        new THREE.MeshLambertMaterial({ 
+          color: 0x000000,
+          emissive: 0xaaaaaa,
+          transparent: false,
+        }),
+      );
+      scene.add(dropOffMarker);
+      dropOffMarker.visible = false;
+
+      //------------------------
+      // sun
       sunSphere = new THREE.Mesh(new THREE.SphereGeometry(radius * 2, 20, 20), new THREE.MeshBasicMaterial({ color: 0xFFE893 }));
       sunSphere.visible = pars.sun_visible;
       scene.add(sunSphere);
@@ -1129,8 +1147,11 @@ export default {
           pars.auto_rotate = false;
           // FADE IN ONLY THE MIN TRACK
           this.selectedExplorer = this.minTrack + 1;
+          // show drop-off marker
+          dropOffMarker.visible = true;
 
           labels.cityLabels.setVisible(false);
+
           // GO TO DESTINATION POINT
           const d = Util.XYZ2LatLon(explorers[this.minTrack].animatingSphere.position); // explorers[this.minTrack].destination;
           this.resetTo({
@@ -1496,6 +1517,7 @@ export default {
               for (let i = 0; i < explorers.length; i += 1) { // explorers.length
                 tl = tl && explorers[i].setAlpha(alpha);
               }
+
               this.trajectoryLoaded = tl;
 
               if (tl) {
@@ -1544,8 +1566,8 @@ export default {
                     }
                   }
                 }
-                if (this.animating) this.incrementTime(frames);
               }
+              if (this.animating) this.incrementTime(frames);
               if (alpha >= 1) { this.visualizationState = STATE_MOVING_TO_DESTINATION; }
               break;
             }
@@ -1562,6 +1584,12 @@ export default {
         if (d > max) d = max;
         var n = (d / max) + 0.1;
         
+
+        // counterscale strokes?
+        // for (let i = 0; i < explorers.length; i++) {
+        //   explorers[i].setLineWidthScale(n);
+        // }
+
         labels.setSphereScale(n);
 
         if (Util.isMobile())
@@ -1643,6 +1671,8 @@ export default {
       _.each(explorers, (e) => { e.reset(); });
       labels.setVisible(false);
       this.minDist = 10000000000000000;
+      this.bestDropOff = {lat: 0, lng: 0};
+      dropOffMarker.visible = false;
       this.minTrack = 0;
       this.minTime = 0;
       this.onboardIndex = 0;
@@ -1664,52 +1694,104 @@ export default {
     * Download the trajectory data for the 8 explorers, create curves using Catmull Rom Curves algorithm and
     * compute explorer movement in altitude based on the angle between the explorer and the sun position (point light)
     */
-    downloadMulti() {
-      downloader.downloadMulti(departure, destination, pressureLevels[this.initialAltitudeLevel],
-        // this.altitudeLevel],
-        (data) => {
+    downloadMulti()
+    {
+      const dest_point = Util.latLon2XYZPosition(destination.lat, 
+                                                destination.lng, 
+                                                earthSphereRadius);
 
-          // ON UPDATE
+      downloader.downloadMulti(departure, destination, altitudeLevels[this.initialAltitudeLevel],
+        // on update callback
+        (data, explorerIndex) => {
 
-          // check if one explorer got closer to destination
-          if (data.mindist < this.minDist) {
-            this.minDist = Math.round(data.mindist);
-            this.minTime = Math.round(data.mintime) - data.mintrack;
-            this.minTrack = data.mintrack;
+          // ON UPDATE          
+          
+          const duration = new Date(data.request.stop_datetime).getTime() - new Date(data.request.launch_datetime).getTime();
+          // console.log("duration: " + duration + " ms -> " + (duration / 1000 / 60 / 60) + " hours");
+
+          const float_alt = data.request.float_altitude;
+          // let explorerH = pars.explorer_height_base * 1.3;
+
+          const ratio = 0.0006;
+
+          // const pts = [];
+          let point_count = 0;
+          for (let i=0; i<data.prediction.length; i++)
+          {
+            point_count += data.prediction[i].trajectory.length;
           }
+          // console.log("points count: " + point_count + " float-lat: " + data.prediction[1].trajectory[0].latitude + " float-lng: " + data.prediction[1].trajectory[0].longitude); 
 
-          this.api_data.push(data.d);
-          this.timestamp = data.timestamp.substring(11);
+          
 
-          for (let j = 0; j < explorers.length; j += 1) {
-            const pts = [];
-            for (let i = j; i < data.d.length; i += 8) { pts.push(Util.latLon2XYZPosition(data.d[i][2], data.d[i][3], radius)); }
+          // setup explorer with amount of points
+          explorers[explorerIndex].setMaxLength(point_count);
 
-            /* increase the number of points using Catmull Rom Curves algorithm */
-            const curve = new THREE.CatmullRomCurve3(pts);
-            const points = curve.getPoints(CATMULL_NUM_POINTS * (pts.length - 1));
+          const original_data = [];
+          for (let i=0; i<data.prediction.length; i++)
+          {
+            for (let j = 0; j < data.prediction[i].trajectory.length; j++) 
+            {              
+              const data_point = data.prediction[i].trajectory[j];
+              original_data.push(data_point);
 
-            /* compute explorer movement in altitude based on the angle between the explorer and the sun position (point light) */
-            const cdate = new Date(this.startingDate);
-            const explorerH = pars.explorer_height_base;
+              explorerH = data_point.altitude * ratio;
+              // console.log(data_point.altitude + " :  explorerH: " + explorerH);
+              
 
-            for (let k = 0; k < points.length - 1; k += 1) {
-              const r = Util.getEarthAzimuthRotation(cdate);
-              const sunP = new THREE.Vector3(Math.sin(-r) * radius, Math.sin(axesRotation) * radius, Math.cos(-r) * radius);
-              const t = points[k];
-              const g = sunP.angleTo(t);// Math.max(0,pointLight.position.angleTo(t)/(Math.PI*0.5));
-              const s = (Math.PI * 0.5 - g) / (Math.PI * 0.5);
+              // get point on the ground
+              const point = Util.latLon2XYZPosition(data_point.latitude, 
+                                                data_point.longitude, 
+                                                earthSphereRadius + explorerH);
 
-              if (g < Math.PI * 0.45) {
-                explorerHS[j] += s * 0.005;
-              } else { explorerHS[j] -= 0.0015; }
+              // dropOffMarker.position.set(point.x, point.y, point.z);
+              // dropOffMarker.visible = true;                                  
 
-              explorerHS[j] = Math.min(pars.explorer_height_shift, Math.max(explorerHS[j], 0));
-              explorers[j].addDataSample(points[k], explorerH, explorerHS[j]);
-              Util.addHours(cdate, 24.0 / (points.length - 1));
+              // const r = Util.getEarthAzimuthRotation(new Date(data_point.datetime));
+              // const sunP = new THREE.Vector3(Math.sin(-r) * radius, Math.sin(axesRotation) * radius, Math.cos(-r) * radius);
+              // const g = sunP.angleTo(point);// Math.max(0,pointLight.position.angleTo(t)/(Math.PI*0.5));
+              // const s = (Math.PI * 0.5 - g) / (Math.PI * 0.5);
+
+              // if (g < Math.PI * 0.45) {
+              //   explorerHS[explorerIndex] += s * 0.005;
+              // } else { explorerHS[explorerIndex] -= 0.0015; }
+
+              // explorerHS[explorerIndex] = Math.min(pars.explorer_height_shift, Math.max(explorerHS[explorerIndex], 0));
+
+              explorers[explorerIndex].addDataSample(point, (earthSphereRadius + explorerH)/earthSphereRadius, 0, data_point.altitude);
+
+              if (this.flightType === 'planned')
+              {
+                // calculate distance to target
+                const d = point.distanceTo(dest_point);
+
+                // check if one explorer got closer to destination
+                if (d < this.minDist) {
+                  // calculate read distance in km
+                  this.minDist = d;
+
+                  this.bestDropOff = {lat: data_point.latitude, lng: data_point.longitude};
+                  this.minTime = ((new Date(data_point.datetime) - new Date(data.request.launch_datetime)) / 1000 / 60 / 60 / 24);
+                  this.minTrack = explorerIndex;
+
+
+                  // set position of drop-off marker
+                  dropOffMarker.position.set(point.x, point.y, point.z);
+                }
+              }
             }
           }
+          explorers[explorerIndex].originalData = original_data;
+
+          // start animation in case it is not turned on already...
+          if (animator.isActive() !== true && 
+              explorerIndex === 0 &&
+              this.visualizationState !== STATE_ANIMATION_ACTIVE)
+          {
+            this.visualizationState = STATE_ANIMATION_ACTIVE;
+          }
         },
+        // on end callback
         () => { 
 
           // ON END
@@ -1732,25 +1814,29 @@ export default {
             this.minTrack = winningIndex;
             this.minTime = 16 - this.minTrack;
           }
+          else
+          {
+            this.minDist = Util.getDistanceFromLatLonInKm(this.bestDropOff.lat, this.bestDropOff.lng, destination.lat, destination.lng);
+          }
 
           // setup data
-          const data = [];
-          for (let i = 0; i < this.api_data.length; i += 1) {
-            for (let j = this.minTrack; j < this.api_data[i].length - 8; j += 8) {
-              data.push(this.api_data[i][j][2]);
-              data.push(this.api_data[i][j][3]);
-            }
-          }
+          // const data = [];
+          // for (let i = 0; i < this.api_data.length; i += 1) {
+          //   for (let j = this.minTrack; j < this.api_data[i].length - 8; j += 8) {
+          //     data.push(this.api_data[i][j][2]);
+          //     data.push(this.api_data[i][j][3]);
+          //   }
+          // }
 
           /*
             Fill a json with the trajectory data and push to server.
             This will add it to the gallery.
           */
+
           const trajectory = new Trajectory();
           trajectory.load(this, 
             departure,
             destination,
-            data,
             explorers[this.minTrack],
             altitudeLevels[this.initialAltitudeLevel],
             this.toSVG()

@@ -15,9 +15,9 @@
         <div v-if="isPlannedFlight" class="message">
             The Aerocene Sculpture that left from <b>{{departure.city}}</b>
             on <strong>{{depDate}}</strong>
-            arrived within <strong>{{winningExplorerData.min_dist}}km</strong>
+            arrived within <strong>{{minDistFloat}}km</strong>
             from <strong>{{destination.city}}</strong> in
-            <strong>{{winningExplorerData.min_time}} days.</strong>
+            <strong>{{minTime}} days.</strong>
         </div>
         <div v-else class="message">
             The Aerocene Sculpture that floated the farthest
@@ -148,7 +148,10 @@ export default {
       return this.$store.state.flightSimulator.winningExplorerData;
     },
     maxDist() {
-      return parseInt(this.winningExplorerData.min_dist, 10).toLocaleString('en');
+      return this.winningExplorerData.min_dist ? parseInt(this.winningExplorerData.min_dist, 10).toLocaleString('en') : -1;
+    },
+    minDistFloat() {
+      return this.winningExplorerData.min_dist ? this.winningExplorerData.min_dist.toFixed(2) : -1;
     },
     depDate() {
       return moment(this.winningExplorerData.departure_date).format('MMM Do, YYYY');
@@ -161,6 +164,9 @@ export default {
     },
     animationEnd() {
       return this.$store.state.flightSimulator.visualizationState === 4;
+    },
+    minTime() {
+        return this.winningExplorerData.min_time ? this.winningExplorerData.min_time.toFixed(2) : -1;
     },
     modalVisible: {
       set(val) {

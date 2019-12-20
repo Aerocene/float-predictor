@@ -60,35 +60,17 @@ RUN mkdir -p /app/bundle
 ########################
 # floatpredictor-Install
 RUN apt-get update && \
-    apt-get install -y git nano python python-numpy python-scipy cdo cron xz-utils && \
-    rm -rf /var/lib/apt/lists/*
+    apt-get upgrade -y && \
+    apt-get install -y wget git nano unzip powerstat apt-utils
 
-RUN apt-get update && \
-    apt-get install -y wget unzip
 
-# add initial dataset (outdated)
-# dataset is used until updated data is downloaded
-#ADD ./gfsdata/ /gfsdata/
-RUN wget http://192.168.178.155/gfsdata.zip && unzip gfsdata.zip -d / && rm gfsdata.zip
+# stuff for eventual scripts
+#RUN apt-get install -y python python-numpy python-scipy cdo
+
 
 #!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 # edit from here
 #!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
-RUN apt-get update && \
-    apt-get install -y powerstat apt-utils
-
-# pull scripts
-RUN mkdir -p /scripts
-RUN git clone https://github.com/Aerocene/float-predictor-scripts.git /scripts
-
-# environment variables for downloader scripts
-ENV GFS_SCRIPT_PATH /scripts/
-ENV GFS_NPZ_DATA /gfsdata/
-ENV GFS_JSON_DATA /app/bundle/programs/web.browser/app/data/gfs/:/app/bundle/programs/web.browser.legacy/app/data/gfs/
-
-# environment variable for floatpredictor-server
-ENV TRAJ_4_MULTI_2D_SCRIPT /scripts/traj4multi2d.py
-
-# start cron, start app
+# start app
 CMD /app/run.sh

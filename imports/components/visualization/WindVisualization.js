@@ -81,6 +81,7 @@ const fshader =
 '  gl_FragColor = vec4(vColor.rgb,vOpacity);' +
 '}';
 
+
 class WindVisualization {
   constructor(pressure, scene, radius) {
     this.pressure = pressure;
@@ -89,7 +90,7 @@ class WindVisualization {
     this.urls = [];
     this.downloadStatus = [];
     for (let i = 0; i < 16; i += 1) {
-      this.urls.push(`/data/gfs/data/${this.pressure}/${i * 24}.json`);
+      this.urls.push(`https://predict.aerocene.org/wind/${this.pressure}/${i * 24}.json`);
       this.downloadStatus.push(0);
     }
   }
@@ -109,6 +110,10 @@ class WindVisualization {
       WindVisualization.geometry = new THREE.IcosahedronGeometry(this.radius, 6);
     }
     let geometry = WindVisualization.geometry;
+    //console.log("geometry.vertices.length: " + geometry.vertices.length);
+    //geometry.vertices.length: 40962
+    // 40962 * 3 = 122886 * 2 = 245772
+    
     for (let i = 0; i < geometry.vertices.length; i += 1) {
       this.array.push(geometry.vertices[i].x, geometry.vertices[i].y, geometry.vertices[i].z);
       this.array.push(geometry.vertices[i].x, geometry.vertices[i].y, geometry.vertices[i].z);
@@ -119,6 +124,7 @@ class WindVisualization {
       this.colors.push(1, 1, 1);
       this.colors.push(0, 0, 0);
     }
+    
     this.lineMaterial = this.createMaterial();
     geometry = new THREE.BufferGeometry();
     geometry.addAttribute('position', new THREE.BufferAttribute(new Float32Array(this.array), 3));
@@ -193,7 +199,7 @@ class WindVisualization {
       }).then(r => r.json())
         .then((json) => {
 
-          console.log("processing windata from: " + json.timestamp);
+          if (json.timestamp) console.log("processing windata from: " + json.timestamp);
           
           for (let i = 0; i < json.data.length; i += 3) {
             this.windData[d][i * 2] = json.data[i];

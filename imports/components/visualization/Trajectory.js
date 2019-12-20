@@ -8,15 +8,15 @@ class Trajectory {
     constructor() {
         // add object version
         // version 2: move to mongodb
-        this.version = 2;
+        // version 3: use tawhiri data
+        this.version = 3;
     }
 
-    load(viz, departure, destination, data, explorer, altitude, svg) {
+    load(viz, departure, destination, explorer, altitude, svg) {
 
         // viz: Visualisation object
         // departure: departure object
-        // destination: destination object
-        // data: path in geo-data
+        // destination: destination object        
         // explorer: winning explorer object
         // altitude: altitude
         // svg: svg xml string 
@@ -37,7 +37,7 @@ class Trajectory {
         this.speed = explorer.avgSpeed;
         this.altitude = altitude;
         this.distance = explorer.getTotalDistance() * 0.001;
-        this.path = data;
+        this.path = explorer.originalData; // data: path in geo-data
         this.svg = svg;
         this.svgB64 = "data:image/svg+xml;base64," + btoa(svg);
 
