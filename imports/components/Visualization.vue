@@ -281,23 +281,33 @@ export default {
       }
     },
 
-    departure(d) {
+    departure(d)
+    {
       this.visualizationState = STATE_INITIAL;
-      if (d !== undefined && d.city && d.lat && d.lng && d.country) {
-        
-        departure = { lat: d.lat, lng: d.lng, country: d.country, city: d.city };
 
-        const t = Util.latLon2XYZPosition(d.lat, d.lng, radius);
-        if (labels.departureLabel) labels.departureLabel.set(d.city, t);
-        const azimuth = ((d.lng + 90) / 360.0) * 2 * Math.PI;
+      if (d !== undefined && d.city && d.lat && d.lng && d.country)
+      {
+        // set departure        
+        departure = {lat: d.lat, 
+                     lng: d.lng, 
+                     country: d.country, 
+                     city: d.city
+                    };
+
+        // update label position
+        const t = Util.latLon2XYZPosition(d.lat, d.lng, earthSphereRadius);
+        labels.departureLabel.set(d.city, t);
 
         /* 
           compute the date that make the point light zenithal to departure location
         */
+        const azimuth = ((d.lng + 90) / 360.0) * 2 * Math.PI;
         const ts = (-earthRotation - azimuth) / (Math.PI * 2) % 1;
+
         this.targetDate.setTime(this.startingDate.getTime() + (ts * 24.0 * 60 * 60 * 1000));
         this.targetDate.setMonth(new Date().getMonth());
         this.targetDate.setDate(new Date().getDate());
+        
         const r = Util.getEarthAzimuthRotation(this.startingDate);
         const sunP = new THREE.Vector3(Math.sin(-r) * radius, Math.sin(axesRotation) * radius, Math.cos(-r) * radius);
         const angle = labels.departureLabel.getPosition().angleTo(sunP);
@@ -307,18 +317,29 @@ export default {
           do not accept location like Iceland on the 22nd of December
         */
         this.coordinatesValid = angle < 1.5;
+
       } else {
         departure = undefined;
       }
     },
 
-    destination(d) {
+    destination(d)
+    {
       this.visualizationState = STATE_INITIAL;
-      if (d !== undefined && d.city && d.lat && d.lng && d.country) {
+      
+      if (d !== undefined && d.city && d.lat && d.lng && d.country)
+      {
+        // set destination
+        destination = {lat: d.lat, 
+                       lng: d.lng, 
+                       country: d.country, 
+                       city: d.city
+                      };
 
-        destination = { lat: d.lat, lng: d.lng, country: d.country, city: d.city };
         // console.log(`Destination: ${d.lat} ${d.lng} ${d.city} `);
-        const t = Util.latLon2XYZPosition(destination.lat, d.lng, radius);
+
+        // update destination label
+        const t = Util.latLon2XYZPosition(destination.lat, destination.lng, earthSphereRadius);
         labels.destinationLabel.set(d.city, t);
       } else {
         destination = undefined;
@@ -600,11 +621,14 @@ export default {
     /**
      * Init the wind data for all the altitude levels. It preloads all the 16 days data of the initial altitude level.
      */
-    initWindVisualization() {
+    initWindVisualization()
+    {
       windVisualizations = [];
-      _.each(pressureLevels, (l) => {
+
+      _.each(altitudeLevels, (l) => {
         windVisualizations.push(new WindVisualization(l, scene, radius * 1.02));
       });
+
       /* preload */
       windVisualizations[this.initialAltitudeLevel].setActive();
 
@@ -1694,7 +1718,8 @@ export default {
             set the winning explorer to the one that got closer to the destination.
             If the flight is not planned, use the one that went farther
           */
-          if (this.flightType !== 'planned') {
+          if (this.flightType !== 'planned')
+          {
             let maxDistance = -1;
             let winningIndex = 0;
             _.each(explorers, (e, index) => {
