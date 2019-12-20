@@ -772,7 +772,7 @@ export default {
 
       //------------------------
       // earth
-      if (WEBGL_VERSION === 2)
+      if (WEBGL_VERSION >= 2)
       {
         earthSphere = new THREE.Mesh(
           new THREE.SphereGeometry(earthSphereRadius, 64, 36),
@@ -828,7 +828,7 @@ export default {
       emisphereSprite.scale.set(440, 440, 440);
       scene.add(emisphereSprite);
 
-      if (WEBGL_VERSION === 2)
+      if (WEBGL_VERSION >= 2)
       {
         emisphereSphere = new THREE.Mesh(
           new THREE.SphereGeometry(radius * 1.04, 64, 36),
