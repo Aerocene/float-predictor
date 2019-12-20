@@ -712,32 +712,45 @@ module.exports = function(THREE) {
 			var scalingf=0.003;
 			var dscaling=1-scalingf;
 			var uscaling=1+scalingf;
-			if(delta>0)
-				constraint.scene.scale.set(constraint.scene.scale.x*uscaling,constraint.scene.scale.x*uscaling,constraint.scene.scale.x*uscaling);
+			
+			if (constraint.scene)
+			{
+				if(delta > 0)
+				{
+					constraint.scene.scale.set(constraint.scene.scale.x*uscaling,constraint.scene.scale.x*uscaling,constraint.scene.scale.x*uscaling);
+				}
+				else
+				{
+					constraint.scene.scale.set(constraint.scene.scale.x*dscaling,constraint.scene.scale.x*dscaling,constraint.scene.scale.x*dscaling);
+				}
+				
+				scope.dispatchEvent( changeEvent );
+				scope.dispatchEvent( scaleEvent );
+	
+				scope.update();
+				scope.dispatchEvent( startEvent );
+				scope.dispatchEvent( endEvent );
+				return;
+			}		
 			else
-				constraint.scene.scale.set(constraint.scene.scale.x*dscaling,constraint.scene.scale.x*dscaling,constraint.scene.scale.x*dscaling);
-			scope.dispatchEvent( changeEvent );
-			scope.dispatchEvent( scaleEvent );
+			{
+				// no control scene
+				if ( delta > 0 ) {
+	
+					constraint.dollyOut( getZoomScale() );
+	
+				} else if ( delta < 0 ) {
+	
+					constraint.dollyIn( getZoomScale() );
+	
+				}
 
-			scope.update();
-			scope.dispatchEvent( startEvent );
-			scope.dispatchEvent( endEvent );
-			return;
-
-			if ( delta > 0 ) {
-
-				constraint.dollyOut( getZoomScale() );
-
-			} else if ( delta < 0 ) {
-
-				constraint.dollyIn( getZoomScale() );
-
+				scope.dispatchEvent( changeEvent );
+	
+				scope.update();
+				scope.dispatchEvent( startEvent );
+				scope.dispatchEvent( endEvent );
 			}
-
-			scope.update();
-			scope.dispatchEvent( startEvent );
-			scope.dispatchEvent( endEvent );
-
 		}
 
 		function onKeyDown( event ) {
