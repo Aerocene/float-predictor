@@ -1,20 +1,24 @@
 import { Meteor } from 'meteor/meteor';
 import { check } from 'meteor/check';
-import flights from '../imports/api/flights/flights';
+import ExplorerTrajectories from '../imports/api/flights/explorerTrajectories';
 
 Meteor.startup(() => {
   Meteor.publish('flights', (skip, limit) => {
     check(skip, Number);
     check(limit, Number);
-    return flights.find({}, { sort: { date: -1 }, skip, limit });
+    return ExplorerTrajectories.find({}, { sort: { date: -1 }, skip, limit });
   });
 
   Meteor.publish('flights.mine', () => {
-    const userId = this.userId;
+    const userId = Meteor.userId();
     if (!userId) {
+      console.log("NO USER ID");      
       return [];
     }
-    return flights.find({ userId }, { sort: { date: -1 } });
+
+    data = ExplorerTrajectories.find({ userId }, { sort: { date: -1 } });
+    console.log("RETURN: " + (data));  
+    return data;
   });
 
   Meteor.publish('currentUser', function publish() {
