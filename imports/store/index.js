@@ -22,7 +22,6 @@ export default new Vuex.Store({
   // plugins: [createPersistedState({paths: ['filters', 'visualization']})]
   mutations: {
     updateUsers(state, value) {
-      console.log('users state mutated');
       state.users = value;
     },
   },

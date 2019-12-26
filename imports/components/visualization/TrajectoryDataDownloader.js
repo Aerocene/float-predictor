@@ -67,7 +67,7 @@ class TrajectoryDataDownloader {
     const launch_altitude = 0;
 
     let url = `https://predict.aerocene.org/api/v1/?profile=${float.profile}&time_resolution=${time_resolution}&use_sunrise=${use_sunrise}&offset_days=${day}&launch_latitude=${lat}&launch_longitude=${lng}&launch_altitude=${launch_altitude}&launch_datetime=${start_datetime}&ascent_rate=${float.ascent_rate}&float_altitude=${float.float_altitude}`;
-    console.log("url: " + url);
+    // console.log("url: " + url);
 
     if (float.profile === "up_down_profile")
     {
