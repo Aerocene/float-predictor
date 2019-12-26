@@ -29,29 +29,43 @@
               </div>
               <div class="coordinates-selector-group">
                   <label class="small">From</label>
-                  <vue-google-autocomplete
-                          id="map" classname="form-control"
-                          :placeholder="placeholder.departure"
-                          @placechanged="setDeparture"
-                          @focus="setFocus"
-                          @blur="removeFocus"
-                          @change="mapChanged"
-                          types="(cities)"
-                          rtypes="geocode">
-                  </vue-google-autocomplete>
+                  <div class="place-input">
+                  
+                    <vue-google-autocomplete
+                            id="map" classname="form-control"
+                            ref="departureBox"
+                            :placeholder="placeholder.departure"
+                            @placechanged="setDeparture"
+                            @focus="setFocus"
+                            @blur="removeFocus"
+                            @change="mapChanged"
+                            types="(cities)"
+                            rtypes="geocode">
+                    </vue-google-autocomplete>
+
+                    <b-btn class="loc-btn" @click="getLocationDep">⦿</b-btn>
+
+                  </div>
                   <transition name="fade-height">
                       <div class="optional-destination" v-if="(flightType === 'planned')">
                         <label  class="small">To</label>
-                        <vue-google-autocomplete
-                          id="map2" classname="form-control"
-                          :placeholder="placeholder.destination"
-                          @placechanged="setDestination"
-                          @focus="setFocus"
-                          @blur="removeFocus"
-                          @change="map2Changed"
-                          types="(cities)"
-                          rtypes="geocode">
-                        </vue-google-autocomplete>
+                        <div class="place-input">
+
+                          <vue-google-autocomplete
+                            id="map2" classname="form-control"
+                            ref="destinationBox"
+                            :placeholder="placeholder.destination"
+                            @placechanged="setDestination"
+                            @focus="setFocus"
+                            @blur="removeFocus"
+                            @change="map2Changed"
+                            types="(cities)"
+                            rtypes="geocode">
+                          </vue-google-autocomplete>
+                          
+                          <b-btn class="loc-btn" @click="getLocationDest">⦿</b-btn>
+
+                        </div>
                       </div>
                   </transition>
               </div>
@@ -140,12 +154,20 @@ export default {
       if (this.form.errors.departure) {
         departureStr = this.form.errors.departure;
       } else if (!_.isEmpty(this.departure)) {
-        departureStr = `${this.departure.city}, ${this.departure.country}`;
+        if (this.departure.city && this.departure.country) {
+          departureStr = `${this.departure.city}, ${this.departure.country}`;
+        } else {
+          departureStr = `${this.departure.lat}, ${this.departure.lng}`;
+        }
       }
       if (this.form.errors.destination) {
         destinationStr = this.form.errors.destination;
       } else if (!_.isEmpty(this.destination)) {
-        destinationStr = `${this.destination.city}, ${this.destination.country}`;
+        if (this.destination.city && this.destination.country) {
+          destinationStr = `${this.destination.city}, ${this.destination.country}`;
+        } else {
+          destinationStr = `${this.destination.lat}, ${this.destination.lng}`;
+        }
       }
       return {
         departure: departureStr,
@@ -229,7 +251,30 @@ export default {
           this.form.errors = errors;
         });
     },
+    isValidGps(text, cb) {
+
+      const arr = text.split(',');
+      if (arr.length == 2) {
+        const lat = parseFloat(arr[0]);
+        const lng = parseFloat(arr[1]);
+        if (!isNaN(lat) && !isNaN(lng)) {
+          // use this!
+          if (cb) {
+            cb(lat, lng);
+            return true;
+          }
+        }
+      }
+      return false;
+    },
     mapChanged(text) {
+
+      if (this.isValidGps(text, 
+        (lat, lng) => this.setDepartureLocation(lat, lng)) === true)
+      {
+        return;
+      }
+
       if (text !== this.departureString) {
         this.departure = {};
         this.departureString = undefined;
@@ -240,32 +285,39 @@ export default {
       }
     },
     map2Changed(text) {
-        if (text !== this.destinationString) {
-          this.destination = {};
-          this.destinationString = undefined;
-          const map_input = document.getElementById('map2');
-          if (map_input !== undefined) {
-            map_input.value = "";
-          }
-        }
-    },
-    setDeparture(e) {
+      
+      if (this.isValidGps(text, 
+        (lat, lng) => this.setDestinationLocation(lat, lng)) === true)
+      {
+        return;
+      }
 
+      if (text !== this.destinationString) {
+        this.destination = {};
+        this.destinationString = undefined;
+        const map_input = document.getElementById('map2');
+        if (map_input !== undefined) {
+          map_input.value = "";
+        }
+      }
+    },
+    setDeparture(e) {    
       this.departure =
         { lat: e.latitude, lng: e.longitude, city: e.locality, country: e.country };
 
-        // get actual string from inputfield
-        const map = document.getElementById('map');
-        this.departureString = map.value;
+      // get actual string from inputfield
+      const map = document.getElementById('map');
+      map.value = e.locality + ', ' + e.country;
+      this.departureString = map.value;
     },
     setDestination(e) {
-
       this.destination =
         { lat: e.latitude, lng: e.longitude, city: e.locality, country: e.country };
 
-        // get actual string from inputfield
-        const map = document.getElementById('map2');
-        this.destinationString = map.value;
+      // get actual string from inputfield
+      const map = document.getElementById('map2');
+      map.value = e.locality + ', ' + e.country;
+      this.destinationString = map.value;
     },
     validateForm() {
       const errors = {};
@@ -291,16 +343,49 @@ export default {
       this.$store.commit('general/setFormStatus', false);
       this.$store.commit('general/setAnimationHeight', 'normal');
     },
+    getLocationDep() {
+      navigator.geolocation.getCurrentPosition(location => {        
+        this.setDepartureLocation(location.coords.latitude, location.coords.longitude);
+      });
+    },
+    getLocationDest() {
+      navigator.geolocation.getCurrentPosition(location => {
+        this.setDestinationLocation(location.coords.latitude, location.coords.longitude);
+      });
+    },
+    setDepartureLocation(lat, lng) {
+      this.departure = {lat: lat, lng: lng}
+      this.departureString = lat + ', ' + lng;
+      this.$refs.departureBox.update(this.departureString)
+    },
+    setDestinationLocation(lat, lng) {
+      this.destination = {lat: lat, lng: lng}
+      this.destinationString = lat + ', ' + lng;
+      this.$refs.destinationBox.update(this.destinationString)
+    },
   },
   mounted() {
     this.upperHeight = (this.$refs.content) ? `${this.$refs.content.clientHeight + 80}px` : 0;
-  },
+  },  
 };
 </script>
 <style lang="scss">
 @import "../css/_variables_and_mixins.scss";
 .main-content.over .flight-form{
     transition: margin-top .3s ease-in-out;
+}
+.place-input {
+  display: flex;
+  flex-direction: row;
+  align-items: stretch;
+}
+.loc-btn {
+  font-size: 1.3em;
+  padding: 0 4px 0 4px;
+  margin-top: 0;
+  margin-bottom: 0.5em;
+  background: none;
+  border: none;
 }
 .flight-form.wrapper {
     position: relative;

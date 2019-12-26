@@ -287,7 +287,7 @@ export default {
     {
       this.visualizationState = STATE_INITIAL;
 
-      if (d !== undefined && d.city && d.lat && d.lng && d.country)
+      if (d !== undefined && d.lat && d.lng)
       {
         // set departure        
         departure = {lat: d.lat, 
@@ -329,7 +329,7 @@ export default {
     {
       this.visualizationState = STATE_INITIAL;
       
-      if (d !== undefined && d.city && d.lat && d.lng && d.country)
+      if (d !== undefined && d.lat && d.lng)
       {
         // set destination
         destination = {lat: d.lat, 
@@ -342,7 +342,7 @@ export default {
 
         // update destination label
         const t = Util.latLon2XYZPosition(destination.lat, destination.lng, earthSphereRadius);
-        labels.destinationLabel.set(d.city, t);
+        labels.destinationLabel.set(destination.city, t);
       } else {
         destination = undefined;
       }
@@ -1110,13 +1110,26 @@ export default {
         /* move to departure point after departure/destination selection and start downloading the trajectory data */
         case STATE_MOVING_TO_DEPARTURE: {
           this.clear();
-          labels.departureLabel.set(departure.city, labels.departureLabel.anchorObject.position.clone().multiplyScalar(1.003));
+
+          if (departure.city !== undefined) {
+            labels.departureLabel.set(departure.city, labels.departureLabel.anchorObject.position.clone().multiplyScalar(1.003));
+          } else {
+            labels.departureLabel.setVisible(false);
+            labels.departureSphere.visible =true;
+          }
+
           /* hide the departure label if the flight is planned */
           if (this.flightType === 'planned') {
-            labels.destinationLabel.set(destination.city, labels.destinationLabel.anchorObject.position.clone().multiplyScalar(1.003));
+            if (destination.city) {
+              labels.destinationLabel.set(destination.city, labels.destinationLabel.anchorObject.position.clone().multiplyScalar(1.003));
+            } else {
+              labels.destinationLabel.setVisible(false);
+              labels.destinationSphere.visible =true;
+            }
           } else {
             labels.destinationLabel.setVisible(false);
           }
+
           pars.auto_rotate = false;
           // download trajectories
           this.downloadMulti();
