@@ -255,6 +255,16 @@ router.beforeEach((to, from, next) => {
     transitionName = 'fade-form-from-top';
     transitionMode = '';
   }
+   
+  if (from.name === null
+    && (to.name === 'profile'))
+  {
+    console.log("jump to profile!!");
+    
+    // store.commit('flightSimulator/setVisualizationState', 5); // start to move the earth
+    transitionName = 'middle-to-bottom';
+    transitionMode = 'out-in';
+  }
 
   store.commit('general/setTransition', transitionName);
   store.commit('general/setTransitionMode', transitionMode);
