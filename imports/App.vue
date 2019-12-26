@@ -40,9 +40,9 @@
 */
 import { TweenLite } from 'gsap';
 import visualization from './components/Visualization';
-import siteHeader from './components/Header';
+import siteHeader from './components/SiteHeader';
 import dashboard from './components/Dashboard';
-import siteFooter from './components/Footer';
+import siteFooter from './components/SiteFooter';
 
 // keep this even if it seems it is not needed !!!
 // eslint-disable-next-line

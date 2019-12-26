@@ -22,7 +22,9 @@ export default {
       return (window.matchMedia('(max-width: 768px)').matches);
     },
     isMenuVisible() {
-      return ((!this.isOnboard && this.isMobile) || !this.isMobile);
+        let result = ((!this.isOnboard && this.isMobile) || !this.isMobile);
+        console.log('menu visible: ' + result);    
+      return result;
     },
   },
 };
