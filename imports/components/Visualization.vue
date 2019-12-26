@@ -795,8 +795,7 @@ export default {
           new THREE.MeshLambertMaterial({ color: 0xffffff,
             transparent: true,
             opacity: 1,
-            map: colorTexture,
-            shininess: 1,
+            map: colorTexture
           }),
         );
       }
