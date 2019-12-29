@@ -7,6 +7,7 @@
           <circle class="path" cx="50" cy="50" r="20"
           fill="none" stroke-width="1" stroke-miterlimit="10"/>
         </svg>
+        <div class="loader-content">{{ content }}</div>
       </div>
     </div>
   </div>
@@ -26,8 +27,8 @@ export default {
     return {
       // type: 'fullscreen'
     }
-  }
-
+  },
+  props: ['content'],
 }
 </script>
 
@@ -37,7 +38,7 @@ export default {
 #loading{
   overflow: hidden;
   position: absolute;
-  z-index: 3;
+  z-index: 99;
   top:0px;
   left:0px;
   display: table;
@@ -51,6 +52,14 @@ export default {
   position: relative;
   margin: 0 auto;
   width: 80px;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+}
+.loader-content {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
 }
 
 .loader:before {

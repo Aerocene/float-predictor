@@ -4,7 +4,8 @@
     <img id="down" src="/assets/icons/destination_arrow_down.svg"/>
     <img id="up" src="/assets/icons/departure_arrow_up.svg"/>
     <div id="labels"></div>
-    <Loading v-if="(loading < 1.0 || saving)"></Loading>
+    <Loading v-if="(errorContent === '' && (loading < 1.0 || saving))" v-bind:content="loadingContent"></Loading>
+    <Error v-if="errorContent !== ''" v-bind:content="errorContent"></Error>
     <canvas id="labels-canvas"></canvas>
   </div>
 </template>
@@ -24,6 +25,7 @@
 import _ from 'lodash';
 import { saveAs } from 'file-saver';
 import Loading from './parts/Loading.vue';
+import Error from './parts/Error.vue';
 import Util from './visualization/Util';
 import NightMap from './visualization/NightMap';
 import animator from './visualization/Animator';
@@ -62,6 +64,7 @@ const STATE_UNFOCUSED = 5;
 const STATE_UNFOCUSED_PAGES = 6;
 const STATE_UNFOCUSED_GALLERY = 7;
 const STATE_INITIAL = 8;
+const STATE_WAIT_FOR_FLIGHTS = 9;
 
 const pressureLevels = [1000, 850, 500, 250, 100, 30, 10];
 const altitudeLevels = [100, 1500, 5500, 10000, 16000, 21500, 26500];
@@ -89,6 +92,55 @@ const WEBGL_VERSION = Util.getWebGlVersion();
 export default {
   name: 'visualization',
 
+  data() {
+    return {
+      alive: true, /* needed for debug hot reload */
+      selecting: false, /* explorer mouse selection */
+      minDist: 0, /* min dist from destination */
+      minTime: 0, /* time when the explorer was closer to the destination */
+      minTrack: 0, /* winning track */
+      onboardIndex: 0, /* track onboard */
+      startingDate: new Date(), /* initial date */
+      targetDate: new Date(), /* target date for starting (zenithal to destination) */
+      windsLoaded: false,
+      trajectoryLoaded: false,
+      textureLoaded: 0,
+      loadingContent: "",
+      errorContent: "",
+    };
+  },
+
+  components: {
+    Loading,
+    Error,
+  },
+
+  mounted() {
+    /* INIT VARIABLES */
+    fetch('/config/general.json')
+      .then(r => r.json())
+      .then((json) => {
+        pars = json;
+        pars.zoom = (window.matchMedia('(orientation: portrait)').matches) ? 0.4 : 0.5;
+        console.log(pars);
+        earthRotation = 0;
+        loaded = 0;
+        timer = 0;
+        fps = 0;
+        explorers = [];
+        explorerHS = [0, 0, 0, 0, 0, 0, 0, 0];
+        this.initVis();
+        if (this.guiVisible) {
+          this.addDebugTools();
+        }
+      });
+  },
+
+  beforeDestroy() {
+    this.alive = false;
+    if (gui) gui.destroy();
+  },
+
   /* Computed properties */
   computed: {
     animating() {
@@ -104,6 +156,11 @@ export default {
     flightType() { return this.$store.state.flightSimulator.flightType; },
     guiVisible() { return this.$store.state.flightSimulator.guiVisible; },
     isWindPanelOn() { return this.$store.state.general.isWindPanelOpen && this.$store.state.general.isAltPanelOpen; },
+    loading() {
+      const v = this.windsLoaded * (this.trajectoryLoaded || this.visualizationState !== STATE_WAIT_FOR_FLIGHTS) * this.textureLoaded;
+      this.$store.commit('flightSimulator/setLoading', v);
+      return v;
+    },
     focusedExplorer: {
       get() { return this.$store.state.flightSimulator.focusedExplorer; },
       set(fe) { this.$store.commit('flightSimulator/setFocusedExplorer', fe); },
@@ -139,11 +196,7 @@ export default {
     saving: {
       get() { return this.$store.state.flightSimulator.isSaving; },
       set(value) { this.$store.commit('flightSimulator/setSaving', value); },
-    },
-    loading: {
-      get() { return this.$store.state.flightSimulator.loading; },
-      set(value) { this.$store.commit('flightSimulator/setLoading', value); },
-    },
+    },    
     winningExplorerData: {
       get() { return this.$store.state.flightSimulator.winningExplorerData; },
       set(value) { this.$store.commit('flightSimulator/setWinningExplorerData', value); },
@@ -205,23 +258,6 @@ export default {
         /* quit onboard if user interact with the mouse */
         if (this.visualizationState === STATE_ANIMATION_ACTIVE) this.focusedExplorer = 0;
       }
-    },
-
-    /*  Set loading true if:
-    * 1) wind data is not loaded
-    * 2) textures are not loaded
-    * 3) trajectory are not loaded when state is active
-    */
-    windsLoaded(wl) {
-      this.loading = wl * (this.trajectoryLoaded || this.visualizationState !== STATE_ANIMATION_ACTIVE) * this.textureLoaded;
-    },
-
-    textureLoaded(tl) {
-      this.loading = this.windsLoaded * (this.trajectoryLoaded || this.visualizationState !== STATE_ANIMATION_ACTIVE) * tl;
-    },
-
-    trajectoryLoaded(tl) {
-      this.loading = this.windsLoaded * (tl || this.visualizationState !== STATE_ANIMATION_ACTIVE) * this.textureLoaded;
     },
 
     isWindPanelOn(on) {
@@ -360,53 +396,7 @@ export default {
         windVisualization.setStyle(pars.layers.wind);
       }
     },
-  },
-  data() {
-    return {
-      alive: true, /* needed for debug hot reload */
-      selecting: false, /* explorer mouse selection */
-      minDist: 0, /* min dist from destination */
-      minTime: 0, /* time when the explorer was closer to the destination */
-      minTrack: 0, /* winning track */
-      onboardIndex: 0, /* track onboard */
-      startingDate: new Date(), /* initial date */
-      targetDate: new Date(), /* target date for starting (zenithal to destination) */
-      windsLoaded: false,
-      trajectoryLoaded: false,
-      textureLoaded: 0,
-    };
-  },
-
-  components: {
-    Loading,
-  },
-
-  mounted() {
-    /* INIT VARIABLES */
-    fetch('/config/general.json')
-      .then(r => r.json())
-      .then((json) => {
-        pars = json;
-        pars.zoom = (window.matchMedia('(orientation: portrait)').matches) ? 0.4 : 0.5;
-        console.log(pars);
-        earthRotation = 0;
-        loaded = 0;
-        timer = 0;
-        fps = 0;
-        explorers = [];
-        explorerHS = [0, 0, 0, 0, 0, 0, 0, 0];
-        this.initVis();
-        if (this.guiVisible) {
-          this.addDebugTools();
-        }
-      });
-  },
-
-  beforeDestroy() {
-    this.alive = false;
-    if (gui) gui.destroy();
-  },
-
+  },  
   methods: {
     /**
      * Init the visualization on component mount. It setup the three.js scene, add the gui and setup the listeners.
@@ -1139,11 +1129,15 @@ export default {
                         time: 0.5, 
                         date: this.targetDate, 
                         onAnimationEnd: () => { 
-                          // only set this to animation_active if we got at least one trajectory!
+                          // only set visualizationState to animation_active if we got all trajectories
                           // otherwise wait until we got trajectory-data
-                          if (explorers[0].getLength() > 0)
+                          if (this.trajectoryLoaded === true)
                           {
                             this.visualizationState = STATE_ANIMATION_ACTIVE;
+                          }
+                          else
+                          {
+                            this.visualizationState = STATE_WAIT_FOR_FLIGHTS;
                           }
                         } 
                       });
@@ -1525,14 +1519,13 @@ export default {
             case STATE_ANIMATION_ACTIVE: {
               const alpha = Math.min(1, pars.elapsed_days / 16.0);
               /* check if trajectory are loaded  for current elapsed days */
-              let tl = true;
-              for (let i = 0; i < explorers.length; i += 1) { // explorers.length
-                tl = tl && explorers[i].setAlpha(alpha);
+              for (let i = 0; i < explorers.length; i++) { // explorers.length
+                explorers[i].setAlpha(alpha);
               }
 
-              this.trajectoryLoaded = tl;
-
-              if (tl) {
+              // NOTE: STATE_ANIMATION_ACTIVE is only set if this.trajectoryLoaded === true
+              // this check therefore is not needed!
+              if (this.trajectoryLoaded) {
                 if (!this.interacting) {
                   /* if user is not interacting with the camera update camera and target position */
                   if (pars.onboard) {
@@ -1563,7 +1556,7 @@ export default {
                   } else {
                     /* position the camera to the average of all explorers position and the camera target to the earth center */
                     const v = new THREE.Vector3();
-                    for (let i = 0; i < explorers.length; i += 1) { // explorers.length
+                    for (let i = 0; i < explorers.length; i++) { // explorers.length
                       v.add(explorers[i].animatingSphere.position);
                     }
                     v.divideScalar(explorers.length);
@@ -1691,13 +1684,15 @@ export default {
       this.elapsed_days = 0;
       this.api_data = [];
       this.setOnboard(false);
+      this.loadingContent = "";
     },
 
     /**
     * Error routines. Set the state to initial to start again.
     */
-    error() {
-      console.log('ERROR ROUTINES');
+    error(e) {
+      console.log("ERROR: " + e);
+      // TODO: show error?
       this.visualizationState = STATE_INITIAL;
       animator.stop();
     },
@@ -1712,11 +1707,17 @@ export default {
                                                 destination.lng, 
                                                 earthSphereRadius);
 
+      this.loadingContent = "0%";
+
       downloader.downloadMulti(departure, destination, altitudeLevels[this.initialAltitudeLevel],
         // on update callback
         (data, explorerIndex) => {
 
           // ON UPDATE          
+
+          // set loadingContent
+          const p = 100*(explorerIndex+1)/8;
+          this.loadingContent = p.toFixed(0) + "%";
           
           const duration = new Date(data.request.stop_datetime).getTime() - new Date(data.request.launch_datetime).getTime();
           // console.log("duration: " + duration + " ms -> " + (duration / 1000 / 60 / 60) + " hours");
@@ -1794,19 +1795,15 @@ export default {
             }
           }
           explorers[explorerIndex].originalData = original_data;
-
-          // start animation in case it is not turned on already...
-          if (animator.isActive() !== true && 
-              explorerIndex === 0 &&
-              this.visualizationState !== STATE_ANIMATION_ACTIVE)
-          {
-            this.visualizationState = STATE_ANIMATION_ACTIVE;
-          }
         },
         // on end callback
         () => { 
-
+          
           // ON END
+
+          this.loadingContent = "100%";
+          this.trajectoryLoaded = true;
+          this.visualizationState = STATE_ANIMATION_ACTIVE;
           
           /* 
             set the winning explorer to the one that got closer to the destination.
@@ -1869,10 +1866,7 @@ export default {
           }
           this.previousTrajectoryData = s;
         },
-        (e) => { // ON ERROR
-          console.log(e);
-          this.error();
-        },
+        (e) => this.error(e),
       );
     },
   },

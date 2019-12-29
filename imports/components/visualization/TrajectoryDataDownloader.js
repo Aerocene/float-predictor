@@ -37,11 +37,12 @@ class TrajectoryDataDownloader {
     
     if (this.errors > MAX_ERRORS)
     {
+      const error_message = "Could not load trajectories from server. Please try again."
       // call error
       if (this.onErrorCallback)
-        this.onErrorCallback("too many errors");
+        this.onErrorCallback(error_message);
       else
-        console.error("too many errors!");        
+        console.error(error_message);        
     }
     else
     {
@@ -97,11 +98,15 @@ class TrajectoryDataDownloader {
       }
 
       // download next day
-      if (day < 7) {          
-        this.downloadMultiS(date, day + 1, departure, destination, altitude);
-      } else {
+      if (day < 7)
+      {    
+        this.downloadMultiS(date, day + 1, departure, destination, altitude);      
+      }
+      else
+      {
         console.log('Trajectory data download complete: ' + jsonData.metadata.complete_datetime);
-        if (this.onEndCallback) {
+        if (this.onEndCallback)
+        {
           this.onEndCallback();
         }
       }
