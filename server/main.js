@@ -112,6 +112,8 @@ Meteor.startup(() => {
 });
 
 
+Accounts.emailTemplates.from = Meteor.settings.emails.support;
+
 Accounts.onCreateUser((options, user) => {
 
   if (user && user.emails && user.emails[0] && user.emails[0].address) {
