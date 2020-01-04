@@ -1740,13 +1740,11 @@ export default {
           // setup explorer with amount of points
           explorers[explorerIndex].setMaxLength(point_count);
 
-          const original_data = [];
           for (let i=0; i<data.prediction.length; i++)
           {
             for (let j = 0; j < data.prediction[i].trajectory.length; j++) 
             {              
               const data_point = data.prediction[i].trajectory[j];
-              original_data.push(data_point);
 
               explorerH = data_point.altitude * ratio;
               // console.log(data_point.altitude + " :  explorerH: " + explorerH);
@@ -1794,7 +1792,9 @@ export default {
               }
             }
           }
-          explorers[explorerIndex].originalData = original_data;
+
+          // store whole dataset
+          explorers[explorerIndex].originalData = data;
         },
         // on end callback
         () => { 

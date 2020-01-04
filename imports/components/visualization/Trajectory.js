@@ -8,8 +8,9 @@ class Trajectory {
     constructor() {
         // add object version
         // version 2: move to mongodb
-        // version 3: use tawhiri data
-        this.version = 3;
+        // version 3: use tawhiri data (trajectory gps-points only)
+        // version 4: use complete returned data (not only the trajectory)
+        this.version = 4;
     }
 
     load(viz, departure, destination, explorer, altitude, svg) {
@@ -37,7 +38,7 @@ class Trajectory {
         this.speed = explorer.avgSpeed;
         this.altitude = altitude;
         this.distance = explorer.getTotalDistance() * 0.001;
-        this.path = explorer.originalData; // data: path in geo-data
+        this.path = explorer.originalData; // data from server
         this.svg = svg;
         this.svgB64 = "data:image/svg+xml;base64," + btoa(svg);
 
