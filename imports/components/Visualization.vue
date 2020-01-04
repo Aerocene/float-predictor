@@ -426,6 +426,7 @@ export default {
       console.log("webgl version: " + WEBGL_VERSION);      
 
       this.selectedExplorer = 0;
+
       this.initTHREE();
       this.initStarfield();
       this.initExplorers();
@@ -434,8 +435,12 @@ export default {
       this.setScale(INITIAL_ZOOM);
       this.initWindVisualization();
       this.initFPSChecker();
-      // this.visualizationState = STATE_INITIAL;
-      this.mouse = new THREE.Vector2();
+
+      if (this.$store.state.flightSimulator.visualizationState >= 0) {
+        this.visualizationState = this.$store.state.flightSimulator.visualizationState;
+      } else {
+        this.visualizationState = STATE_INITIAL;
+      }
 
       rendererAA.domElement.addEventListener('mousemove', this.onMouseMove, false);
       rendererAA.domElement.addEventListener('click', this.onMouseClick, false);
