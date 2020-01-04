@@ -1506,13 +1506,18 @@ export default {
           const d = new Date(this.startingDate);
           d.setTime(d.getTime() + 1000 * 60 * 60 * 24 * pars.elapsed_days);
           earthRotation = Util.getEarthAzimuthRotation(d);
-          pointLight.position.set(Math.sin(-earthRotation) * radius * 90, Math.sin(axesRotation) * radius * 90, Math.cos(-earthRotation) * radius * 90);
-          if (pars.sun_visible) {
-            sunSphere.position.set(pointLight.position.x, pointLight.position.y, pointLight.position.z);
+
+          if (pointLight)
+          {
+            pointLight.position.set(Math.sin(-earthRotation) * radius * 90, Math.sin(axesRotation) * radius * 90, Math.cos(-earthRotation) * radius * 90);
+            if (pars.sun_visible) {
+              sunSphere.position.set(pointLight.position.x, pointLight.position.y, pointLight.position.z);
+            }
+
+            /* update night map sun position */
+            NightMap.update(new THREE.Vector3(pointLight.position.x / 90, pointLight.position.y / 90, pointLight.position.z / 90));
           }
 
-          /* update night map sun position */
-          NightMap.update(new THREE.Vector3(pointLight.position.x / 90, pointLight.position.y / 90, pointLight.position.z / 90));
 
           /* manage viz states */
           switch (pars.state) {

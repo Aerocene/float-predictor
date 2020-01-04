@@ -38,7 +38,7 @@ export default {
 } */
 .site-header {
     position: relative;
-    z-index: 20;
+    z-index: 50;
     background-color: transparent;
     transition: top .3s ease-in-out;
     @include large_down {

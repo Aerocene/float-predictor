@@ -1,7 +1,6 @@
 <template>
     <transition name="fade">
     <div class="back-to-viz"
-         @click="disappear"
          :class="classes"
          v-show="isVisible">
         <router-link to="/flight-simulator">
@@ -12,6 +11,8 @@
     </div>
     </transition>
 </template>
+
+
 <script>
 /**
  * @author Studio Folder - @StudioFolder / http://studiofolder.it
@@ -30,9 +31,14 @@ export default {
   },
 };
 </script>
+
+
 <style lang="scss">
+
 @import "../css/_variables_and_mixins.scss";
+
 $borderWidth: calc((100vw - 36rem)/2); // 36rem is the article max width
+
 .back-to-viz {
     transition: opacity .4s ease;
     top: unset;

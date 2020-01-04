@@ -1,8 +1,14 @@
 <template>
     <!-- Modal Component -->
-    <b-modal id="instruction-modal" class="instruction-modal"
-             centered hide-footer size="lg" title="How To Float">
-        <i slot="modal-header-close" class="fp fp-close"></i>
+    <b-modal 
+        id="instruction-modal" 
+        class="instruction-modal"
+        centered 
+        hide-footer 
+        size="lg" 
+        title="How To Float"
+    >
+        <i slot="modal-header-close" class="fp fp-close" />
         <f-slider />
     </b-modal>
 </template>
