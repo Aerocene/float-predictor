@@ -136,7 +136,7 @@ export default {
     toggleWindsPanel() {
       if (!this.isFlightOver && !this.isPlaying) {
         this.$store.commit('flightSimulator/setFocusedExplorer', 1);
-        this.$store.commit('flightSimulator/setPlaying', true);
+        // this.$store.commit('flightSimulator/setPlaying', true);
         setTimeout(() => this.$store.commit('flightSimulator/setFocusedExplorer', 0), 0);
         this.$store.commit('general/setAltPanel', false);
       }
