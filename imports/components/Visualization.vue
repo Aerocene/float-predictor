@@ -427,6 +427,7 @@ export default {
 
       this.selectedExplorer = 0;
 
+      // init
       this.initTHREE();
       this.initStarfield();
       this.initExplorers();
@@ -435,12 +436,6 @@ export default {
       this.setScale(INITIAL_ZOOM);
       this.initWindVisualization();
       this.initFPSChecker();
-
-      if (this.$store.state.flightSimulator.visualizationState >= 0) {
-        this.visualizationState = this.$store.state.flightSimulator.visualizationState;
-      } else {
-        this.visualizationState = STATE_INITIAL;
-      }
 
       rendererAA.domElement.addEventListener('mousemove', this.onMouseMove, false);
       rendererAA.domElement.addEventListener('click', this.onMouseClick, false);
@@ -452,6 +447,15 @@ export default {
       controls.addEventListener('end', () => { this.interacting = false; }, false);
       // controls.addEventListener('scale', () => { this.setScale(scene.scale.x); }, false);
 
+      // set initial state and move to it...
+      if (this.$store.state.flightSimulator.visualizationState >= 0) {
+        this.visualizationState = this.$store.state.flightSimulator.visualizationState;
+      } else {
+        this.visualizationState = STATE_INITIAL;
+      }
+      this.setState(this.visualizationState);
+
+      // call initial animate
       this.animate();
     },
 
