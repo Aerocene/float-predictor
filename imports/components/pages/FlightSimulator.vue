@@ -1,6 +1,8 @@
 <template>
   <div class="main-content over" :style="{ height: upperHeight }">
+
       <!--just the animation here-->
+
       <div v-if="isChoosing" class="flight-form wrapper shadowed" ref="content">
           <b-form @submit="onSubmit">
               <div class="type-selector-group">
@@ -43,7 +45,7 @@
                             rtypes="geocode">
                     </vue-google-autocomplete>
 
-                    <b-btn class="loc-btn" @click="getLocationDep">⦿</b-btn>
+                    <button class="locationBtn" @click="getLocationDep">⦿</button>
 
                   </div>
                   <transition name="fade-height">
@@ -63,7 +65,7 @@
                             rtypes="geocode">
                           </vue-google-autocomplete>
                           
-                          <b-btn class="loc-btn" @click="getLocationDest">⦿</b-btn>
+                          <button class="locationBtn" @click="getLocationDest">⦿</button>
 
                         </div>
                       </div>
@@ -117,9 +119,14 @@ export default {
       form: {
         errors: {
         },
-        altValues: ['100 m', '1,500 m',
-          '5,500 m', '10,000 m', '16,000 m',
-          '21,500 m', '26,500 m',
+        altValues: [
+          '100 m', 
+          '1,500 m',
+          '5,500 m', 
+          '10,000 m', 
+          '16,000 m',
+          '21,500 m', 
+          '26,500 m',
         ],
       },
     };
@@ -211,24 +218,26 @@ export default {
       const ua = navigator.userAgent.toLowerCase();
       if (ua.indexOf('android') > -1
         && window.matchMedia('(max-height: 768px)').matches
-        && ua.indexOf('mobile')) {
-        this.$refs.content.style.marginTop = '-60px';
-        const header = document.getElementsByClassName('site-header')[0];
-        const logo = document.getElementById('fp-logo');
-        header.classList.add('to-top');
-        logo.classList.add('to-top');
+        && ua.indexOf('mobile'))
+      {
+        // this.$refs.content.style.marginTop = '-60px';
+        // const header = document.getElementsByClassName('site-header')[0];
+        // const logo = document.getElementById('fp-logo');
+        // header.classList.add('to-top');
+        // logo.classList.add('to-top');
       }
     },
     removeFocus() {
       const ua = navigator.userAgent.toLowerCase();
       if (ua.indexOf('android') > -1
         && window.matchMedia('(max-height: 768px)').matches
-        && ua.indexOf('mobile')) {
-        this.$refs.content.style.marginTop = '40px';
-        const header = document.getElementsByClassName('site-header')[0];
-        const logo = document.getElementById('fp-logo');
-        header.classList.remove('to-top');
-        logo.classList.remove('to-top');
+        && ua.indexOf('mobile'))
+      {
+        // this.$refs.content.style.marginTop = '40px';
+        // const header = document.getElementsByClassName('site-header')[0];
+        // const logo = document.getElementById('fp-logo');
+        // header.classList.remove('to-top');
+        // logo.classList.remove('to-top');
       }
     },
     closeAltPanel() {
@@ -324,11 +333,11 @@ export default {
       let hasErrors = false;
       return new Promise((resolve, reject) => {
         if (_.isEmpty(this.departure)) { // departure always filled
-          errors.departure = 'Please choose a departure location';
+          errors.departure = 'Invalid location';
           hasErrors = true;
         }
         if (_.isEmpty(this.destination) && this.flightType === 'planned') {
-          errors.destination = 'Please choose a destination for a planned flight';
+          errors.destination = 'Invalid destination';
           hasErrors = true;
         }
         if (hasErrors) {
@@ -379,7 +388,9 @@ export default {
   },  
 };
 </script>
+
 <style lang="scss">
+
 @import "../css/_variables_and_mixins.scss";
 .main-content.over .flight-form{
     transition: margin-top .3s ease-in-out;
@@ -389,11 +400,13 @@ export default {
   flex-direction: row;
   align-items: stretch;
 }
-.loc-btn {
-  font-size: 1.3em;
-  padding: 0 4px 0 4px;
-  margin-top: 0;
-  margin-bottom: 0.5em;
+.locationBtn {
+  color: white;
+  font-size: 1.1em;
+  position: absolute;
+  right: 20px;
+  margin: 0px;
+  padding: 0.4em 0 0 0;
   background: none;
   border: none;
 }
