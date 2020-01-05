@@ -26,16 +26,20 @@
             and travelled <strong>{{maxDist}} km</strong>
             in <strong>{{winningExplorerData.min_time}} days.</strong>
         </div>
+
         <!-- Begin MailChimp Signup Form -->
-        <div id="mc_embed_signup">
+        <!-- <div id="mc_embed_signup">
+
             <form @submit="onSubmit"
-                  class="flight-form"
-                  action="https://aerocene.us12.list-manage.com/subscribe/post?u=8adb5d542fb2a0cf0dac11583&amp;id=d753b7b620"
-                  method="post"
-                  id="mc-embedded-subscribe-form"
-                  name="mc-embedded-subscribe-form"
-                  target="_blank"
-                  novalidate>
+                class="flight-form"
+                action="https://aerocene.us12.list-manage.com/subscribe/post?u=8adb5d542fb2a0cf0dac11583&amp;id=d753b7b620"
+                method="post"
+                id="mc-embedded-subscribe-form"
+                name="mc-embedded-subscribe-form"
+                target="_blank"
+                novalidate
+            >
+
                 <div id="mc_embed_signup_scroll" class="selector-group-wrapper">
                     <p class="input-label">
                         Enter your name to get updates on Aerocene.
@@ -52,8 +56,9 @@
                         </div>
                         <input type="hidden" name="EMAIL" v-model="userEmail" id="mce-EMAIL" />
                     </div>
-                    <!-- real people should not fill this in and expect good things
+                    <!- real people should not fill this in and expect good things
                     - do not remove this or risk form bot signups-->
+                    <!--
                     <div style="position: absolute; left: -5000px;" aria-hidden="true">
                         <input type="text"
                                name="b_8adb5d542fb2a0cf0dac11583_d753b7b620"
@@ -68,8 +73,9 @@
                               class="button">Get updates on Aerocene</b-button>
                 </div>
             </form>
-        </div>
+        </div> -->
         <!--End mc_embed_signup-->
+
         <ul class="bottom-links">
             <li class="share">
                 <small>Share</small>
