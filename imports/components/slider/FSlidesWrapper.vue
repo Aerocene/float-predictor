@@ -219,5 +219,10 @@ export default {
   },
 };
 </script>
+
+
 <style lang="scss">
+.animation {
+    width: 100%;
+}
 </style>
