@@ -445,7 +445,7 @@ export default {
       controls.addEventListener('change', () => { labels.update(pars.onboard); });
       controls.addEventListener('start', () => { this.interacting = true; this.autoMode = false; }, false);
       controls.addEventListener('end', () => { this.interacting = false; }, false);
-      // controls.addEventListener('scale', () => { this.setScale(scene.scale.x); }, false);
+      controls.addEventListener('scale', () => { this.setScale(scene.scale.x); }, false);
 
       // set initial state and move to it...
       if (this.$store.state.flightSimulator.visualizationState >= 0) {
