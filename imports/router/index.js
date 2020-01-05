@@ -182,7 +182,7 @@ router.beforeEach((to, from, next) => {
   if (to.matched.some(record => record.meta.requiresAuth)) {
     if (!Meteor.userId()) {
       next({
-        path: '/sign-up',
+        path: '/sign-in',
         query: { redirect: to.fullPath },
       });
     } else {
@@ -202,68 +202,101 @@ router.beforeEach((to, from, next) => {
 });
 
 router.beforeEach((to, from, next) => {
+  
   const fromTop = from.matched.some(m => m.meta.position === 'top');
   const fromBottom = from.matched.some(m => m.meta.position === 'bottom');
+  const fromMiddle = from.matched.some(m => m.meta.position === 'middle');
+
   const toTop = to.matched.some(m => m.meta.position === 'top');
   const toBottom = to.matched.some(m => m.meta.position === 'bottom');
   const toMiddle = to.matched.some(m => m.meta.position === 'middle');
-  const fromMiddle = from.matched.some(m => m.meta.position === 'middle');
 
   let transitionName = 'fade';
   let transitionMode = '';
+  
+  if (fromMiddle)
+  { 
+    // From Middle
+    if (toBottom)
+    {
+      // STATE_UNFOCUSED_GALLERY = 7;
+      store.commit('flightSimulator/setVisualizationState', 7);
 
-  if (fromMiddle) { // From Middle
-    if (toBottom) {
-      store.commit('flightSimulator/setVisualizationState', 7); // start to move the earth
       transitionName = 'middle-to-bottom';
       transitionMode = 'out-in';
-    } else if (toTop) {
+    } 
+    else if (toTop) 
+    {
+      // STATE_INITIAL = 8;
+      store.commit('flightSimulator/setVisualizationState', 8);
       transitionName = 'fade-middle-to-top';
     }
+
+    // STATE_ANIMATION_IDLE = 0;
     store.commit('flightSimulator/setFocusedExplorer', 0);
-  } else if (fromTop) { // From Top
-    if (toMiddle) {
+  } 
+  else if (fromTop)
+  { 
+    // From Top
+    if (toMiddle)
+    {
       transitionName = 'top-to-middle';
-    } else if (toBottom) {
+    } 
+    else if (toBottom)
+    {
       transitionName = 'top-to-bottom';
       transitionMode = 'out-in';
+
+
+      // STATE_UNFOCUSED_GALLERY = 7;
       store.commit('flightSimulator/setVisualizationState', 7);
     } else {
       transitionMode = 'out-in';
     }
-  } else if (fromBottom) { // From Bottom
+  } 
+  else if (fromBottom) 
+  { 
+    // From Bottom
     if (toTop) {
       transitionName = 'bottom-to-top';
       transitionMode = 'out-in';
+
+      // STATE_UNFOCUSED_PAGES = 6;
       store.commit('flightSimulator/setVisualizationState', 6);
     } else if (toMiddle) {
       transitionName = 'bottom-to-middle';
     }
   }
+
   // if to middle we need some logic to change the viz state
-  if (toMiddle) {
-    if (store.state.general.isChoosingDestination) {
-      store.commit('flightSimulator/setVisualizationState', 5); // start to move the earth
-    } else {
+  if (toMiddle)
+  {
+    if (store.state.general.isChoosingDestination)
+    {
+      // STATE_UNFOCUSED = 5;
+      store.commit('flightSimulator/setVisualizationState', 5);
+    } 
+    else
+    {
+      // STATE_ANIMATION_ACTIVE = 2;
       store.commit('flightSimulator/setVisualizationState', 2);
       store.commit('flightSimulator/setPlaying', true);
     }
   }
+
   // some overwrites for particular cases
-  if (from.name === 'home-page'
-    && (to.name === 'flight-simulator' && store.state.general.isChoosingDestination)) {
+  if (from.name === 'home-page' && 
+      to.name === 'flight-simulator' && 
+      store.state.general.isChoosingDestination)
+  {
     transitionName = 'fade-form-from-top';
     transitionMode = '';
   }
-   
-  if (from.name === null
-    && (to.name === 'profile'))
+
+  if (to.name === 'flight-simulator')
   {
-    console.log("jump to profile!!");
-    
-    // store.commit('flightSimulator/setVisualizationState', 5); // start to move the earth
-    transitionName = 'middle-to-bottom';
-    transitionMode = 'out-in';
+    // STATE_INITIAL = 8;
+    store.commit('flightSimulator/setVisualizationState', 8);
   }
 
   store.commit('general/setTransition', transitionName);
