@@ -8,9 +8,10 @@ import { Meteor } from 'meteor/meteor';
 import { Vue } from 'meteor/akryum:vue';
 
 // import Vue from 'vue';
-import BootstrapVue from 'bootstrap-vue';
 // import VueNativeSock from 'vue-native-websocket';
+import BootstrapVue from 'bootstrap-vue';
 import BootstrapCSS from 'bootstrap/dist/css/bootstrap.min.css';
+import BootstrapVueCSS from 'bootstrap-vue/dist/bootstrap-vue.min.css';
 import InfiniteScroll from 'vue-infinite-scroll';
 import vbclass from 'vue-body-class';
 import VueAnalytics from 'vue-analytics';
@@ -27,6 +28,7 @@ Vue.config.productionTip = false;
 
 Vue.use(BootstrapVue);
 Vue.use(BootstrapCSS);
+Vue.use(BootstrapVueCSS)
 Vue.use(InfiniteScroll);
 Vue.use(VuejsDialog);
 Vue.use(vbclass, router);
