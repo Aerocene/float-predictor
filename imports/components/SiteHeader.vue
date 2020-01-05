@@ -19,12 +19,10 @@ export default {
     isChoosing() { return this.$store.state.general.isChoosingDestination; },
     isHome() { return this.$route.name === 'home-page'; },
     isMobile() {
-      return (window.matchMedia('(max-width: 768px)').matches);
+        return (window.matchMedia('(max-width: 768px)').matches);
     },
     isMenuVisible() {
-        let result = ((!this.isOnboard && this.isMobile) || !this.isMobile);
-        console.log('menu visible: ' + result);    
-      return result;
+        return ((!this.isOnboard && this.isMobile) || !this.isMobile);
     },
   },
 };

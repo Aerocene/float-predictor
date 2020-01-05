@@ -90,7 +90,9 @@ export default {
 </script>
 
 <style lang="scss">
+
     @import "../css/_variables_and_mixins.scss";
+
     .info-box {
         background-color: $lightBlack;
         position: fixed;
@@ -98,7 +100,7 @@ export default {
         right: calc(#{$marginBase} + #{$itemWidth} + #{$marginItem});
         width: 13.5rem;
         font-size: .9em;
-        z-index: 20;
+        z-index: 100;
         @include medium_down {
             display: flex;
             flex-flow: column;

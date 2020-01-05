@@ -45,7 +45,7 @@ export default {
   height: 100%;
   width: 100%;
   transition: opacity 1.0s ease;
-  background-color: rgba(0,0,0,0.9);
+  background-color: rgba(0,0,0,0.7);
 }
 
 .loader {

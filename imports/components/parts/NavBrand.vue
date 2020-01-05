@@ -44,8 +44,8 @@ export default {
   props: ['isChoosing'],
   computed: {
     isDescriptionActive() {
-      return (this.isChoosing &&
-        (this.$route.name === 'flight-simulator' || this.$route.name === 'home-page'));
+      return (this.isChoosing && this.$route.name === 'home-page');
+        // (this.$route.name === 'flight-simulator' || this.$route.name === 'home-page'));
     },
     isStagingOrLocal() {
       return (window.location.hostname.startsWith("localhost") || window.location.hostname.startsWith("staging.")) && (this.isChoosing &&

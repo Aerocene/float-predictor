@@ -1095,7 +1095,8 @@ export default {
      * It manages state transition, implementing the different behaviours for each state.
      * @param {Integer} state
      */
-    setState(state) {
+    setState(state)
+    {
       switch (state) {
         case STATE_ANIMATION_IDLE: {
           pars.auto_rotate = false;

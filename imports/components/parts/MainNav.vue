@@ -18,9 +18,13 @@
         <div class="macro-section --main">
             <div class="menu-section">
                 <ul class="list-group menu-items">
+
                     <li v-show="user" class="menu-item --nav" @click="closeAction">
                         <router-link to="/profile">Profile ({{user && user.emails[0].address}})</router-link>
                     </li>
+
+                    <hr>
+
                     <li class="menu-item --nav" @click="closeAction">
                         <router-link to="/about">About</router-link>
                     </li>
@@ -33,9 +37,12 @@
                     <li class="menu-item --nav" @click="closeAction">
                         <a href="#" @click.prevent v-b-modal.instruction-modal>How to Float</a>
                     </li>
-                    <li class="menu-item --nav" @click="closeAction">
+
+                    <hr>
+
+                    <!-- <li class="menu-item --nav" @click="closeAction">
                         <router-link to="/resources-and-api">Resources and API</router-link>
-                    </li>
+                    </li> -->
                     <li class="menu-item --nav" >
                         <a href="#" @click.prevent v-b-modal.impressum-modal>Impressum</a>
                     </li>
@@ -46,16 +53,19 @@
             </div>
             <div class="menu-section">
                 <ul class="list-group link-items">
+
                     <li class="menu-item --link">
                          <a target="_blank" href="http://aerocene.org/">
                             <span class="lowercase">Aerocene Project</span>
                         </a>
                     </li>
+
                     <li class="menu-item --link">
                          <a target="_blank" href="https://forum.aerocene.org/">
                             <span class="lowercase">Aerocene Forum</span>
                         </a>
                     </li>
+
                 </ul>
             </div>
             <div class="menu-section">
@@ -79,14 +89,23 @@
                 <div class="font-small">
                     Aerocene is an open artistic project by  <a target="_blank" href="http://tomassaraceno.com/">Studio Tomás Saraceno</a>.
                     Trajectory computation by
-                    <a href="https://eapsweb.mit.edu/" target="_blank">MIT EAPS</a>.
-                    Design and code by  <a target="_blank" href="http://www.studiofolder.it/">Studio Folder</a> and Angelo Semeraro.
+                    <a href="https://github.com/cuspaceflight/tawhiri" target="_blank">CUSF Tawhiri</a>.
+                    Design and code by  <a target="_blank" href="http://www.studiofolder.it/">Studio Folder</a>, Angelo Semeraro and Ingo Randolf.
                 </div>
             </div>
         </div>
     </div>
     </div>
 </template>
+
+<style scoped>
+hr {
+    margin: 0px;
+    background: rgba(255, 255, 255, 0.2);
+    min-width: 100%;
+    margin: 12px 0 12px 0;
+}
+</style>
 
 <script>
 /**
