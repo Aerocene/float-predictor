@@ -131,5 +131,8 @@ Accounts.onCreateUser((options, user) => {
     }
   }
 
+  // TODO: don't user profile!
+  user.profile = options.profile;
+
   return user;
 });
