@@ -344,14 +344,24 @@ export default {
       this.$store.commit('general/setAnimationHeight', 'normal');
     },
     getLocationDep() {
-      navigator.geolocation.getCurrentPosition(location => {        
-        this.setDepartureLocation(location.coords.latitude, location.coords.longitude);
-      });
+      navigator.geolocation.getCurrentPosition(
+        location => {        
+          this.setDepartureLocation(location.coords.latitude, location.coords.longitude);
+        },
+        error => {
+          console.error("error getting location for departure: " + error);
+        }
+      );
     },
     getLocationDest() {
-      navigator.geolocation.getCurrentPosition(location => {
-        this.setDestinationLocation(location.coords.latitude, location.coords.longitude);
-      });
+      navigator.geolocation.getCurrentPosition(
+        location => {
+          this.setDestinationLocation(location.coords.latitude, location.coords.longitude);
+        },
+        error => {
+          console.error("error getting location for destination: " + error);
+        }
+      );
     },
     setDepartureLocation(lat, lng) {
       this.departure = {lat: lat, lng: lng}
