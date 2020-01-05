@@ -1258,7 +1258,7 @@ export default {
           this.active = false;
           this.clear();
           const iv = [controls.target.y, this.getScale(), controls.getPolarAngle()];
-          const ev = [0, 0.5, Math.PI * 0.5];
+          const ev = [130, 0.5, Math.PI * 0.5];
           animator.start({
             init_values: iv,
             end_values: ev,
