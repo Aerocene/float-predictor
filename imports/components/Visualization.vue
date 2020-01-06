@@ -730,16 +730,16 @@ export default {
      */
     initStarfield() {
       // create the particle variables
-      const particleCount = 1000;
+      const particleCount = 3000;
       const particles = new THREE.Geometry();
       const pMaterial = new THREE.PointsMaterial({
         color: 0xbbbbbb,
-        size: 16,
+        size: 52,
       });
       // now create the individual particles
       for (let p = 0; p < particleCount; p += 1) {
         // create a particle radius between 3000 and 5000
-        const r = 5000 + Math.random() * 3000;
+        const r = 6000 + Math.random() * 3000;
         const v = Math.random() * Math.PI;
         const f = Math.random() * Math.PI * 2.0 - Math.PI;
         const pX = r * Math.sin(v) * Math.cos(f);
