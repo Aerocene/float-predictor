@@ -19,6 +19,7 @@ const USE_SPHERES = false;
 const ATTACK_DECAY = 12;
 const EARTH_RADIUS = 6378.137;
 const SCENE_SCALE = EARTH_RADIUS / 200.0;
+const LINE_SCALE_FACTOR = 300;
 
 class Explorer {
   constructor(scene, color, dayOffset, pars, shift = 0, nPoints = 1) {
@@ -39,7 +40,7 @@ class Explorer {
     this.totalDistance = 0;
     const c = 0xffffff;
 
-    this.lineWidth = pars.explorerSettings.line_width;
+    this.lineWidth = pars.explorerSettings.line_width / LINE_SCALE_FACTOR;
 
     this.sphereMaterial = new THREE.MeshBasicMaterial({ transparent: true, color: c, opacity: 0.0 });
     this.animatingSphereMaterial = new THREE.MeshBasicMaterial({ transparent: true, color: color, opacity: 1.0 });
@@ -138,8 +139,8 @@ class Explorer {
   }
 
   setLineWidth(value) {
-    this.lineWidth = value;
-    this.lineMaterial.uniforms.lineWidth.value = value;
+    this.lineWidth = value / LINE_SCALE_FACTOR;
+    this.lineMaterial.uniforms.lineWidth.value = this.lineWidth;
   }
 
   setLineWidthScale(value) {

@@ -35,6 +35,9 @@
                         <router-link to="/aeroglyphs-archive">Aeroglyphs archive</router-link>
                     </li>
                     <li class="menu-item --nav" @click="closeAction">
+                        <router-link to="/globe-archive">Aerocene archive</router-link>
+                    </li>
+                    <li class="menu-item --nav" @click="closeAction">
                         <a href="#" @click.prevent v-b-modal.instruction-modal>How to Float</a>
                     </li>
 

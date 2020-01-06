@@ -35,6 +35,7 @@ import WindVisualization from './visualization/WindVisualization';
 import TrajectoryDataDownloader from './visualization/TrajectoryDataDownloader';
 import Labels from './visualization/Labels';
 import insertFlight from '../api/flights/client/insertFlight';
+import ArchiveScene from './visualization/ArchiveScene'
 
 import THREE from 'three';
 import OrbitControlsFrom from '../custom_modules/three-orbit-controls';
@@ -65,6 +66,7 @@ const STATE_UNFOCUSED_PAGES = 6;
 const STATE_UNFOCUSED_GALLERY = 7;
 const STATE_INITIAL = 8;
 const STATE_WAIT_FOR_FLIGHTS = 9;
+const STATE_GLOBE_ARCHIVE = 10;
 
 const pressureLevels = [1000, 850, 500, 250, 100, 30, 10];
 const altitudeLevels = [100, 1500, 5500, 10000, 16000, 21500, 26500];
@@ -73,8 +75,8 @@ const radius = 200;
 const earthSphereRadius = radius/1.01;
 const altMultiplier = radius / 6371000;
 // const EARTH_RADIUS = 6378.137
-const INITIAL_ZOOM = (window.matchMedia('(orientation: portrait)').matches) ? 0.4 : 0.5;
-const responsiveZoom = (window.matchMedia('(orientation: portrait)').matches) ? 0.5 : 0.8;
+const INITIAL_ZOOM = (window.matchMedia('(orientation: portrait)').matches) ? 1.4 : 1.5;
+const responsiveZoom = (window.matchMedia('(orientation: portrait)').matches) ? 1.5 : 1.8;
 const responsiveY = (window.matchMedia('(orientation: portrait)').matches) ? 45 : 150;
 const axesRotation = Util.getEarthPolarRotation(new Date());
 const colors = [0xFF060D, 0xF0E41E, 0x00FA00, 0xFFAC00, 0x8A7CEF, 0xFF81EB, 0x490073, 0xffffff];
@@ -85,6 +87,7 @@ const mouse = new THREE.Vector2();
 // eslint-disable-next-line
 let bumpTexture, labels, colorTexture, nightMapTexture, container, renderer, rendererAA, rendererNAA, scene, camera, controls, gui, pointLight, ambientLight, earthSphere, sunSphere, selectSphere, earthRotation, loaded, timer, explorers, explorerHS, fps, emisphereSprite, emisphereSphere, departure, destination, windVisualization, windVisualizations, downloader, particleSystem;
 let dropOffMarker;
+let archiveScene;
 let pars = {};
 
 const WEBGL_VERSION = Util.getWebGlVersion();
@@ -160,6 +163,9 @@ export default {
       const v = this.windsLoaded * (this.trajectoryLoaded || this.visualizationState !== STATE_WAIT_FOR_FLIGHTS) * this.textureLoaded;
       this.$store.commit('flightSimulator/setLoading', v);
       return v;
+    },
+    isArchive() { 
+      return this.visualizationState === STATE_GLOBE_ARCHIVE;
     },
     focusedExplorer: {
       get() { return this.$store.state.flightSimulator.focusedExplorer; },
@@ -434,6 +440,7 @@ export default {
       this.initExplorers();
       this.initNightMap();
       labels = new Labels(scene, camera, radius);
+      archiveScene = new ArchiveScene(camera, earthSphereRadius);
       this.setScale(INITIAL_ZOOM);
       this.initWindVisualization();
       this.initFPSChecker();
@@ -464,7 +471,8 @@ export default {
      * Compute explorer selection by finding explorers object intersecting the mouse picking ray.
      * @param event
      */
-    onMouseMove(event) {
+    onMouseMove(event)
+    {
       event.preventDefault();
       const pr = renderer.getPixelRatio();
       mouse.x = (event.clientX / (renderer.domElement.width / pr)) * 2 - 1;
@@ -472,19 +480,45 @@ export default {
       camera.updateMatrixWorld();
       raycaster.setFromCamera(mouse, camera);
 
-      /* only if not already selected (sphere visible or not) */
-      if (!(selectSphere.visible && raycaster.intersectObject(selectSphere).length > 0)) {
-        let selected = -1;
-        _.each(explorers, (e, index) => {
-          if (raycaster.intersectObject(e.animatingSphere).length > 0 &&
-            e.getDistance() > 0) { /* if launched */
-            selected = index;
-            this.selecting = true;
-            selectSphere.visible = true;
-            selectSphere.position.copy(explorers[selected].animatingSphere.position.clone().multiplyScalar(1.001));// `Explorer ${index + 1} > `, e.animatingSphere.position);
+      if (this.visualizationState === STATE_GLOBE_ARCHIVE)
+      {
+        // // get point on earthSphere
+        // const intersects = raycaster.intersectObject(earthSphere, false);
+
+        // console.log("intersects: " + intersects.length);
+        // if (intersects.length > 0)
+        // {
+        //   var objs = intersects.filter( function ( res ) {
+        //     return res && res.object;
+        //   });
+
+        //   var inter_point = objs[0].point;
+        //   archiveScene.onMouseMove(inter_point);
+        // }
+      }
+      else
+      {
+        /* only if not already selected (sphere visible or not) */
+        if (!(selectSphere.visible && raycaster.intersectObject(selectSphere).length > 0))
+        {
+          let selected = -1;
+          _.each(explorers, (e, index) => {
+            if (raycaster.intersectObject(e.animatingSphere).length > 0 &&
+                e.getDistance() > 0)
+            {
+              /* if launched */
+              selected = index;
+              this.selecting = true;
+              selectSphere.visible = true;
+              selectSphere.position.copy(explorers[selected].animatingSphere.position.clone().multiplyScalar(1.001));// `Explorer ${index + 1} > `, e.animatingSphere.position);
+            }
+          });
+  
+          if (this.selecting)
+          {
+            this.selectedExplorer = selected + 1;
           }
-        });
-        if (this.selecting) this.selectedExplorer = selected + 1;
+        }
       }
     },
 
@@ -492,20 +526,56 @@ export default {
      * Go onboard on mouse click if active. Set selection when animation ends.
      * @param event
      */
-    onMouseClick(event) {
-      if (this.visualizationState === STATE_ANIMATION_ACTIVE) {
+    onMouseClick(event)
+    {
+      if (this.visualizationState === STATE_ANIMATION_ACTIVE)
+      {
         this.onMouseMove(event);
         /* go onboard on mouse click */
-        if (this.selectedExplorer < pars.elapsed_days + 1) {
+        if (this.selectedExplorer < pars.elapsed_days + 1)
+        {
           this.focusedExplorer = this.selectedExplorer;
           this.selectedExplorer = 0;
-          if (this.selectedExplorer > 0) this.playing = true;
+          if (this.selectedExplorer > 0) 
+          {
+            this.playing = true;
+          }
         }
       }
-      if (this.visualizationState === STATE_ANIMATION_END) {
+      else if (this.visualizationState === STATE_ANIMATION_END)
+      {
         this.onMouseMove(event);
-        if (this.selectedExplorer > 0) {
+        if (this.selectedExplorer > 0)
+        {
           this.minTrack = this.selectedExplorer - 1;
+        }
+      }
+      else if (this.visualizationState === STATE_GLOBE_ARCHIVE)
+      {
+        // get point on earthSphere
+        event.preventDefault();
+        const pr = renderer.getPixelRatio();
+        mouse.x = (event.clientX / (renderer.domElement.width / pr)) * 2 - 1;
+        mouse.y = -(event.clientY / (renderer.domElement.height / pr)) * 2 + 1;
+        camera.updateMatrixWorld();
+
+        const mm = new THREE.Vector3(mouse.x, mouse.y, 0.5);
+        raycaster.far = camera.position.distanceTo(new THREE.Vector3(0, 0, 0));
+        raycaster.setFromCamera(mm, camera);
+        const intersects = raycaster.intersectObject(earthSphere, false);
+
+        console.log("mouse: " + mouse.x + ", " + mouse.y);        
+        console.log("intersects.length: " + intersects.length);
+        
+        if (intersects.length > 0)
+        {
+          var objs = intersects.filter( function ( res ) {
+            return res && res.object;
+          });
+
+          var point = objs[0].point.divideScalar(scene.scale.x);
+          console.log("point: " + point.x + ", " + point.y + ", " + point.z);      
+          archiveScene.onMouseClick(point);
         }
       }
     },
@@ -712,32 +782,44 @@ export default {
      */
     initTHREE() {
       container = document.getElementById('visualization');
+      const w = window.innerWidth;
+      const h = window.innerHeight
       this.loadTextures();
 
       /* setup antialias and non-antialias rennderers */
       rendererAA = new THREE.WebGLRenderer({
         antialias: true, // pars.antialias,
         preserveDrawingBuffer: true,
+        alpha: true,
       });
       rendererAA.domElement.classList.add('canvas');
       rendererAA.domElement.id = 'canvasAA';
       container.appendChild(rendererAA.domElement);
-      rendererAA.setSize(window.innerWidth, window.innerHeight);
-      rendererAA.setClearColor(0x000000);
+      rendererAA.setSize(w, h);
+      rendererAA.setClearColor(0x00000000);
+      rendererAA.autoClear = false;
 
       rendererNAA = new THREE.WebGLRenderer({
         antialias: false, // pars.antialias,
         preserveDrawingBuffer: true,
+        alpha: true,
       });
       rendererNAA.domElement.classList.add('canvas');
       rendererNAA.domElement.id = 'canvasNAA';
       container.appendChild(rendererNAA.domElement);
-      rendererNAA.setSize(window.innerWidth, window.innerHeight);
-      rendererNAA.setClearColor(0x000000);
+      rendererNAA.setSize(w, h);
+      rendererNAA.setClearColor(0x00000000);
+      rendererNAA.autoClear = false;
 
       /* setup scene, camera, controls */
       scene = new THREE.Scene();
-      camera = new THREE.PerspectiveCamera(40, rendererAA.getSize().width / rendererAA.getSize().height, 0.1, 10000);
+      // camera = new THREE.PerspectiveCamera(40, rendererAA.getSize().width / rendererAA.getSize().height, 0.1, 10000);
+      camera = new THREE.OrthographicCamera(rendererAA.getSize().width / -2, 
+                                            rendererAA.getSize().width / 2, 
+                                            rendererAA.getSize().height / 2, 
+                                            rendererAA.getSize().height / -2, 
+                                            0.1, 
+                                            10000);
       camera.position.set(0, radius * 0.25, radius * 1.7);
 
       //------------------------
@@ -756,6 +838,9 @@ export default {
       
       controls.minDistance = radius * 0.5; // How far you can dolly in ( PerspectiveCamera only ). Default is 0.
       controls.maxDistance = radius * 10;
+
+      controls.maxZoom = 3;
+      controls.minZoom = 0.15;
 
       pars.pixel_ratio = window.devicePixelRatio;
       this.setAntialias(pars.antialias);
@@ -872,6 +957,7 @@ export default {
           }),
         );
       }
+
       scene.add(emisphereSphere);
       emisphereSphere.visible = false;
       emisphereSprite.visible = false;
@@ -883,8 +969,16 @@ export default {
       window.addEventListener('resize', () => {
         const w = window.innerWidth;
         const h = window.innerHeight;
-        camera.aspect = w / h;
+
+
+        camera.left= w / -2;
+        camera.right = w / 2;
+        camera.top = h / 2;
+        camera.bottom = h / -2;
+
+        // camera.aspect = w / h;
         camera.updateProjectionMatrix();
+
         rendererNAA.setSize(w, h);
         rendererAA.setSize(w, h);
 
@@ -1219,7 +1313,7 @@ export default {
         case STATE_UNFOCUSED_PAGES: {
           pars.auto_rotate = true;
           const iv = [controls.target.y, this.getScale(), controls.getPolarAngle()];
-          const ev = [60, 0.65, Math.PI * 0.5];
+          const ev = [60, 1.65, Math.PI * 0.5];
           animator.start({
             init_values: iv,
             end_values: ev,
@@ -1241,7 +1335,7 @@ export default {
           const timeInt = (this.$store.state.general.transitionName === 'middle-to-bottom') ? 0.1 : 0.4;
           pars.auto_rotate = true;
           const iv = [controls.target.y, this.getScale(), controls.getPolarAngle()];
-          const ev = [-60, 0.65, Math.PI * 0.5];
+          const ev = [-60, 1.65, Math.PI * 0.5];
           animator.start({
             init_values: iv,
             end_values: ev,
@@ -1259,12 +1353,15 @@ export default {
           break;
         }
 
+        /*
+        * INITIAL STATE (8)
+        */
         case STATE_INITIAL: {
           pars.auto_rotate = true;
           this.active = false;
           this.clear();
           const iv = [controls.target.y, this.getScale(), controls.getPolarAngle()];
-          const ev = [130, 0.5, Math.PI * 0.5];
+          const ev = [350, 1.4, Math.PI * 0.5];
           animator.start({
             init_values: iv,
             end_values: ev,
@@ -1281,6 +1378,38 @@ export default {
           });
           break;
         }
+
+        /*
+        * GLOBE ARCHIVE (10)
+        */
+        case STATE_GLOBE_ARCHIVE:
+          archiveScene.clear();
+          pars.auto_rotate = false;
+          this.active = false;
+          this.cachedWinds = this.winds;
+          this.winds = 0;
+          const iv = [controls.target.y, this.getScale(), controls.getPolarAngle()];
+          const ev = [0, 1.3, Math.PI * 0.5];
+
+          this.downloadArchive();
+
+          animator.start({
+            init_values: iv,
+            end_values: ev,
+            time_start: 0,
+            time_interval: 0.4,
+            sine_interpolation: true,
+            onAnimationEnd: () => {
+            },
+            onAnimationUpdate: (v) => {
+              controls.target.set(controls.target.x, v[0], controls.target.z);
+              this.setScale(v[1]);
+              controls.setPolarAngle(v[2]);
+            },
+          });
+          break;
+        
+
         default: {
           break;
         }
@@ -1448,8 +1577,10 @@ export default {
     * @param {Float} s
     */
     setScale(s) {
+      // console.log("SCALE: " + s);
       pars.zoom = s;
       scene.scale.set(s, s, s);
+      archiveScene.setScale(s);
       _.each(explorers, (e) => { e.animatingSphere.scale.set(1 / s, 1 / s, 1 / s); });
       selectSphere.scale.set(1 / s, 1 / s, 1 / s);
       labels.setScale(s);
@@ -1624,7 +1755,14 @@ export default {
         }
         controls.rotateSpeed = n;
 
+        renderer.clear();
         renderer.render(scene, camera);
+
+        if (this.visualizationState === STATE_GLOBE_ARCHIVE)
+        {
+          archiveScene.render(renderer, camera);
+        }
+
         /*
         MULTI SCREEN EXAMPLE CODE
         renderer.clear();
@@ -1706,6 +1844,10 @@ export default {
       this.api_data = [];
       this.setOnboard(false);
       this.loadingContent = "";
+      if (this.cachedWinds) {
+        this.winds = this.cachedWinds;
+        this.cachedWinds = undefined;
+      }
     },
 
     /**
@@ -1890,7 +2032,43 @@ export default {
         (e) => this.error(e),
       );
     },
-  },
+
+
+    downloadArchive()
+    {
+      this.downloadArchive1(() => {
+        this.downloadArchive2();
+      });
+    },
+    downloadArchive1(followUpFunc)
+    {
+      const url = "https://aerocene.org/wp-json/wp/v2/community_member?per_page=100&_embed=1";
+
+      fetch(url)
+      .then(response => response.json())
+      .then((jsonData) => {      
+        archiveScene.addData(jsonData);
+        if (followUpFunc) followUpFunc();
+      })
+      .catch((r) => {
+        console.error(`error downloading community-archive: ${JSON.stringify(r)}`);
+        if (followUpFunc) followUpFunc();
+      });
+    },
+    downloadArchive2()
+    {
+      const url = "https://aerocene.org/wp-json/wp/v2/flight?per_page=100&_embed=1";    
+
+      fetch(url)
+      .then(response => response.json())
+      .then((jsonData) => { 
+        archiveScene.addData(jsonData);
+      })
+      .catch((r) => {
+        console.error(`error downloading flight-archive: ${JSON.stringify(r)}`);
+      });
+    }
+  },  
 };
 </script>
 
