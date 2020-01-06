@@ -368,18 +368,19 @@ export default {
       if (d !== undefined && d.lat && d.lng)
       {
         // set destination
-        destination = {lat: d.lat, 
-                       lng: d.lng, 
-                       country: d.country, 
-                       city: d.city
-                      };
-
-        // console.log(`Destination: ${d.lat} ${d.lng} ${d.city} `);
+        destination = {
+          lat: d.lat, 
+          lng: d.lng, 
+          country: d.country, 
+          city: d.city
+        };
 
         // update destination label
         const t = Util.latLon2XYZPosition(destination.lat, destination.lng, earthSphereRadius);
         labels.destinationLabel.set(destination.city, t);
-      } else {
+      } 
+      else
+      {
         destination = undefined;
       }
     },
@@ -1102,11 +1103,13 @@ export default {
     setState(state)
     {
       switch (state) {
+
         case STATE_ANIMATION_IDLE: {
           pars.auto_rotate = false;
           this.clear();
           break;
         }
+
         /* move to departure point after departure/destination selection and start downloading the trajectory data */
         case STATE_MOVING_TO_DEPARTURE: {
           this.clear();
@@ -1153,11 +1156,13 @@ export default {
                       });
           break;
         }
+
         /* animation active */
         case STATE_ANIMATION_ACTIVE: {
           pars.auto_rotate = false;
           break;
         }
+
         /* move to destination point after simulation ends */
         case STATE_MOVING_TO_DESTINATION: {
           pars.auto_rotate = false;
@@ -1183,6 +1188,7 @@ export default {
           labels.update(pars.onboard);
           break;
         }
+
         /* animation end */
         case STATE_ANIMATION_END: {
           pars.auto_rotate = false;

@@ -1,35 +1,52 @@
 <template>
-    <div id="app"
-         class="main-application" :class="classObject">
-        <site-header ref="siteHeader" />
-        <dashboard v-show="flightToolsActive"/>
-        <div class="site-content" :class="{'--bottom': isBottom}">
-            <div class="router-view" ref="content">
-                <transition
-                        appear
-                        :name="transitionName"
-                        :mode="transitionMode"
-                        @before-enter="beforeEnter"
-                        @enter="onEnter"
-                        @afterEnter="afterEnter"
-                        @before-leave="beforeLeave"
-                        @leave="onLeave"
-                        @after-leave="afterLeave">
-                    <router-view/>
-                </transition>
+    <div 
+      id="app"
+      class="main-application" :class="classObject"
+    >
+      <site-header ref="siteHeader" />
+
+      <dashboard v-show="flightToolsActive"/>
+
+      <div class="site-content" :class="{'--bottom': isBottom}">
+        <div class="router-view" ref="content">
+          
+          <transition appear>
+            <div class="login-background" v-if="!isLoggedIn">
+              <img src="/img/background-gradient.png" style="width: 100%;" alt=""><img>
             </div>
-            <div class="main-visualization-wrapper"
-                 ref="simulator"
-                 :class="{'--small': isSmall, '--bottom': isBottom, '--logged-in': isLoggedIn}">
-                <div class="cover">
-                    <router-link to="/flight-simulator" class="link-to-flight-sim">
-                    </router-link>
-                </div>
-                <visualization v-if="isExhibitionClient" />
-            </div>
+          </transition>
+
+          <transition
+            appear
+            :name="transitionName"
+            :mode="transitionMode"
+            @before-enter="beforeEnter"
+            @enter="onEnter"
+            @afterEnter="afterEnter"
+            @before-leave="beforeLeave"
+            @leave="onLeave"
+            @after-leave="afterLeave"
+          >
+            <router-view/>
+          </transition>
         </div>
-        <site-footer />
+
+        <div 
+          class="main-visualization-wrapper"
+          ref="simulator"
+          :class="{'--small': isSmall, '--bottom': isBottom, '--logged-in': isLoggedIn}"
+        >
+          <div class="cover" v-if="showCover">
+            <router-link to="/flight-simulator" class="link-to-flight-sim"/>
+          </div>
+          <visualization v-if="isExhibitionClient" />
+        </div>
+      </div>
+
+      <site-footer />
+
     </div>
+
 </template>
 
 <script>
@@ -98,6 +115,10 @@ export default {
     isMenuOpen() {
       return this.$store.state.general.isMenuOpen;
     },
+    showCover() {
+      // don't show cover on globe-archive
+      return this.$store.state.flightSimulator.visualizationState != 10;
+    },
   },
   watch: {
     isMenuOpen(v) {
@@ -159,7 +180,8 @@ export default {
       this.transitionLeave = true;
     },
     onLeave() {
-      if (this.transitionName === 'fade-middle-to-top') {
+      if (this.transitionName === 'fade-middle-to-top')
+      {
         const height = document.querySelector('.fade-middle-to-top-enter-active article').offsetHeight;
         TweenLite.to('.fade-middle-to-top-leave-active',
           this.duration * 2,
@@ -167,9 +189,15 @@ export default {
         TweenLite.from('.fade-middle-to-top-enter-active',
           this.duration * 2,
           { y: height * -1 });
-      } else if (this.transitionName === 'top-to-middle') {
-        const height = document.querySelector('.top-to-middle-leave-active article').offsetHeight;
-        TweenLite.to(window, this.duration, { scrollTo: height });
+      } 
+      else if (this.transitionName === 'top-to-middle')
+      {
+        const o = document.querySelector('.top-to-middle-leave-active article');
+        if (o)
+        {
+          const height = document.querySelector('.top-to-middle-leave-active article').offsetHeight;
+          TweenLite.to(window, this.duration, { scrollTo: height });
+        }
       } else if (this.transitionName === 'top-to-bottom') {
         const height = document.querySelector('.top-to-bottom-leave-active article').offsetHeight;
         TweenLite.to('.top-to-bottom-leave-active',

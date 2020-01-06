@@ -14,7 +14,6 @@ import BootstrapCSS from 'bootstrap/dist/css/bootstrap.min.css';
 import BootstrapVueCSS from 'bootstrap-vue/dist/bootstrap-vue.min.css';
 import InfiniteScroll from 'vue-infinite-scroll';
 import vbclass from 'vue-body-class';
-import VueAnalytics from 'vue-analytics';
 import SocialSharing from 'vue-social-sharing';
 import VuejsDialog from 'vuejs-dialog';
 import router from '../imports/router';
@@ -32,11 +31,7 @@ Vue.use(BootstrapVueCSS)
 Vue.use(InfiniteScroll);
 Vue.use(VuejsDialog);
 Vue.use(vbclass, router);
-Vue.use(VueAnalytics, {
-  id: 'UA-25554902-10',
-});
 Vue.use(SocialSharing);
-
 
 Meteor.startup(() => {
   /* eslint-disable no-new */

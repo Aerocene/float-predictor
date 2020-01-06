@@ -20,6 +20,7 @@ window.mobilecheck = function() {
 };
 
 const IS_MOBILE = window.mobilecheck();
+const IS_ANDROID = /(android)/i.test(navigator.userAgent);
 
 export default {
 
@@ -41,6 +42,10 @@ export default {
 
   isMobile() {
     return IS_MOBILE;
+  },
+
+  isAndroid() {
+    return IS_ANDROID;
   },
 
   dayOfYear(date) {
