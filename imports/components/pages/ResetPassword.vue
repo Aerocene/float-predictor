@@ -1,5 +1,5 @@
 <template>
-    <div class="main-content" :style="{ height: upperHeight }">
+    <div class="main-content">
       <article role="article" class="article" ref="content">
         <resetPasswordForm v-on:success="redirectToFlightSimulator" />
         <router-link to="/sign-in" class="link-button">Back to sign-in</router-link>
@@ -39,7 +39,7 @@ export default {
     };
   },
   created() {
-    this.$store.commit('flightSimulator/setVisualizationState', 6);
+    // this.$store.commit('flightSimulator/setVisualizationState', 6);
   },
   mounted() {
     this.upperHeight = `${this.$refs.content.clientHeight}px`;

@@ -16,6 +16,9 @@ const authModule = {
     lastSessionError: null,
     resetPasswordToken: null,
     resetPasswordDoneFunction: null,
+    userEmail: null,
+    signupPassword: null,
+    signupName: null
   },
   mutations: {
     updateUser(state, value) {
@@ -33,6 +36,15 @@ const authModule = {
     setResetPasswordDoneFunction(state, value) {
       state.resetPasswordDoneFunction = value;
     },
+    setUserEmail(state, value) {
+      state.userEmail = value;
+    },
+    setSignupPassword(state, value) {    
+      state.signupPassword = value;
+    },
+    setSignupName(state, value) {    
+      state.signupName = value;
+    }
   },
   actions: {
   },

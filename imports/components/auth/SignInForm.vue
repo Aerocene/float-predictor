@@ -1,18 +1,62 @@
 <template>
   <form class="session-form" @submit.prevent="submitForm">
-    <!-- <h3>Login</h3> -->
-    <fieldset>
-      <label>email</label>
-      <input type="email" required v-model="formData.username" placeholder="email@example.com" />
+
+    <fieldset class="fieldset-class">
+      <b-form-input 
+        class="form-input"
+        id="sign-in-field-email"
+        type="email" 
+        required 
+        v-model="formData.username" 
+        placeholder="E-mail"/>
       <footer class="form-text text-danger" v-show="lastSessionError">{{lastSessionError && lastSessionError.reason}}</footer>
     </fieldset>
-    <fieldset>
-      <label>password</label>
-      <input type="password" required minlength="8" v-model="formData.password" placeholder="min. 8 characters" />
+
+    <fieldset class="fieldset-class">
+      <b-form-input 
+        class="form-input"
+        id="sign-in-field-pwd"
+        type="password" 
+        required 
+        minlength="8" 
+        v-model="formData.password" 
+        placeholder="Password" />
     </fieldset>
-    <button>Login</button>
+
+    <button class="signin-button">Sign in</button>
+    
   </form>
 </template>
+
+<style scoped>
+.session-form {
+  width: 100%;
+}
+
+.form-input {
+  text-align: left;
+  color: white;
+  font-size: 18px;
+  border-bottom-color: white;
+}
+.form-input:focus {
+  border-bottom-color: white;
+  color: white;
+}
+
+.fieldset-class {
+  width: 100%
+}
+
+.signin-button {
+  margin-top: 0em;
+  text-transform: none;
+  background: #41254F;
+  border-radius: 9px;
+  border: none;
+}
+
+</style>
 
 <script>
 import router from '../../router';
@@ -30,7 +74,7 @@ export default {
   data() {
     return {
       formData: {
-        username: '',
+        username: this.$store.state.auth.userEmail,
         password: ''
       }
     }

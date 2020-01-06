@@ -18,13 +18,17 @@ import FlightSimulator from '../components/pages/FlightSimulator.vue';
 import About from '../components/pages/About.vue';
 import AeroceneExplorer from '../components/pages/AeroceneExplorer.vue';
 import Resources from '../components/pages/Resources.vue';
+
 import Profile from '../components/pages/Profile.vue';
 import ChangePassword from '../components/pages/ChangePassword.vue';
 import ForgotPassword from '../components/pages/ForgotPassword.vue';
 import ResetPassword from '../components/pages/ResetPassword.vue';
 import SignIn from '../components/pages/SignIn.vue';
 import SignUp from '../components/pages/SignUp.vue';
+import SignUpTerms from '../components/pages/SignUpTerms.vue';
+
 import DeleteAccount from '../components/pages/DeleteAccount.vue';
+import ProfileSettings from '../components/pages/ProfileSettings.vue';
 
 Vue.use(Router);
 
@@ -45,8 +49,18 @@ const router = new Router({
       name: 'signUp',
       component: SignUp,
       meta: {
-        bodyClass: 'sign-up upper-content',
-        position: 'top',
+        bodyClass: 'sign-up no-scroll',
+        position: 'middle',
+        requiresLoggedOutState: true,
+      },
+    },
+    {
+      path: '/sign-up-terms',
+      name: 'signUpTerms',
+      component: SignUpTerms,
+      meta: {
+        bodyClass: 'sign-up no-scroll',
+        position: 'middle',
         requiresLoggedOutState: true,
       },
     },
@@ -55,8 +69,8 @@ const router = new Router({
       name: 'signIn',
       component: SignIn,
       meta: {
-        bodyClass: 'sign-in upper-content',
-        position: 'top',
+        bodyClass: 'sign-in no-scroll',
+        position: 'middle',
         requiresLoggedOutState: true,
       },
     },
@@ -65,8 +79,8 @@ const router = new Router({
       name: 'deleteAccount',
       component: DeleteAccount,
       meta: {
-        bodyClass: 'delete-account upper-content',
-        position: 'top',
+        bodyClass: 'delete-account no-scroll',
+        position: 'middle',
         requiresAuth: true,
       },
     },
@@ -75,8 +89,18 @@ const router = new Router({
       name: 'profile',
       component: Profile,
       meta: {
-        bodyClass: 'profile upper-content',
-        position: 'top',
+        bodyClass: 'profile no-scroll',
+        position: 'middle',
+        requiresAuth: true,
+      },
+    },
+    {
+      path: '/profile-settings',
+      name: 'profileSettings',
+      component: ProfileSettings,
+      meta: {
+        bodyClass: 'profileSettings no-scroll',
+        position: 'middle',
         requiresAuth: true,
       },
     },
@@ -85,8 +109,8 @@ const router = new Router({
       name: 'changePassword',
       component: ChangePassword,
       meta: {
-        bodyClass: 'change-password upper-content',
-        position: 'top',
+        bodyClass: 'change-password no-scroll',
+        position: 'middle',
         requiresAuth: true,
       },
     },
@@ -95,8 +119,8 @@ const router = new Router({
       name: 'resetPassword',
       component: ResetPassword,
       meta: {
-        bodyClass: 'reset-password upper-content',
-        position: 'top',
+        bodyClass: 'reset-password no-scroll',
+        position: 'middle',
         requiresLoggedOutState: true,
       },
     },
@@ -105,8 +129,8 @@ const router = new Router({
       name: 'forgotPassword',
       component: ForgotPassword,
       meta: {
-        bodyClass: 'forgot-password upper-content',
-        position: 'top',
+        bodyClass: 'forgot-password no-scroll',
+        position: 'middle',
         requiresLoggedOutState: true,
       },
     },
@@ -129,6 +153,15 @@ const router = new Router({
         requiresAuth: true,
       },
     },
+    {
+      path: '/globe-archive',
+      name: 'globe-archive',
+      meta: {
+        bodyClass: 'no-scroll',
+        position: 'middle',
+        requiresAuth: true,
+      },
+    },    
     {
       path: '/about',
       name: 'about',
@@ -293,10 +326,15 @@ router.beforeEach((to, from, next) => {
     transitionMode = '';
   }
 
-  if (to.name === 'flight-simulator')
+  if (to.path === '/flight-simulator')
   {
     // STATE_INITIAL = 8;
     store.commit('flightSimulator/setVisualizationState', 8);
+  }
+  if (to.path === '/globe-archive')
+  {
+    // to globe archive
+    store.commit('flightSimulator/setVisualizationState', 10);
   }
 
   store.commit('general/setTransition', transitionName);

@@ -267,4 +267,20 @@ export default {
 @import "./components/css/_session_forms";
 @import "./components/css/_menus";
 @import "./components/css/_animations";
+
+.login-background {
+  position: absolute;
+  background: #000000;
+  height: 100%;
+  width: 100%;
+  z-index: 10;
+
+  display: flex;
+  flex-direction: column;
+  justify-content: end;
+
+  &.hidden {
+    display: none;
+  }
+}
 </style>
