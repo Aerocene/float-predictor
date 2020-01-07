@@ -5,7 +5,7 @@
     >
       <site-header ref="siteHeader" />
 
-      <dashboard v-show="flightToolsActive"/>
+      <dashboard id="dashboard" v-show="flightToolsActive"/>
 
       <div class="site-content" :class="{'--bottom': isBottom}">
         <div class="router-view" ref="content">
@@ -267,6 +267,14 @@ export default {
 @import "./components/css/_session_forms";
 @import "./components/css/_menus";
 @import "./components/css/_animations";
+
+
+#dashboard {
+  position: absolute;
+  top: 0px;
+  left: 0px;
+  z-index: 100;
+}
 
 .login-background {
   position: absolute;
