@@ -20,7 +20,7 @@
                 <ul class="list-group menu-items">
 
                     <li v-show="user" class="menu-item --nav" @click="closeAction">
-                        <router-link to="/profile">Profile ({{user && user.emails[0].address}})</router-link>
+                        <router-link to="/profile">Profile ({{user && ((user.profile && user.profile.name) || user.emails[0].address)}})</router-link>
                     </li>
 
                     <hr>
