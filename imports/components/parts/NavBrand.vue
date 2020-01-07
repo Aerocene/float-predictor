@@ -1,5 +1,6 @@
 <template>
     <nav class="nav-brand">
+
         <router-link to="/flight-simulator">
             <div class="logo" id="fp-logo">
                 <img src="/img/float_predictor_logo.svg"
@@ -7,6 +8,7 @@
                      @click="startNew">
             </div>
         </router-link>
+
         <transition name="fade">
         <p class="intro-description"
            v-if="isDescriptionActive">
@@ -33,6 +35,8 @@
         </transition>
     </nav>
 </template>
+
+
 <script>
 /**
  * @author Studio Folder - @StudioFolder / http://studiofolder.it
@@ -65,7 +69,7 @@ export default {
     },
     initNew() {
       this.$store.dispatch('flightSimulator/resetVisualization');
-      this.$store.commit('general/toggleMenu');
+      this.$store.commit('general/closeMenu');
       // this.$store.commit('flightSimulator/setVisualizationState', 8);
       this.$store.commit('general/setFormStatus', true);
       this.$store.commit('general/setModalShow', true);
