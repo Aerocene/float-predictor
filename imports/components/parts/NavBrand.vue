@@ -3,9 +3,7 @@
 
         <router-link to="/flight-simulator">
             <div class="logo" id="fp-logo">
-                <img src="/img/float_predictor_logo.svg"
-                     alt="logo aerocene float predictor"
-                     @click="startNew">
+              <span @click="startNew">AEROCENE</span>
             </div>
         </router-link>
 
@@ -77,21 +75,35 @@ export default {
   },
 };
 </script>
+
+
 <style lang="scss">
-@import "../css/_variables_and_mixins.scss";
-.nav-brand {
-    .logo {
-        width: 165px;
-        margin-bottom: 33px;
-        img{
-            max-width: 100%;
-        }
-        @include small_down {
-            width: 120px;
-        }
-    }
-    .logo.to-top {
-        top: -50px;
-    }
+// @import "../css/_typography.scss";
+// @import "../css/_variables_and_mixins.scss";
+
+.logo {
+  font-family: "Raleway-Regular";
+  font-size: 12px;
+  color: white;
+  letter-spacing: 4.2px;
 }
+
+// .nav-brand {
+
+//   .logo {
+//     font-family: "Raleway-Medium";
+//     letter-spacing: 4.2px;
+//       /* width: 165px; */
+//       margin-bottom: 33px;
+//       /* img{
+//           max-width: 100%;
+//       } */
+//       /* @include small_down {
+//           width: 120px;
+//       } */
+//   }
+//   /* .logo.to-top {
+//       top: -50px;
+//   } */
+// }
 </style>

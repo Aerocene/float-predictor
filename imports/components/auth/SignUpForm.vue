@@ -84,9 +84,10 @@
 .signup-button {
   margin-top: 1em;
   text-transform: none;
-  background: #41254F;
+  background: rgba(74, 144, 226, 0.3928);
   border-radius: 9px;
   border: none;
+  min-height: 37px;
 }
 </style>
 

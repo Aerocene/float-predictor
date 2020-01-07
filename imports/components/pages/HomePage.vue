@@ -39,7 +39,7 @@ export default {
 </script>
 <style lang="scss">
 .call-to-action {
-    margin: 60vh auto 0;
+    margin: 70vh auto 0;
     color: #fff;
     width: auto;
     text-align: center;

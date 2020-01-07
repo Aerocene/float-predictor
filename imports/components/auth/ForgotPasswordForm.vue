@@ -15,7 +15,7 @@
       <footer class="form-text text-danger" v-show="lastSessionError">{{lastSessionError && lastSessionError.reason}}</footer>
     </fieldset>
 
-    <button class="signin-button">Send password reset</button>
+    <button class="send-button">Send password reset</button>
     
   </form>
 </template>
@@ -41,12 +41,13 @@
   width: 100%
 }
 
-.signin-button {
+.send-button {
   margin-top: 1em;
   text-transform: none;
-  background: #41254F;
+  background: rgba(74, 144, 226, 0.3928);
   border-radius: 9px;
   border: none;
+  min-height: 37px;
 }
 
 

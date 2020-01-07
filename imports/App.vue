@@ -284,6 +284,7 @@ export default {
   z-index: 10;
 
   display: flex;
+  display: -webkit-box;
   flex-direction: column;
   justify-content: end;
 

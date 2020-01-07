@@ -264,7 +264,7 @@ button {
   font-weight: 600;
   /* text-transform: uppercase; */
   margin: 8px;
-  min-height: 44px;
+  min-height: 37px;
   /* border-radius: 4px; */
   padding: 8px;
   /* background-color: rgba(0, 0, 0, 0.6); */

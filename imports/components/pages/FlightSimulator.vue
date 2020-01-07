@@ -94,7 +94,7 @@
                       Aerocene sculptures always leave at noon with sun light.
                   </p>
               </div>
-              <b-button type="submit" variant="primary" v-bind:disabled="!hasLocations">Launch</b-button>
+              <button class="launch-button" type="submit" variant="primary" v-bind:disabled="!hasLocations">Launch</button>
           </b-form>
       </div>
   </div>
@@ -658,5 +658,16 @@ export default {
 @keyframes select-slide-down {
     0% {height: 0; bottom: 0;}
     100% {height: 210px; bottom: -210px;}
+}
+
+.launch-button {
+  background-color: rgba(74, 144, 226, 0.3928);
+  border-radius: 9px;
+  border: none;
+  color:white;
+  margin-top: 2em;
+  margin-left: auto;
+  margin-right: auto;
+  min-height: 37px;
 }
 </style>

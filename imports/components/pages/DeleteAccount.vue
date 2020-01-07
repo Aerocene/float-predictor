@@ -30,13 +30,13 @@
 }
 
 .mybtn {
-  min-height: 44px;
+  min-height: 37px;
 }
 
 .form-submit-button {
   margin-top: 2em;
   text-transform: none;
-  background: #41254F;
+  background: rgba(74, 144, 226, 0.3928);
   border-radius: 9px;
   border: none;
 }
