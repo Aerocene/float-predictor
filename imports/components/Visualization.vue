@@ -886,7 +886,14 @@ export default {
       }
       scene.add(earthSphere);
 
-      if (pars.use_bump) { earthSphere.material.bumpMap = bumpTexture; } else { earthSphere.material.bumpMap = undefined; }
+      if (pars.use_bump) 
+      { 
+        earthSphere.material.bumpMap = bumpTexture; 
+      } 
+      else 
+      { 
+        earthSphere.material.bumpMap = undefined;
+      }      
       earthSphere.material.bumpScale = pars.bump_scale;
 
       earthSphere.material.needsUpdate = true;
@@ -1886,18 +1893,15 @@ export default {
           // console.log("duration: " + duration + " ms -> " + (duration / 1000 / 60 / 60) + " hours");
 
           const float_alt = data.request.float_altitude;
-          // let explorerH = pars.explorer_height_base * 1.3;
+          let explorerH = 0;
 
-          const ratio = 0.0006;
-
-          // const pts = [];
+          // count points to reset explorer
           let point_count = 0;
           for (let i=0; i<data.prediction.length; i++)
           {
             point_count += data.prediction[i].trajectory.length;
           }
           // console.log("points count: " + point_count + " float-lat: " + data.prediction[1].trajectory[0].latitude + " float-lng: " + data.prediction[1].trajectory[0].longitude); 
-
           
 
           // setup explorer with amount of points
@@ -1909,17 +1913,15 @@ export default {
             {              
               const data_point = data.prediction[i].trajectory[j];
 
-              explorerH = data_point.altitude * ratio;
+              // normalize height
+              explorerH = (data_point.altitude / altitudeLevels[this.initialAltitudeLevel]) * 5;
               // console.log(data_point.altitude + " :  explorerH: " + explorerH);
               
 
               // get point on the ground
               const point = Util.latLon2XYZPosition(data_point.latitude, 
                                                 data_point.longitude, 
-                                                earthSphereRadius + explorerH);
-
-              // dropOffMarker.position.set(point.x, point.y, point.z);
-              // dropOffMarker.visible = true;                                  
+                                                earthSphereRadius + explorerH);                         
 
               // const r = Util.getEarthAzimuthRotation(new Date(data_point.datetime));
               // const sunP = new THREE.Vector3(Math.sin(-r) * radius, Math.sin(axesRotation) * radius, Math.cos(-r) * radius);
@@ -1947,7 +1949,6 @@ export default {
                   this.bestDropOff = {lat: data_point.latitude, lng: data_point.longitude};
                   this.minTime = ((new Date(data_point.datetime) - new Date(data.request.launch_datetime)) / 1000 / 60 / 60 / 24);
                   this.minTrack = explorerIndex;
-
 
                   // set position of drop-off marker
                   dropOffMarker.position.set(point.x, point.y, point.z);
