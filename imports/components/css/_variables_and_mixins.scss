@@ -42,18 +42,18 @@ $img-base-path: '../../../img/' !default;
 }
 
 // fonts mixins
-%colfax_base {
-  font-family: "Colfax-Light", Arial, "Helvetica Neue", Helvetica, sans-serif;
+%raleway_base {
+  font-family: "Raleway-Light", Arial, "Helvetica Neue", Helvetica, sans-serif;
   font-weight: normal !important;
   font-style: normal !important;
 }
-%colfax_bold {
-  font-family: "Colfax-Regular", Arial, "Helvetica Neue", Helvetica, sans-serif;
+%raleway_bold {
+  font-family: "Raleway-Medium", Arial, "Helvetica Neue", Helvetica, sans-serif;
   font-weight: normal !important;
   font-style: normal ;
 }
-%colfax_bolder {
-  font-family: "Colfax-Medium", Arial, "Helvetica Neue", Helvetica, sans-serif;
+%raleway_bolder {
+  font-family: "Raleway-Medium", Arial, "Helvetica Neue", Helvetica, sans-serif;
   font-weight: normal !important;
   font-style: normal ;
 }

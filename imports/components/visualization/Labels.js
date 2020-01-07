@@ -36,7 +36,7 @@ class Labels
     this.departureLabel = new THREELabel(
       scene, 
       camera, 
-      'Colfax-Medium', 
+      'Raleway-Medium', 
       11, 
       'rgba(30,30,30,1)',
       'rgba(255,255,255,1)', 
@@ -64,7 +64,7 @@ class Labels
     this.destinationLabel = new THREELabel(
       scene, 
       camera, 
-      'Colfax-Medium', 
+      'Raleway-Medium', 
       11, 
       'rgba(30,30,30,1)',
       'rgba(255,255,255,1)', 

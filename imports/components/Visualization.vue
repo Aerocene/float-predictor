@@ -2080,7 +2080,7 @@ export default {
   height: 100%;
   position: relative;
   z-index: 0;
-  font-style: 'Colfax-Medium';
+  font-style: 'Raleway-Medium';
 }
 
 #labels{

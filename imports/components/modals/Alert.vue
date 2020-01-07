@@ -186,7 +186,7 @@ export default {
         text-align: center;
     }
     .message {
-        @extend %colfax_base;
+        @extend %raleway_base;
         font-size: 1rem;
         text-align: center;
         margin-bottom: 1rem;

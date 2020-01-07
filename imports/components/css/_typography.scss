@@ -1,16 +1,26 @@
 @font-face {
-  font-family: "Colfax-Medium";
-  src: url("/fonts/Colfax/ColfaxWebMedium.woff") format("woff"),
-       url("/fonts/Colfax/ColfaxWebMedium.woff2") format("woff2");
+  font-family: "Raleway-Medium";
+  font-style: normal;
+  font-weight: 500;
+  font-display: swap;
+  src: url("/fonts/Raleway/RalewayWebMedium.woff2") format("woff2");
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+2000-206F, U+2074, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
 }
 @font-face {
-  font-family: "Colfax-Regular";
-  src: url("/fonts/Colfax/ColfaxWebRegular.woff") format("woff");
+  font-family: "Raleway-Medium";
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url("/fonts/Raleway/RalewayWebRegular.woff") format("woff2");
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+2000-206F, U+2074, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
 }
 @font-face {
-  font-family: "Colfax-Light";
-  src: url("/fonts/Colfax/ColfaxWebLight.woff") format("woff"),
-       url("/fonts/Colfax/ColfaxWebLight.woff2") format("woff2");
+  font-family: "Raleway-Light";
+  font-style: normal;
+  font-weight: 300;
+  font-display: swap;
+  src: url("/fonts/Raleway/RalewayWebLight.woff2") format("woff2");
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+2000-206F, U+2074, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
 }
 
 
@@ -21,7 +31,7 @@ html {
   }
 }
 body {
-  @extend %colfax_base;
+  @extend %raleway_base;
   font-size: 1em;
   line-height: 1.45;
   font-variant-caps: normal;
@@ -65,7 +75,7 @@ small, .font-small {
   }
 }
 b, strong {
-  @extend %colfax_bold;
+  @extend %raleway_bold;
 }
 p {
   font-size: 1em;

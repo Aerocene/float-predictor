@@ -109,7 +109,7 @@ body.flight-simulator .main-application:not(.choosing-destination){
 
 // buttons
 .btn {
-  @extend %colfax_base;
+  @extend %raleway_base;
   font-size: 0.9em;
   padding: 6px 30px 5px;
   text-transform: uppercase;
@@ -218,7 +218,7 @@ body.modal-open {
   border-top-right-radius: 0;
   .modal-title {
     @extend .h2;
-    @extend %colfax_bold;
+    @extend %raleway_bold;
     margin: 0;
   }
   .close {

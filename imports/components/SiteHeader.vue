@@ -84,7 +84,7 @@ export default {
         }
     }
     .logo {
-        @extend %colfax_bold;
+        @extend %raleway_bold;
         text-transform: uppercase;
         text-decoration: none;
         font-size: 1.5rem; // 24px

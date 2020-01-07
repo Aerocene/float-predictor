@@ -236,7 +236,7 @@ export default {
                   font-size: .8em;
               }
               strong {
-                  @extend %colfax_bold;
+                  @extend %raleway_bold;
               }
           }
           img {

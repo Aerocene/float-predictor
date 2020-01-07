@@ -32,7 +32,7 @@ class DaysLabels
       const label = new THREELabel(
         scene, 
         camera, 
-        'Colfax-Medium', 
+        'Raleway-Medium', 
         11, 
         'rgba(30,30,30,0)', 
         'rgba(255,255,255,1)', 

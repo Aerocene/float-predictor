@@ -170,7 +170,7 @@ body.upper-content {
   }
   &.--nav {
     margin: $marginItem*1.2 0;
-    @extend %colfax_bold;
+    @extend %raleway_bold;
     @media screen and (min-height: 1000px) {
       margin: $marginItem*1.8 0;
     }
@@ -204,7 +204,7 @@ body.upper-content {
 .menu-section {
   &.--rights {
     a {
-      @extend %colfax_bold;
+      @extend %raleway_bold;
       text-transform: lowercase;
       text-decoration: none;
     }
