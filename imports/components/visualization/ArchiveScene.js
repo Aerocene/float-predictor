@@ -268,7 +268,7 @@ class ArchiveScene
             this.selected = undefined;
         }
 
-        const obj = this.findSprites(point, 60);
+        const obj = this.findSprites(point, 20);
 
         if (obj)
         {
