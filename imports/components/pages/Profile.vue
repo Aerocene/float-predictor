@@ -2,9 +2,9 @@
     <div class="main-content">
         <article role="article" class="article" ref="content">
 
-            <header>Profile</header>
 
             <div class="profile-info">
+              <header>Profile</header>
               <!-- <div class="img-border">
                 <b-img 
                     ref="profileImageRef"
@@ -19,7 +19,7 @@
               </div> -->
 
               <div class="nameinfo">
-                <span>{{userProfile.name}}</span>
+                <!-- <span>{{userProfile.name}}</span> -->
                 <hr>
                 <span class="email-lower">{{user && user.emails[0].address}}</span>
               </div>
@@ -64,7 +64,8 @@
                 <!-- <button @click="showUserArchive">My Archive</button> -->
                 <!-- <button @click="openSettings">Settings</button> -->
                 <button @click="logout">Log out</button>
-                <button @click="deleteAccount" class="negative">Delete account</button>
+                <button @click="deleteAccount">Delete account</button>
+                <!-- <button @click="deleteAccount" class="negative">Delete account</button> -->
             </footer>
         </article>
     </div>
@@ -76,7 +77,7 @@
   position: absolute;
   z-index: 20;
   padding-top: 75px;
-  background: #000000bb;
+  background: transparent;
   height: 100%;
   width: 100%;
 
@@ -92,15 +93,18 @@
     height: 100%;
     min-width: 100%;
     overflow-y: scroll;
-    padding-left: 5%;
-    padding-right: 5%;
+    padding-left: 10%;
+    padding-right: 10%;
     padding-top: 0%;
+
+    justify-content: space-between;
+    padding-bottom: 13vh;
   }
 }
 
 .profile-info {
   display: flex; 
-  flex-direction: row; 
+  flex-direction: column; 
   width: 100%; 
   margin-top: 1em;
 
@@ -124,12 +128,10 @@
     -moz-outline-radius: 20px;
   } */
   .nameinfo {
-    margin-top: 20px;
-
+    margin-top: 0px;
   }
   div {
-    margin-left: 16px;
-    margin-top: 10px;
+    /* margin-top: 10px; */
     width: 100%;
     display: flex; 
     flex-direction: column;
@@ -144,7 +146,7 @@
       min-width: 100%;
     }
     .email-lower {
-      font-size: 12px;
+      font-size: 18px;
     }
   }
 }
@@ -201,7 +203,8 @@
     margin-top: 4em;
     width: 100%;
     height: 100%;
-    max-height: 2em;
+    line-height: 4em;
+    max-height: 4em;
   }
 
   button {

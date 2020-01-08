@@ -67,6 +67,7 @@ const STATE_UNFOCUSED_GALLERY = 7;
 const STATE_INITIAL = 8;
 const STATE_WAIT_FOR_FLIGHTS = 9;
 const STATE_GLOBE_ARCHIVE = 10;
+const STATE_GLOBE_PROFILE = 11;
 
 const pressureLevels = [1000, 850, 500, 250, 100, 30, 10];
 const altitudeLevels = [100, 1500, 5500, 10000, 16000, 21500, 26500];
@@ -1425,7 +1426,32 @@ export default {
             },
           });
           break;
+        }
         
+        /*
+        * STATE_GLOBE_PROFILE (11)
+        */
+        case STATE_GLOBE_PROFILE: {
+          pars.auto_rotate = true;
+          this.active = false;
+          const iv = [controls.target.y, this.getScale(), controls.getPolarAngle()];
+          const ev = [0, 0.3, Math.PI * 0.5];          
+          animator.start({
+            init_values: iv,
+            end_values: ev,
+            time_start: 0,
+            time_interval: 0.4,
+            sine_interpolation: true,
+            onAnimationEnd: () => {
+            },
+            onAnimationUpdate: (v) => {
+              controls.target.set(controls.target.x, v[0], controls.target.z);
+              this.setScale(v[1]);
+              controls.setPolarAngle(v[2]);
+            },
+          });
+          break;    
+        }
 
         default: {
           break;

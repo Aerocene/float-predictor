@@ -336,6 +336,11 @@ router.beforeEach((to, from, next) => {
     // to globe archive
     store.commit('flightSimulator/setVisualizationState', 10);
   }
+  if (to.path === '/profile')
+  {
+    // to globe archive
+    store.commit('flightSimulator/setVisualizationState', 11);
+  }
 
   store.commit('general/setTransition', transitionName);
   store.commit('general/setTransitionMode', transitionMode);
