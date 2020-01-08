@@ -312,12 +312,15 @@ class ArchiveScene
 
     render(renderer, camera)
     {    
-        const sc = spriteScale/camera.zoom;
-        // for (var i=0; i < this.labelGroup.children.length; i++ )
-        // {
-        //     const sprite = this.labelGroup.children[i];            
-        //     sprite.scale.set(sc, sc, 1.0 );
-        // }
+        let sc = spriteScale/camera.zoom;
+
+        if (sc > spriteScale*2) sc = spriteScale*2;
+        
+        for (var i=0; i < this.labelGroup.children.length; i++ )
+        {
+            const sprite = this.labelGroup.children[i];            
+            sprite.scale.set(sc, sc, 1.0 );
+        }
     
         this.earthCircle.lookAt( camera.position );
 
