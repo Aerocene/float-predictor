@@ -45,7 +45,7 @@
                             rtypes="geocode">
                     </vue-google-autocomplete>
 
-                    <button class="locationBtn" @click="getLocationDep">⦿</button>
+                    <!-- <button class="locationBtn" @click="getLocationDep">⦿</button> -->
 
                   </div>
                   <transition name="fade-height">
@@ -65,7 +65,7 @@
                             rtypes="geocode">
                           </vue-google-autocomplete>
                           
-                          <button class="locationBtn" @click="getLocationDest">⦿</button>
+                          <!-- <button class="locationBtn" @click="getLocationDest">⦿</button> -->
 
                         </div>
                       </div>
