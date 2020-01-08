@@ -14,8 +14,10 @@ const MARKER_PATH = '/img/marker.png';
 
 class ArchiveScene
 {
-    constructor(camera, radius)
+    constructor(camera, radius, selectCb)
     {
+        this.selectCb = selectCb;
+        this.idSpriteMap = {};
         this.camera = camera;
         this.radius = radius * 0.9999;
         this.scene = new THREE.Scene();
@@ -43,6 +45,90 @@ class ArchiveScene
         });
     }
 
+    cleanupSprites()
+    {
+        // get a map with current available ids
+        let ids = {};
+        for (var prop in this.idSpriteMap) {
+            if (Object.prototype.hasOwnProperty.call(this.idSpriteMap, prop)) {
+                // add it...                
+                ids[prop] = true;
+            }
+        }
+
+        // delete the ids we got from the archive
+        for (let i=0; i<this.collectedIds.length; i++) {
+            delete ids[this.collectedIds[i]];
+        }
+
+        // remove ids we did not get from the online-archive
+        for (var prop in ids) {
+            if (Object.prototype.hasOwnProperty.call(ids, prop)) {
+                // remove item with id from scene...
+                if (this.idSpriteMap[prop]) {
+                    // remove sprite
+                    this.labelGroup.remove(this.idSpriteMap[prop]);
+
+                    // remove from map
+                    delete this.idSpriteMap[prop];
+                }
+            }
+        }
+
+        delete this.collectedIds;
+    }
+
+    downloadArchive(successCb, errorCb)
+    {
+        this.collectedIds = [];
+
+        this.sCb = () => {
+            this.cleanupSprites();
+            successCb();
+        };
+
+        // download all the archives on after another
+        this.downloadArchive1(() => {
+            this.downloadArchive2(this.sCb, errorCb);
+        }, this.sCb, errorCb);
+    }
+    downloadArchive1(followUpFunc, successCb, errorCb)
+    {
+      const url = "https://aerocene.org/wp-json/wp/v2/community_member?per_page=100&_embed=1";
+
+      fetch(url)
+      .then(response => response.json())
+      .then((jsonData) => {      
+        this.addData(jsonData);
+        if (followUpFunc) followUpFunc();
+        else if (successCb) successCb();
+      })
+      .catch((r) => {
+          if (followUpFunc) {
+            console.error(`error downloading community-archive: ${JSON.stringify(r)}`);
+            followUpFunc();
+        }
+        else if (errorCb) {
+            errorCb("error downloading community-archive");
+        }
+      });
+    }
+    downloadArchive2(successCb, errorCb)
+    {
+      const url = "https://aerocene.org/wp-json/wp/v2/flight?per_page=100&_embed=1";    
+
+      fetch(url)
+      .then(response => response.json())
+      .then((jsonData) => { 
+        this.addData(jsonData);
+        if (successCb) successCb();
+      })
+      .catch((r) => {        
+        if (errorCb) errorCb("error downloading flight-archive");
+      });
+    }
+
+
     addSprite(pos, obj, color)
     {
         let sprite = new THREE.Sprite( this.baseMaterial.clone() );                    
@@ -53,6 +139,10 @@ class ArchiveScene
         sprite.position.set( pos.x, pos.y, pos.z );
         sprite.user = obj;
 
+        // store that in the map        
+        this.idSpriteMap[obj.id] = sprite;
+
+        // add to scene
         this.labelGroup.add(sprite);
     }
 
@@ -71,9 +161,33 @@ class ArchiveScene
 
             if (obj.status !== "publish")
             {
+                // check if we cached an id
+                if (this.idSpriteMap[obj.id] !== undefined)
+                {
+                    // remove that sprite from scene
+                    this.labelGroup.remove(this.idSpriteMap[obj.id]);
+
+                    // remove from map
+                    delete this.idSpriteMap[obj.id];
+                }
+
                 continue;
             }
 
+            // this id should show up in map, so collect it
+            this.collectedIds.push(obj.id);
+
+            // item is published
+            // check if we got it already
+            if (this.idSpriteMap[obj.id] !== undefined)
+            {
+                // just update obj...
+                this.idSpriteMap[obj.id].user = obj;
+
+                continue;
+            }
+
+            // going to it as a new sprite
             if (obj.type === "community_member")
             {
                 if (obj.acf && obj.acf.map)
@@ -87,7 +201,7 @@ class ArchiveScene
                     obj._embedded['wp:term'] &&
                     obj._embedded['wp:term'].length > 0 &&
                     obj._embedded['wp:term'][0]['0'])
-            {           
+            {
                 let color = COLOR_TETHERED;
                 switch (obj._embedded['wp:term'][0]['0'].name)
                 {
@@ -104,6 +218,7 @@ class ArchiveScene
                         color = COLOR_FREE;
                         break;
                 }
+                
                 // a flight...
                 if (obj.acf && obj.acf.map)
                 {
@@ -112,8 +227,7 @@ class ArchiveScene
                     this.addSprite(pos, obj, color);
                 }
                 else {
-                    console.log("no acf or afc.map for index: " + i);
-                    
+                    console.log("no acf or afc.map for index: " + i);                
                 }                
             }
             else 
@@ -161,6 +275,10 @@ class ArchiveScene
             this.selected = obj;
             this.selected.material.color.set( '#fff' );
             this.hovered = undefined;
+
+            if (this.selectCb) {
+                this.selectCb(obj.user);
+            }
         }
     }
 
@@ -189,6 +307,7 @@ class ArchiveScene
         {
             this.labelGroup.remove(this.labelGroup.children[0]);
         }
+        this.idSpriteMap = {};
     }
 
     render(renderer, camera)
@@ -209,6 +328,10 @@ class ArchiveScene
     setScale(s)
     {
         this.scene.scale.set(s, s, s);
+    }
+    getScale()
+    {
+        return this.scene.scale.x;
     }
 
 }

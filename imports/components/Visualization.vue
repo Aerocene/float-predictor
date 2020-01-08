@@ -75,8 +75,6 @@ const radius = 200;
 const earthSphereRadius = radius/1.01;
 const altMultiplier = radius / 6371000;
 // const EARTH_RADIUS = 6378.137
-const INITIAL_ZOOM = (window.matchMedia('(orientation: portrait)').matches) ? 1.4 : 1.5;
-const responsiveZoom = (window.matchMedia('(orientation: portrait)').matches) ? 1.5 : 1.8;
 const responsiveY = (window.matchMedia('(orientation: portrait)').matches) ? 45 : 150;
 const axesRotation = Util.getEarthPolarRotation(new Date());
 const colors = [0xFF060D, 0xF0E41E, 0x00FA00, 0xFFAC00, 0x8A7CEF, 0xFF81EB, 0x490073, 0xffffff];
@@ -154,6 +152,9 @@ export default {
       return this.playing && (!this.isWindPanelOn) &&
         this.textureLoaded >= 1 && this.windsLoaded &&
         (!this.selecting || this.visualizationState !== STATE_ANIMATION_ACTIVE);
+    },
+    initialZoom() {
+      return (window.matchMedia('(orientation: portrait)').matches) ? (camera === cameraOrtho ? 1.4 : 0.4) : (camera === cameraOrtho ? 1.5 : 0.5);
     },
     activeExplorers() { return this.$store.state.flightSimulator.activeExplorers; },
     flightType() { return this.$store.state.flightSimulator.flightType; },
@@ -405,6 +406,9 @@ export default {
     },
   },  
   methods: {
+    showArchiveContent(obj) {
+      this.$emit('archive-show', obj);
+    },
     /**
      * Init the visualization on component mount. It setup the three.js scene, add the gui and setup the listeners.
      */
@@ -440,8 +444,8 @@ export default {
       this.initExplorers();
       this.initNightMap();
       labels = new Labels(scene, camera, radius);
-      archiveScene = new ArchiveScene(camera, earthSphereRadius);
-      this.setScale(INITIAL_ZOOM);
+      archiveScene = new ArchiveScene(camera, earthSphereRadius, this.showArchiveContent);
+      this.setScale(this.initialZoom);
       this.initWindVisualization();
       this.initFPSChecker();
 
@@ -964,10 +968,8 @@ export default {
           }),
         );
       }
-
       scene.add(emisphereSphere);
       emisphereSphere.visible = false;
-      emisphereSprite.visible = false;
 
       //------------------------
       /* events */
@@ -1299,6 +1301,9 @@ export default {
         case STATE_UNFOCUSED: {
           pars.auto_rotate = true;
           const iv = [controls.target.y, this.getScale(), controls.getPolarAngle()];
+
+          const responsiveZoom = (window.matchMedia('(orientation: portrait)').matches) ? (camera === cameraOrtho ? 1.5 : 0.5) : (camera === cameraOrtho ? 1.8 : 0.8);
+
           const ev = [responsiveY, responsiveZoom, Math.PI * 0.5];
           animator.start({
             init_values: iv,
@@ -1390,15 +1395,20 @@ export default {
         * GLOBE ARCHIVE (10)
         */
         case STATE_GLOBE_ARCHIVE:
-          archiveScene.clear();
           pars.auto_rotate = false;
           this.active = false;
           this.cachedWinds = this.winds;
           this.winds = 0;
           const iv = [controls.target.y, this.getScale(), controls.getPolarAngle()];
           const ev = [0, 1.3, Math.PI * 0.5];
-
-          this.downloadArchive();
+          
+          archiveScene.downloadArchive(() => {
+            // success
+          },
+          (error) => {
+            // error
+            console.error(error);
+          });
 
           animator.start({
             init_values: iv,
@@ -1546,7 +1556,7 @@ export default {
       const ev = [azimuth, polar];
       // console.log(`Zooming from ${this.getScale()} to ${config.zoom}`);
       iv.push(this.getScale());
-      ev.push(INITIAL_ZOOM);
+      ev.push(this.initialZoom);
       iv.push(controls.target.x, controls.target.y, controls.target.z);
       ev.push(0, 0, 0);
       iv.push(camera.position.length());
@@ -1705,6 +1715,7 @@ export default {
                         camera.position.y * v + umv * c.y * pars.camera_distance,
                         camera.position.z * v + umv * c.z * pars.camera_distance,
                       );
+
                       // camera.position.clampLength(radius * 1.35, radius * 5);
                       controls.target.set(
                         controls.target.x * v + umv * explorers[this.onboardIndex].animatingSphere.position.x,
@@ -1724,7 +1735,7 @@ export default {
                     const uma = 1 - a;
                     controls.target.set(controls.target.x * a, controls.target.y * a, controls.target.z * a);
                     if (this.autoMode) {
-                      const t = this.getScale() * a + INITIAL_ZOOM * uma;
+                      const t = this.getScale() * a + this.initialZoom * uma;
                       this.setScale(t);
                       camera.position.set(camera.position.x * a + v.x * uma, camera.position.y * a + v.y * uma, camera.position.z * a + v.z * uma);
                     }
@@ -2033,42 +2044,6 @@ export default {
         (e) => this.error(e),
       );
     },
-
-
-    downloadArchive()
-    {
-      this.downloadArchive1(() => {
-        this.downloadArchive2();
-      });
-    },
-    downloadArchive1(followUpFunc)
-    {
-      const url = "https://aerocene.org/wp-json/wp/v2/community_member?per_page=100&_embed=1";
-
-      fetch(url)
-      .then(response => response.json())
-      .then((jsonData) => {      
-        archiveScene.addData(jsonData);
-        if (followUpFunc) followUpFunc();
-      })
-      .catch((r) => {
-        console.error(`error downloading community-archive: ${JSON.stringify(r)}`);
-        if (followUpFunc) followUpFunc();
-      });
-    },
-    downloadArchive2()
-    {
-      const url = "https://aerocene.org/wp-json/wp/v2/flight?per_page=100&_embed=1";    
-
-      fetch(url)
-      .then(response => response.json())
-      .then((jsonData) => { 
-        archiveScene.addData(jsonData);
-      })
-      .catch((r) => {
-        console.error(`error downloading flight-archive: ${JSON.stringify(r)}`);
-      });
-    }
   },  
 };
 </script>
