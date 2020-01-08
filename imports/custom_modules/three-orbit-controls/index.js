@@ -421,6 +421,10 @@ module.exports = function(THREE) {
 
 		} );
 
+		this.setCamera = function(object) {
+			constraint = new OrbitConstraint( object );
+		};
+
 		this.getPolarAngle = function () {
 
 			return constraint.getPolarAngle();
