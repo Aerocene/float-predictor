@@ -6,18 +6,21 @@
       <div v-if="isChoosing" class="flight-form wrapper shadowed" ref="content">
           <b-form @submit="onSubmit">
               <div class="type-selector-group">
+
                   <b-form-checkbox id="FlightTypeSelector"
                                    v-model="flightType"
                                    value="free"
                                    unchecked-value="planned"
                                    class="type-selector"
-                                   :class="flightType">
-                      <div class="type-selector">
-                          <span :class="{'--isActive': isPlanned}">Planned Float</span>
-                          <span class="slider round"></span>
-                          <span :class="{'--isActive': isFree}">Free Float</span>
-                      </div>
+                                   :class="flightType"
+                  >
+                    <div class="type-selector">
+                        <span :class="{'--isActive': isPlanned}">Planned Float</span>
+                        <span class="slider round"></span>
+                        <span :class="{'--isActive': isFree}">Free Float</span>
+                    </div>
                   </b-form-checkbox>
+
                   <transition name="switch-text">
                       <p v-if="isPlanned" class="description" key="planned">
                           Planned floats try to reach a specific destination
@@ -28,11 +31,15 @@
                           fly along following the wind.
                       </p>
                   </transition>
+
               </div>
+
+              <!-- From / To -->
               <div class="coordinates-selector-group">
-                  <label class="small">From</label>
+
+                  <!-- <label class="small">From</label> -->
                   <div class="place-input">
-                  
+
                     <vue-google-autocomplete
                             id="map" classname="form-control"
                             ref="departureBox"
@@ -48,9 +55,11 @@
                     <!-- <button class="locationBtn" @click="getLocationDep">⦿</button> -->
 
                   </div>
+
                   <transition name="fade-height">
+                    
                       <div class="optional-destination" v-if="(flightType === 'planned')">
-                        <label  class="small">To</label>
+                        <!-- <label  class="small">To</label> -->
                         <div class="place-input">
 
                           <vue-google-autocomplete
@@ -71,6 +80,8 @@
                       </div>
                   </transition>
               </div>
+
+              <!-- altitude selector -->
               <div class="altitude-selector-group">
                   <div class="input-group altitude-select">
                       <label class="small">Float Altitude</label>
@@ -94,7 +105,15 @@
                       Aerocene sculptures always leave at noon with sun light.
                   </p>
               </div>
-              <button class="launch-button" type="submit" variant="primary" v-bind:disabled="!hasLocations">Launch</button>
+
+              <!-- launch button -->
+              <button 
+                class="launch-button" 
+                type="submit"
+                v-bind:disabled="!hasLocations"
+              >
+                Launch
+              </button>
           </b-form>
       </div>
   </div>
@@ -156,8 +175,8 @@ export default {
       return !_.isEmpty(this.departure) && (this.isFree || (!_.isEmpty(this.destination)));
     },
     placeholder() {
-      let departureStr = 'Departure';
-      let destinationStr = 'Destination';
+      let departureStr = 'From';
+      let destinationStr = 'To';
       if (this.form.errors.departure) {
         departureStr = this.form.errors.departure;
       } else if (!_.isEmpty(this.departure)) {
@@ -390,10 +409,12 @@ export default {
 </script>
 
 <style lang="scss">
-
+/* @import "../css/_typography.scss"; */
 @import "../css/_variables_and_mixins.scss";
+
 .main-content.over .flight-form{
     transition: margin-top .3s ease-in-out;
+    background-color: black;
 }
 .place-input {
   display: flex;
@@ -461,6 +482,9 @@ export default {
     .description {
         margin: 1em auto .5em;
         min-height: 48px;
+        /* color:white; */
+        font-size: 10px;
+        line-height: 16px;
     }
 
     .type-selector {
@@ -513,6 +537,11 @@ export default {
         font-size: 1em;
         padding: 0.1em 0 0.3em 0;
         margin-bottom: 1.4em;
+        color: white;
+        border-bottom-color: #979797;
+    }
+    .form-control:focus {
+      color: white;
     }
     .input-label {
         color: #FFF;
@@ -662,6 +691,7 @@ export default {
 
 .launch-button {
   background-color: rgba(74, 144, 226, 0.3928);
+  font-size: 16px;
   border-radius: 9px;
   border: none;
   color:white;
@@ -669,5 +699,7 @@ export default {
   margin-left: auto;
   margin-right: auto;
   min-height: 37px;
+  padding-left: 14px;
+  padding-right: 14px;
 }
 </style>

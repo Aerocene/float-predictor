@@ -1,20 +1,37 @@
 <template>
-    <div class="site-header">
-        <transition name="fade">
-            <main-menu v-if="isMenuVisible" :is-choosing="isChoosing" />
-        </transition>
-        <nav-brand :is-choosing="isChoosing" />
+    <div class="site-header" :class="{'--logged-out': isLoggedOut}">
+
+        <b-button ref="fp" id="fpBtn" class="a-button btn" @click="clickFP">Float Predictor</b-button>
+        <b-button ref="ar" id="aBTn" class="a-button" @click="clickA">Archive</b-button>
+        <div></div>
+        <main-menu v-if="isMenuVisible" :is-choosing="isChoosing" />
+
     </div>
 </template>
+
+
 <script>
 import mainMenu from './parts/MainMenu';
 import navBrand from './parts/NavBrand';
+import router from '../router'
 
 export default {
   components: {
     mainMenu, navBrand,
   },
-  computed: {
+  data() {
+      return {
+          isPredictor: true,
+      }
+  },
+  mounted() {
+    this.$refs.fp.style.backgroundColor = this.isPredictor ? ("rgba(74, 144, 226, 0.3928)") : "transparent";
+    this.$refs.ar.style.backgroundColor = this.isPredictor ? "transparent" : ("rgba(74, 144, 226, 0.3928)");
+  },
+  computed: {  
+    isLoggedOut() {
+      return this.$store.state.auth.user === undefined || this.$store.state.auth.user === null;
+    },    
     isOnboard() { return this.$store.state.flightSimulator.focusedExplorer > 0; },
     isChoosing() { return this.$store.state.general.isChoosingDestination; },
     isHome() { return this.$route.name === 'home-page'; },
@@ -25,8 +42,29 @@ export default {
         return ((!this.isOnboard && this.isMobile) || !this.isMobile);
     },
   },
+  watch: {
+      isPredictor(v) {
+          console.log("re" + this.isPredictor);
+          this.$refs.fp.style.backgroundColor = v ? ("rgba(74, 144, 226, 0.3928)") : "transparent";
+          this.$refs.ar.style.backgroundColor = v ? "transparent" : ("rgba(74, 144, 226, 0.3928)");
+      }
+  },
+  methods: {
+      clickFP() {
+          this.isPredictor = true;
+          this.$store.commit('general/closeMenu'); 
+          router.push('/flight-simulator');
+      },
+      clickA() {
+          this.isPredictor = false;
+          this.$store.commit('general/closeMenu'); 
+          router.push('/globe-archive');
+      }
+  }
 };
 </script>
+
+
 <style lang="scss">
 @import "./css/_variables_and_mixins.scss";
 @import "./css/_typography.scss";
@@ -34,21 +72,49 @@ export default {
 //    position: relative;
 //   background-color: transparent;
 } */
+
+
+.a-button {    
+    text-transform: none !important;
+    font-size: 16px !important;
+    background-color: transparent;
+    transition: background-color .5s;
+    border: none;
+    margin-top: 0px !important;
+    padding-left: 14px !important;
+    padding-right: 14px !important;
+    white-space: nowrap;
+}
+/* .a-button:active {
+    background-color: rgba(74, 144, 226, 0.3928);    
+} */
+
 .site-header {
     position: relative;
-    z-index: 50;
-    background-color: transparent;
+    padding-right: 40px;
+    padding-left: 50px;
+
+    display: flex;
+    /* display: -webkit-box; */
+    justify-content: space-between;
+    align-items: center;
+
+    z-index: 50 !important; /* lower than login background! */
+    background-color: rgba(0, 0, 0, 0.8) !important;
     transition: top .3s ease-in-out;
     @include large_down {
         position: fixed;
         top: 0;
-        height: 75px;
+        height: 65px;
         width: 100%;
         &.is-onboard {
             display: none;
         }
     }
-    &:before {
+    &.--logged-out {
+      display: none;
+    }
+    /* &:before {
         content: '';
         display: block;
         height: 100%;
@@ -63,13 +129,13 @@ export default {
                 rgba(0,0,0,1) 40%,
                 rgba(0,0,0,.9) 90%,
                 rgba(0,0,0,0) 100%);
-    }
-    &.--scroll:before {
+    } */
+    /* &.--scroll:before {
         opacity: 1;
-    }
-    &.to-top {
+    } */
+    /* &.to-top {
         top: -60px !important;
-    }
+    } */
     .nav-brand {
         color: #fff;
         display: block;
@@ -80,7 +146,7 @@ export default {
         padding: $marginBase;
         transition: opacity .2s ease;
         @include large_down {
-            padding: 1rem $marginMobile $marginMobile;
+            padding: 2rem $marginMobile $marginMobile;
         }
     }
     .logo {

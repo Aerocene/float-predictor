@@ -1,19 +1,19 @@
 <template>
     <div class="main-nav shadowed">
         <div class="header">
-        <b-nav vertical>
-            <b-nav-item @click="closeAction" class="--close --correction">
-                <i class="fp fp-close-w"></i></b-nav-item>
-        </b-nav>
-        <ul class="list-group menu-items brand-items">
-            <router-link to="/flight-simulator">
-                <li class="menu-item --logo">
-                    <img src="/img/globe_gif.gif" @click="startNew"></li>
-                <li class="menu-item --nav">
-                    <div @click="startNew">start a new<br>aerosolar journey</div></li>
-            </router-link>
-        </ul>
-    </div>
+            <b-nav vertical>
+                <b-nav-item @click="closeAction" class="--close --correction">
+                    <i class="fp fp-close-w"></i></b-nav-item>
+            </b-nav>
+            <ul class="list-group menu-items brand-items">
+                <router-link to="/flight-simulator">
+                    <li class="menu-item --logo">
+                        <img src="/img/globe_gif.gif" @click="startNew"></li>
+                    <li class="menu-item --nav">
+                        <div @click="startNew">start a new<br>aerosolar journey</div></li>
+                </router-link>
+            </ul>
+        </div>
         <div class="body">
         <div class="macro-section --main">
             <div class="menu-section">
@@ -33,9 +33,6 @@
                     </li>
                     <li class="menu-item --nav" @click="closeAction">
                         <router-link to="/aeroglyphs-archive">Aeroglyphs archive</router-link>
-                    </li>
-                    <li class="menu-item --nav" @click="closeAction">
-                        <router-link to="/globe-archive">Aerocene archive</router-link>
                     </li>
                     <li class="menu-item --nav" @click="closeAction">
                         <a href="#" @click.prevent v-b-modal.instruction-modal>How to Float</a>
@@ -108,6 +105,17 @@ hr {
     min-width: 100%;
     margin: 12px 0 12px 0;
 }
+
+/* .main-nav {
+    background: transparent !important;
+}
+
+.header {
+    background: black !important;
+}
+.body {
+    background: black !important;
+} */
 </style>
 
 <script>
