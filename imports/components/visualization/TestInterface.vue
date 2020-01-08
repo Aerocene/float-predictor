@@ -30,7 +30,7 @@
       <h4>EXPLORERS</h4>
       <ul>
         <li class='explorer-selection' v-for="(c, index) in colors"
-          v-bind:key="index" v-if="days > 0 && index < days">
+          v-bind:key="index">
           <a v-bind:style="{color: c}"
             v-on:click="focusedExplorer = index+1;">
             # {{index+1}}
@@ -63,13 +63,20 @@ export default {
   name: 'TestInterface',
   data() {
     return {
-      colors: ['#FF060D', '#F0E41E', '#00FA00', '#FFAC00', '#8A7CEF', '#FF81EB', '#490073', '#ffffff'],
     };
-  },
+  },  
   components: {
     VueGoogleAutocomplete, Visualization,
   },
   computed: {
+    colors() {
+      let arr = ['#FF060D', '#F0E41E', '#00FA00', '#FFAC00', '#8A7CEF', '#FF81EB', '#490073', '#ffffff'];
+      let output = [];
+      for (let i = 0; i<days; i++) {
+        output.push(arr[i]);        
+      }
+      return output;
+    },
     days() { return this.$store.state.flightSimulator.elapsedDays; },
     animationPlaying() { return this.$store.state.flightSimulator.isPlaying; },
     explorers() { return this.$store.state.flightSimulator.activeExplorers; },
