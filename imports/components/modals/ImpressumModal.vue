@@ -10,12 +10,13 @@
         </p>
         <h4>TRAJECTORY COMPUTATION</h4>
         <p>
-            <a href="https://eapsweb.mit.edu/" target="_blank">MIT Department of Earth, Atmospheric and Planetary Sciences</a> (Glenn Flierl, Lodovica Illari, Bill McKenna).
+            <a href="https://www.cuspaceflight.com/" target="_blank">
+            Camebridge Space Flight (CUSF)</a> - <a href="https://github.com/cuspaceflight/tawhiri" target="_blank">Tawhiri</a>.
         </p>
         <h4>VISUALISATION, DESIGN AND DEVELOPMENT</h4>
         <p>
             <a href="http://www.studiofolder.it/" target="_blank">Studio Folder</a> (Marco Ferrari, Elisa Pasqual, Luca Ferrario, Iacopo Leardini)
-            and <a href="http://angelosemeraro.info/" target="_blank">Angelo Semeraro</a>.
+            with <a href="http://angelosemeraro.info/" target="_blank">Angelo Semeraro</a> and <a href="https://ingorandolf.info/" target="_blank">Ingo Randolf</a>.
         </p>
         <h4>PROJECT DEVELOPMENT AND COORDINATION</h4>
         <p>
