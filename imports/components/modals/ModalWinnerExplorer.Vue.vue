@@ -1,13 +1,85 @@
 <template>
     <!-- Modal Component -->
-    <b-modal v-model="modalVisible"
+
+    <transition name="fade">
+    <div id="winnerContent" v-if="modalVisible" @click="closeModal">
+
+        <div class="content-container">
+        <div>
+        <div class="loader-content">
+          <!-- <img
+            v-if="imageurl" 
+            width="50%" 
+            v-bind:src="imageurl" 
+            alt=""
+          /> -->
+            <div class="aeroglyph" style="text-align: center;" v-html="winningExplorerData.svg"></div>
+
+            <div v-if="isPlannedFlight" class="message">
+                The Aerocene Sculpture that left from <b>{{departure.city}}</b>
+                on <strong>{{depDate}}</strong>
+                arrived within <strong>{{minDistFloat}}km</strong>
+                from <strong>{{destination.city}}</strong> in
+                <strong>{{minTime}} days.</strong>
+            </div>
+            <div v-else class="message">
+                The Aerocene Sculpture that floated the farthest
+                is the one that left from <strong>{{departure.city}}</strong>
+                on <strong>{{depDate}}</strong>
+                and travelled <strong>{{maxDist}} km</strong>
+                in <strong>{{winningExplorerData.min_time}} days.</strong>
+            </div>
+
+            <div style="margin-top: 2em;"></div>
+
+            <ul class="bottom-links">
+            <li class="share">
+                <small>Share</small>
+                <social-sharing url="https://floatpredictor.aerocene.org/"
+                                title="Aerocene Float Predictor"
+                                description="Travel around the earth lifted only by
+                                 the sun, carried only by the wind, towards a clean
+                                  and sustainable future."
+                                hashtags="aerocene,floatpredictor"
+                                twitter-user="aerocene"
+                                inline-template>
+                    <div class="list-group horiziontal share-items">
+                        <network network="email">
+                            <i class="fp fp-mail"></i>
+                        </network>
+                        <network network="facebook">
+                            <i class="fp fp-facebook"></i>
+                        </network>
+                        <!-- <network network="googleplus">
+                            <i class="fp fp-google"></i>
+                        </network> -->
+                        <network network="twitter">
+                            <i class="fp fp-twitter"></i>
+                        </network>
+                    </div>
+                </social-sharing>
+            </li>
+            </ul>
+
+        </div>        
+      </div>
+      </div>
+
+
+        
+    </div>
+    </transition>
+
+    <!-- <b-modal v-model="modalVisible"
              id="dialog-label"
              size="sm"
              hide-footer
              centered
              class="winner-explorer-modal --box"
              title="Your Aerosolar Journey">
+
         <i slot="modal-header-close" class="fp fp-close-w"></i>
+
         <div class="aeroglyph" v-html="winningExplorerData.svg"></div>
         <div class="message">
             You earned <strong>{{earnedAerochange}} Æros</strong> with this flight.
@@ -25,7 +97,7 @@
             on <strong>{{depDate}}</strong>
             and travelled <strong>{{maxDist}} km</strong>
             in <strong>{{winningExplorerData.min_time}} days.</strong>
-        </div>
+        </div> -->
 
         <!-- Begin MailChimp Signup Form -->
         <!-- <div id="mc_embed_signup">
@@ -76,7 +148,7 @@
         </div> -->
         <!--End mc_embed_signup-->
 
-        <ul class="bottom-links">
+        <!-- <ul class="bottom-links">
             <li class="share">
                 <small>Share</small>
                 <social-sharing url="https://floatpredictor.aerocene.org/"
@@ -102,7 +174,10 @@
                         </network>
                     </div>
                 </social-sharing>
-            </li>
+            </li> -->
+
+
+
             <!-- <li class="separator"></li>
             <li class="download">
                 <small>Download</small>
@@ -114,9 +189,12 @@
                     </li>
                 </ul>
             </li> -->
-        </ul>
-    </b-modal>
+        <!-- </ul>
+    </b-modal> -->
 </template>
+
+
+
 <script>
 /**
  * @author Studio Folder - @StudioFolder / http://studiofolder.it
@@ -185,14 +263,76 @@ export default {
   },
   methods: {
     onSubmit() {
-      this.modalShow = false;
+        this.modalShow = false;
+    },
+    closeModal() {
+        console.log("close");
+        
+        this.modalShow = false;
     },
   },
 };
 </script>
+
+
+
 <style lang="scss">
 @import "../css/_variables_and_mixins.scss";
 @import "../css/_typography.scss";
+@import "../css/_icons.scss";
+
+#winnerContent{
+  overflow-y: scroll;
+  overflow-x: hidden;
+  position: absolute;
+  z-index: 999;
+  top:0px;
+  left:0px;
+  /* display: table; */
+  height: 100%;
+  width: 100%;
+  transition: opacity 0.4s ease;
+  background-color: transparent;
+}
+
+.content-container {
+  position: relative;
+  max-height: 80vh;
+  overflow-y: scroll;
+  /* margin: 10 10; */
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+
+  background: rgba(0, 0, 0, 0.8);
+  margin-top: 15vh;
+  margin-left: 10%;
+  margin-right: 10%;
+  border-radius: 20px;
+  padding: 2em;
+}
+.loader-content {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.error-container:before {
+  content: "";
+  display: block;
+  padding-top: 100%;
+}
+
+.fade-enter-active, .fade-leave-active {
+  transition: opacity .5s;
+}
+.fade-enter, .fade-leave-to /* .fade-leave-active below version 2.1.8 */ {
+  opacity: 0;
+}
+
+
+
+
 .winner-explorer-modal {
     z-index: 19;
     font-size: 1rem;

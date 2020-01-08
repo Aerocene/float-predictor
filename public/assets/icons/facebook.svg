@@ -1,12 +1,74 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<svg width="21px" height="21px" viewBox="0 0 21 21" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
-    <!-- Generator: Sketch 48.2 (47327) - http://www.bohemiancoding.com/sketch -->
-    <title>Stroke 87</title>
-    <desc>Created with Sketch.</desc>
-    <defs></defs>
-    <g id="Icons-/-Social-Facebook" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd" transform="translate(-20.000000, -20.000000)">
-        <g id="Group" transform="translate(11.000000, 11.000000)" fill="#1E1E1E">
-            <path d="M28.08,9.75 L10.92,9.75 C10.27338,9.75 9.75,10.27338 9.75,10.92 L9.75,28.08 C9.75,28.72662 10.27338,29.25 10.92,29.25 L19.89,29.25 L19.89,23.01 L17.55,23.01 L17.55,19.89 L19.89,19.89 L19.89,17.55 C19.89,15.39642 21.63642,13.65 23.79,13.65 L26.13,13.65 L26.13,16.77 L24.57,16.77 C23.70888,16.77 23.01,17.46888 23.01,18.33 L23.01,19.89 L26.13,19.89 L25.74,23.01 L23.01,23.01 L23.01,29.25 L28.08,29.25 C28.72662,29.25 29.25,28.72662 29.25,28.08 L29.25,10.92 C29.25,10.27338 28.72662,9.75 28.08,9.75 Z" id="Stroke-87"></path>
-        </g>
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg
+   xmlns:dc="http://purl.org/dc/elements/1.1/"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   width="21px"
+   height="21px"
+   viewBox="0 0 21 21"
+   version="1.1"
+   id="svg894"
+   sodipodi:docname="facebook.svg"
+   inkscape:version="0.92.2 5c3e80d, 2017-08-06">
+  <metadata
+     id="metadata898">
+    <rdf:RDF>
+      <cc:Work
+         rdf:about="">
+        <dc:format>image/svg+xml</dc:format>
+        <dc:type
+           rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+      </cc:Work>
+    </rdf:RDF>
+  </metadata>
+  <sodipodi:namedview
+     pagecolor="#ffffff"
+     bordercolor="#666666"
+     borderopacity="1"
+     objecttolerance="10"
+     gridtolerance="10"
+     guidetolerance="10"
+     inkscape:pageopacity="0"
+     inkscape:pageshadow="2"
+     inkscape:window-width="1622"
+     inkscape:window-height="985"
+     id="namedview896"
+     showgrid="false"
+     inkscape:zoom="46.571429"
+     inkscape:cx="10.5"
+     inkscape:cy="10.5"
+     inkscape:window-x="2063"
+     inkscape:window-y="50"
+     inkscape:window-maximized="0"
+     inkscape:current-layer="svg894" />
+  <!-- Generator: Sketch 48.2 (47327) - http://www.bohemiancoding.com/sketch -->
+  <title
+     id="title885">Stroke 87</title>
+  <desc
+     id="desc887">Created with Sketch.</desc>
+  <defs
+     id="defs889" />
+  <g
+     id="Icons-/-Social-Facebook"
+     stroke="none"
+     stroke-width="1"
+     fill="none"
+     fill-rule="evenodd"
+     transform="translate(-20.000000, -20.000000)"
+     style="fill:#ffffff">
+    <g
+       id="Group"
+       transform="translate(11.000000, 11.000000)"
+       fill="#1E1E1E"
+       style="fill:#ffffff">
+      <path
+         d="M28.08,9.75 L10.92,9.75 C10.27338,9.75 9.75,10.27338 9.75,10.92 L9.75,28.08 C9.75,28.72662 10.27338,29.25 10.92,29.25 L19.89,29.25 L19.89,23.01 L17.55,23.01 L17.55,19.89 L19.89,19.89 L19.89,17.55 C19.89,15.39642 21.63642,13.65 23.79,13.65 L26.13,13.65 L26.13,16.77 L24.57,16.77 C23.70888,16.77 23.01,17.46888 23.01,18.33 L23.01,19.89 L26.13,19.89 L25.74,23.01 L23.01,23.01 L23.01,29.25 L28.08,29.25 C28.72662,29.25 29.25,28.72662 29.25,28.08 L29.25,10.92 C29.25,10.27338 28.72662,9.75 28.08,9.75 Z"
+         id="Stroke-87"
+         style="fill:#ffffff" />
     </g>
+  </g>
 </svg>
