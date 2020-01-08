@@ -1,12 +1,25 @@
 
 <template>
   <div id ="visualization" class="main-visualization">
+
+    <!-- these image are used as icons in a THREELabel -->
     <img id="down" src="/assets/icons/destination_arrow_down.svg"/>
     <img id="up" src="/assets/icons/departure_arrow_up.svg"/>
+
     <div id="labels"></div>
-    <Loading v-if="(errorContent === '' && (loading < 1.0 || saving))" v-bind:content="loadingContent"></Loading>
-    <Error v-if="errorContent !== ''" v-bind:content="errorContent"></Error>
+
+    <Loading 
+      v-if="(errorContent === '' && (loading < 1.0 || saving))" 
+      v-bind:content="loadingContent"
+    />
+
+    <Error 
+      v-if="errorContent !== ''" 
+      v-bind:content="errorContent"
+    />
+
     <canvas id="labels-canvas"></canvas>
+
   </div>
 </template>
 <script>
@@ -76,6 +89,12 @@ const radius = 200;
 const earthSphereRadius = radius/1.01;
 const altMultiplier = radius / 6371000;
 // const EARTH_RADIUS = 6378.137
+
+const MAX_ZOOM = 7;
+const MIN_ZOOM = 0.15;
+const MAX_DIST = radius * 10;
+const MIN_DIST = radius * 0.5;
+
 const responsiveY = (window.matchMedia('(orientation: portrait)').matches) ? 45 : 150;
 const axesRotation = Util.getEarthPolarRotation(new Date());
 const colors = [0xFF060D, 0xF0E41E, 0x00FA00, 0xFFAC00, 0x8A7CEF, 0xFF81EB, 0x490073, 0xffffff];
@@ -569,9 +588,6 @@ export default {
         raycaster.setFromCamera(mm, camera);
         const intersects = raycaster.intersectObject(earthSphere, false);
 
-        console.log("mouse: " + mouse.x + ", " + mouse.y);        
-        console.log("intersects.length: " + intersects.length);
-        
         if (intersects.length > 0)
         {
           var objs = intersects.filter( function ( res ) {
@@ -579,7 +595,6 @@ export default {
           });
 
           var point = objs[0].point.divideScalar(scene.scale.x);
-          console.log("point: " + point.x + ", " + point.y + ", " + point.z);      
           archiveScene.onMouseClick(point);
         }
       }
@@ -841,11 +856,11 @@ export default {
       controls.zoomSpeed = 0.28; // Speed of zooming / dollying. Default is 1. 
       controls.enableZoom = pars.zoom_enabled;
       
-      controls.minDistance = radius * 0.5; // How far you can dolly in ( PerspectiveCamera only ). Default is 0.
-      controls.maxDistance = radius * 10;
+      controls.minDistance = MIN_DIST; // How far you can dolly in ( PerspectiveCamera only ). Default is 0.
+      controls.maxDistance = MAX_DIST;
 
-      controls.maxZoom = 3;
-      controls.minZoom = 0.15;
+      controls.maxZoom = MAX_ZOOM;
+      controls.minZoom = MIN_ZOOM;
 
       pars.pixel_ratio = window.devicePixelRatio;
       this.setAntialias(pars.antialias);
@@ -1278,7 +1293,9 @@ export default {
           labels.cityLabels.setVisible(false);
 
           // GO TO DESTINATION POINT
-          const d = Util.XYZ2LatLon(explorers[this.minTrack].animatingSphere.position); // explorers[this.minTrack].destination;
+          // explorers[this.minTrack].destination;
+          const d = Util.XYZ2LatLon(explorers[this.minTrack].animatingSphere.position);
+
           this.resetTo({
             lat: d.lat,
             lng: d.lng,
@@ -1768,10 +1785,20 @@ export default {
                   }
                 }
               }
-              if (this.animating) this.incrementTime(frames);
-              if (alpha >= 1) { this.visualizationState = STATE_MOVING_TO_DESTINATION; }
+
+              if (this.animating)
+              {
+                this.incrementTime(frames);
+              }
+
+              if (alpha >= 1) 
+              { 
+                this.visualizationState = STATE_MOVING_TO_DESTINATION;
+              }
+
               break;
             }
+
             default:
               break;
           }
