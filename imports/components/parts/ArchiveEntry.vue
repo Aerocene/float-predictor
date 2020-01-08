@@ -3,7 +3,7 @@
   <div id="archiveContent" @click="clearContent">
     <!-- <div style="display: table-cell; vertical-align: middle;"> -->
       <div class="content-container">
-    <div>
+      <div>
         <div class="loader-content">
           <img
             v-if="imageurl" 
@@ -16,7 +16,7 @@
           <div style="font-size: 12px;">{{ place }}</div>
           <div style="margin-top: 1em; margin-bottom: 2em;">{{ content }}</div>
         </div>        
-    </div>
+      </div>
       </div>
   </div>
 </transition>
@@ -47,11 +47,10 @@ export default {
 </script>
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
-<style scoped>
+<style lang="scss" scoped>
 
 #archiveContent{
-  overflow-y: scroll;
-  overflow-x: hidden;
+  overflow: hidden;
   position: absolute;
   z-index: 999;
   top:0px;
@@ -67,6 +66,7 @@ export default {
   position: relative;
   max-height: 80vh;
   overflow-y: scroll;
+  overflow-x: hidden;
   /* margin: 10 10; */
   display: flex;
   flex-direction: row;

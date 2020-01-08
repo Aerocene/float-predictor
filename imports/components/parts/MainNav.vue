@@ -101,7 +101,7 @@
     </div>
 </template>
 
-<style scoped>
+<style lang="scss" scoped>
 hr {
     margin: 0px;
     background: rgba(255, 255, 255, 0.2);

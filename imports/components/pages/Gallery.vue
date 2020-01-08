@@ -122,7 +122,8 @@ export default {
   },
 };
 </script>
-<style scoped lang="scss">
+
+<style lang="scss" scoped>
   @import '../css/_variables_and_mixins.scss';
 
   .main-content.gallery {

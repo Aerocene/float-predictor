@@ -34,7 +34,8 @@
   </form>
 </template>
 
-<style scoped>
+<style lang="scss" scoped>
+
 .session-form {
   width: 100%;
 }
