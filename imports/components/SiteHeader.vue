@@ -5,11 +5,22 @@
 
         <div class="container">
 
-            <b-button ref="fp" id="fpBtn" class="a-button btn" @click="clickFP">Float Predictor</b-button>
-            <b-button ref="ar" id="aBTn" class="a-button" @click="clickA">Archive</b-button>
-            <!-- <div>
-                <img src="/img/menu-burger.png" alt="Menu">
-            </div> -->
+            <b-button 
+                class="a-button" 
+                :class="{'--is-predict': isPredictor}" 
+                @click="clickFP"
+            >
+                Float Predictor
+            </b-button>
+
+            <b-button 
+                class="a-button" 
+                :class="{'--is-predict': !isPredictor}" 
+                @click="clickA"
+            >
+                Archive
+            </b-button>
+
             <main-menu v-if="isMenuVisible" :is-choosing="isChoosing" />
         </div>
 
@@ -22,23 +33,20 @@
 
 <script>
 import mainMenu from './parts/MainMenu';
-import navBrand from './parts/NavBrand';
 import router from '../router'
 
 export default {
   components: {
-    mainMenu, navBrand,
+    mainMenu,
   },
   data() {
       return {
-          isPredictor: true,
       }
   },
-  mounted() {
-    this.$refs.fp.style.backgroundColor = this.isPredictor ? ("rgba(74, 144, 226, 0.3928)") : "transparent";
-    this.$refs.ar.style.backgroundColor = this.isPredictor ? "transparent" : ("rgba(74, 144, 226, 0.3928)");
-  },
   computed: {  
+    isPredictor() {
+        return this.$store.state.general.isPredictor || false;
+    },
     isLoggedOut() {
       return this.$store.state.auth.user === undefined || this.$store.state.auth.user === null;
     },    
@@ -52,21 +60,14 @@ export default {
         return ((!this.isOnboard && this.isMobile) || !this.isMobile);
     },
   },
-  watch: {
-      isPredictor(v) {
-          console.log("re" + this.isPredictor);
-          this.$refs.fp.style.backgroundColor = v ? ("rgba(74, 144, 226, 0.3928)") : "transparent";
-          this.$refs.ar.style.backgroundColor = v ? "transparent" : ("rgba(74, 144, 226, 0.3928)");
-      }
-  },
   methods: {
       clickFP() {
-          this.isPredictor = true;
+          this.$store.commit('general/setIsPredictor', true); 
           this.$store.commit('general/closeMenu'); 
           router.push('/flight-simulator');
       },
       clickA() {
-          this.isPredictor = false;
+          this.$store.commit('general/setIsPredictor', false); 
           this.$store.commit('general/closeMenu'); 
           router.push('/globe-archive');
       }
@@ -78,10 +79,6 @@ export default {
 <style lang="scss">
 @import "./css/_variables_and_mixins.scss";
 @import "./css/_typography.scss";
-/* body.flight-simulator .choosing-destination .site-header {
-//    position: relative;
-//   background-color: transparent;
-} */
 
 .spacer {
     max-width: 50px;
@@ -105,6 +102,9 @@ export default {
     padding-left: 14px !important;
     padding-right: 14px !important;
     white-space: nowrap;
+    &.--is-predict{
+        background-color: rgba(74, 144, 226, 0.3928);
+    }
 }
 
 .site-header {

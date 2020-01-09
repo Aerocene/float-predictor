@@ -327,17 +327,23 @@ router.beforeEach((to, from, next) => {
     transitionMode = '';
   }
 
-  if (to.path === '/flight-simulator')
+  if (to.path === '/')
+  {
+    store.commit('general/setIsPredictor', true);
+  }
+  else if (to.path === '/flight-simulator')
   {
     // STATE_INITIAL = 8;
     store.commit('flightSimulator/setVisualizationState', 8);
+    store.commit('general/setIsPredictor', true);
   }
-  if (to.path === '/globe-archive')
+  else if (to.path === '/globe-archive')
   {
     // to globe archive
     store.commit('flightSimulator/setVisualizationState', 10);
+    store.commit('general/setIsPredictor', false);
   }
-  if (to.path === '/profile')
+  else if (to.path === '/profile')
   {
     // to globe archive
     store.commit('flightSimulator/setVisualizationState', 11);

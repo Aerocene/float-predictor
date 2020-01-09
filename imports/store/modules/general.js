@@ -27,6 +27,7 @@ export default {
     isWindPanelOpen: false,
     deviceName: '', // (small, medium, big) or (phone, tablet, desktop) ???
     modalShow: true,
+    isPredictor: true,
   },
   mutations: {
     setModalShow(state, v) {
@@ -79,6 +80,9 @@ export default {
     },
     setAnimationHeight(state, value) {
       state.animationHeight = value;
+    },
+    setIsPredictor(state, value) {
+      state.isPredictor = value;
     },
   },
   getters: {
