@@ -1,25 +1,31 @@
 <template>
-    <div class="main-menu">
+    <div>
 
         <b-nav vertical>
 
-            <b-nav-item @click="openMenu" class="--rounded --black --correction">
-                <i class="fp fp-menu"></i>
+            <b-nav-item @click="openMenu" class="--rounded --black">
+                <i class="fp fp-menu" style="background-size: unset !important;"></i>
             </b-nav-item>
 
             <transition name="fade">
 
-                <div vertical class="onboard-tools" v-show="flightToolsActive">
-
+                <div 
+                  class="onboard-tools" 
+                  v-show="flightToolsActive"
+                  vertical
+                >
                     
                   <!-- <b-nav-item v-show="!isChoosing" class="&#45;&#45;rounded complete-instruction">
                     <a href="#" @click.prevent v-b-modal.instruction-modal>
                       <i class="fp fp-instructions"></i>
                     </a>
                   </b-nav-item> -->
-                   
 
-                    <li class="nav-item --rounded" v-show="!isChoosing" @click="toggleInfoBox">
+                    <li 
+                      class="nav-item1" 
+                      v-show="!isChoosing"
+                      @click="toggleInfoBox"
+                    >
                         <div class="hover-text">Info and legend</div>
                         <a href="#" target="_self" class="nav-link">
                             <i :class="[isInfoBoxOpen ? 'fp-close' : 'fp-info', 'fp']"></i>
@@ -46,6 +52,23 @@
         </transition>
     </div>
 </template>
+
+<style lang="scss" scoped>
+
+/* .main-menu {
+  position: fixed;
+  top: 0;
+  right: 0; */
+  /* padding: $marginBase $marginBase 0 0; */
+  /* z-index: 20;
+  @include medium_down {
+    padding: $marginMobile;
+    position: absolute;
+  }
+} */
+
+</style>
+
 <script>
 /**
  * @author Studio Folder - @StudioFolder / http://studiofolder.it

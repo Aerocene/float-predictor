@@ -1,10 +1,20 @@
 <template>
     <div class="site-header" :class="{'--logged-out': isLoggedOut}">
 
-        <b-button ref="fp" id="fpBtn" class="a-button btn" @click="clickFP">Float Predictor</b-button>
-        <b-button ref="ar" id="aBTn" class="a-button" @click="clickA">Archive</b-button>
-        <div></div>
-        <main-menu v-if="isMenuVisible" :is-choosing="isChoosing" />
+        <div class="spacer"></div>
+
+        <div class="container">
+
+            <b-button ref="fp" id="fpBtn" class="a-button btn" @click="clickFP">Float Predictor</b-button>
+            <b-button ref="ar" id="aBTn" class="a-button" @click="clickA">Archive</b-button>
+            <!-- <div>
+                <img src="/img/menu-burger.png" alt="Menu">
+            </div> -->
+            <main-menu v-if="isMenuVisible" :is-choosing="isChoosing" />
+        </div>
+
+        <div class="spacer"></div>
+
 
     </div>
 </template>
@@ -73,7 +83,18 @@ export default {
 //   background-color: transparent;
 } */
 
-
+.spacer {
+    max-width: 50px;
+    min-width: 8px;
+    width: 50px;
+}
+.container {
+    height: 100%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0px;
+}
 .a-button {    
     text-transform: none !important;
     font-size: 16px !important;
@@ -85,21 +106,12 @@ export default {
     padding-right: 14px !important;
     white-space: nowrap;
 }
-/* .a-button:active {
-    background-color: rgba(74, 144, 226, 0.3928);    
-} */
 
 .site-header {
     position: relative;
-    padding-right: 40px;
-    padding-left: 50px;
-
     display: flex;
-    /* display: -webkit-box; */
-    justify-content: space-between;
-    align-items: center;
 
-    z-index: 50 !important; /* lower than login background! */
+    z-index: 50; /* lower than login background! */
     background-color: rgba(0, 0, 0, 0.8) !important;
     transition: top .3s ease-in-out;
     @include large_down {

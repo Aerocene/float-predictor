@@ -1,14 +1,3 @@
-.main-menu {
-  position: fixed;
-  top: 0;
-  right: 0;
-  padding: $marginBase $marginBase 0 0;
-  z-index: 20;
-  @include medium_down {
-    padding: $marginMobile;
-    position: absolute;
-  }
-}
 .menu-items a {
   text-decoration: none;
   &:hover {
@@ -240,24 +229,24 @@ body.upper-content {
  * MAin Navigation
  */
 .main-nav {
-  background-color: $lightBlack;
+  background-color: transparent;
   padding: $marginBase $marginBase $marginBase/2 $marginBase+$marginBase/3;
   position: fixed;
   top: 0;
   right: 0;
-  height: 100%;
+  // height: 100%;
   width: auto;
   max-width: 332px;
   display: flex;
   flex-flow: column;
   z-index: 50;
   overflow: scroll;
-  @include small_down {
-    padding: $marginMobile $marginMobile $marginMobile/2 $marginMobile;
-    width: 100%;
-    overflow: scroll;
-    max-width: 100%;
-  }
+  // @include small_down {
+  //   padding: $marginMobile $marginMobile $marginMobile/2 $marginMobile;
+  //   // width: 100%;
+  //   overflow: scroll;
+  //   // max-width: 100%;
+  // }
   .header {
     flex: 0 0 auto;
     .nav {
@@ -285,9 +274,9 @@ body.upper-content {
         margin-left: -14px;
         img {
           max-width: 135px;
-          position: absolute;
-          top: -55px;
-          left: -78px;
+          position: relative;
+          // top: -55px;
+          left: -50px;
         }
       }
     }
@@ -307,6 +296,8 @@ body.upper-content {
         margin: .5rem 0;
       }
       .menu-item.--link {
+        font-size:15px;
+        line-height: 21px;
         margin: .2rem 0;
       }
       .list-group.horiziontal.share-items {
