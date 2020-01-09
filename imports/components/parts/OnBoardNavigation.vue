@@ -102,7 +102,6 @@ export default {
             transform: translate(-50%, -50%);
             position: absolute;
             right: 0;
-            top: 80px;
             padding: 2px;
             cursor: unset;
             &:hover .label {
