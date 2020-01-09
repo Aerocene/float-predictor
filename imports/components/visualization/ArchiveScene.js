@@ -2,7 +2,7 @@ import Util from './Util';
 
 const THREE = require('three');
 
-const spriteScale = 32;
+const spriteScale = 28;
 
 const COLOR_MUSEO = 0x9d0e0e;
 const COLOR_COMMUNITY = 0xeef60e;
@@ -11,6 +11,12 @@ const COLOR_FREE = 0x29C5E7;
 const COLOR_TETHERED = 0x950E9D;
 
 const MARKER_PATH = '/img/marker-1.png';
+
+const MARKER_FREE = '/img/marker-free.png';
+const MARKER_HUMAN = '/img/marker-human.png';
+const MARKER_TETHERED = '/img/marker-tethered.png';
+const MARKER_MEMBER = '/img/marker-member.png';
+const MARKER_MUSEO = '/img/marker-museo.png';
 
 class ArchiveScene
 {
@@ -39,8 +45,33 @@ class ArchiveScene
 
         // create base material so we can use it later
         this.baseMaterial = new THREE.SpriteMaterial( { 
-            color: '#fff', 
+            material: '#fff', 
             map: new THREE.TextureLoader().load(MARKER_PATH),
+            depthTest: true,
+        });
+        this.materialFree = new THREE.SpriteMaterial( { 
+            material: '#fff', 
+            map: new THREE.TextureLoader().load(MARKER_FREE),
+            depthTest: true,
+        });
+        this.materialHuman = new THREE.SpriteMaterial( { 
+            material: '#fff', 
+            map: new THREE.TextureLoader().load(MARKER_HUMAN),
+            depthTest: true,
+        });
+        this.materialTethered = new THREE.SpriteMaterial( { 
+            material: '#fff', 
+            map: new THREE.TextureLoader().load(MARKER_TETHERED),
+            depthTest: true,
+        });
+        this.materialMember = new THREE.SpriteMaterial( { 
+            material: '#fff', 
+            map: new THREE.TextureLoader().load(MARKER_MEMBER),
+            depthTest: true,
+        });
+        this.materialMuseo = new THREE.SpriteMaterial( { 
+            material: '#fff', 
+            map: new THREE.TextureLoader().load(MARKER_MUSEO),
             depthTest: true,
         });
     }
@@ -129,14 +160,14 @@ class ArchiveScene
     }
 
 
-    addSprite(pos, obj, color)
+    addSprite(pos, obj, material)
     {
-        let sprite = new THREE.Sprite( this.baseMaterial.clone() );                    
-        sprite.originalColor = color;
-        sprite.material.color.set(color);
+        let sprite = new THREE.Sprite( material ); 
+        sprite.originalColor = 0xffffff;
         sprite.renderOrder = 3;
         sprite.scale.set(spriteScale, spriteScale, spriteScale);
         sprite.position.set( pos.x, pos.y, pos.z );
+        
         sprite.user = obj;
 
         // store that in the map        
@@ -194,7 +225,7 @@ class ArchiveScene
                 {
                     let pos = Util.latLon2XYZPosition(obj.acf.map.lat, obj.acf.map.lng, this.radius);    
     
-                    this.addSprite(pos, obj, COLOR_COMMUNITY);
+                    this.addSprite(pos, obj, this.materialMember.clone());
                 }
             }
             else if (obj._embedded && 
@@ -202,21 +233,25 @@ class ArchiveScene
                     obj._embedded['wp:term'].length > 0 &&
                     obj._embedded['wp:term'][0]['0'])
             {
-                let color = COLOR_TETHERED;
-                switch (obj._embedded['wp:term'][0]['0'].name)
+                let material;
+                const flightname = obj._embedded['wp:term'][0]['0'].name;            
+                switch (flightname)
                 {
                     case "Museo Aero Solar":
-                        color = COLOR_MUSEO;
+                        material = this.materialMuseo.clone();
                         break;
                     case "Tethered Flight":
-                        color = COLOR_TETHERED;
+                        material = this.materialTethered.clone();
                         break;
                     case "Human Flight":
-                        color = COLOR_HUMAN;
+                        material = this.materialHuman.clone();
                         break;
                     case "Free Flight":
-                        color = COLOR_FREE;
+                        material = this.materialFree.clone();
                         break;
+                    default:
+                        console.error("unknown flight type: " + flightname);                        
+                        continue;
                 }
                 
                 // a flight...
@@ -224,7 +259,7 @@ class ArchiveScene
                 {
                     let pos = Util.latLon2XYZPosition(obj.acf.map.lat, obj.acf.map.lng, this.radius);    
                     
-                    this.addSprite(pos, obj, color);
+                    this.addSprite(pos, obj, material);
                 }
                 else {
                     console.log("no acf or afc.map for index: " + i);                
@@ -273,7 +308,7 @@ class ArchiveScene
         if (obj)
         {
             this.selected = obj;
-            this.selected.material.color.set( '#fff' );
+            this.selected.material.color.set( '#999999' );
             this.hovered = undefined;
 
             if (this.selectCb) {
@@ -286,7 +321,7 @@ class ArchiveScene
     {
         if (this.hovered)
         {
-            this.hovered.material.color.set( '#FBC445' );
+            this.hovered.material.material.set( '#FBC445' );
             this.hovered.renderOrder = 3;
             this.hovered = undefined;
         }
@@ -297,7 +332,7 @@ class ArchiveScene
         {
             this.hovered = obj;
             this.hovered.renderOrder = 10;
-            this.hovered.material.color.set( '#f00' );
+            this.hovered.material.material.set( '#f00' );
         }
     }
 
