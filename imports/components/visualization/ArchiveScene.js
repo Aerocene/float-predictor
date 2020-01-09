@@ -10,7 +10,7 @@ const COLOR_HUMAN = 0x69d40b;
 const COLOR_FREE = 0x29C5E7;
 const COLOR_TETHERED = 0x950E9D;
 
-const MARKER_PATH = '/img/marker.png';
+const MARKER_PATH = '/img/marker-1.png';
 
 class ArchiveScene
 {
