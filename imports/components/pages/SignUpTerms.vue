@@ -2,13 +2,13 @@
     <div class="main-content">
       <article class="form-container" ref="content">
         <span>
-        Terms of Use for the App "Floatpredictor"
+        Terms of Use for the App "Aerocene"
         <br><br>
         1. SCOPE OF THESE TERMS OF USE
         <br><br>
-        1.1 These Terms of Use of Studio Tomás Saraceno GmbH (hereinafter: Studio Saraceno) apply to the use of the App "Floatpredictor" (hereinafter: App) in addition to the terms of use made available by Apple (as the operator of the iTunes store), Google (as the operator of the Google Play store) or other providers (hereinafter collectively: App Store Operators). In case of eventual contradictions, the present Terms of Use will take precedence over those of the App Store Operators with regard to the relationship between Studio Saraceno and the relevant user. These terms do not affect the contractual relationship between the App Store Operators and the user.
+        1.1 These Terms of Use of Studio Tomás Saraceno GmbH (hereinafter: Studio Saraceno) apply to the use of the App "Aerocene" (hereinafter: App) in addition to the terms of use made available by Apple (as the operator of the iTunes store), Google (as the operator of the Google Play store) or other providers (hereinafter collectively: App Store Operators). In case of eventual contradictions, the present Terms of Use will take precedence over those of the App Store Operators with regard to the relationship between Studio Saraceno and the relevant user. These terms do not affect the contractual relationship between the App Store Operators and the user.
         <br><br>
-        1.2 These Terms of Use apply as of August 2019 and will automatically be included in the contractual relationship between you and Studio Saraceno upon registration with the App for any use of the App.
+        1.2 These Terms of Use apply as of January 2020 and will automatically be included in the contractual relationship between you and Studio Saraceno upon registration with the App for any use of the App.
         <br><br>
         2. SCOPE OF SERVICES OF THE APP AND VERSIONS
         <br><br>
