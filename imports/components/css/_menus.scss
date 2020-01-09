@@ -1,3 +1,14 @@
+.main-menu {
+  position: fixed;
+  top: 0;
+  right: 0;
+  padding: 0.55rem $marginBase 0 0;
+  z-index: 20;
+  @include medium_down {
+    padding: 0.55rem $marginMobile 0 0;
+    position: absolute;
+  }
+}
 .menu-items a {
   text-decoration: none;
   &:hover {
@@ -12,7 +23,7 @@
 body.flight-simulator .onboard-tools {
   @include medium_down {
     position: fixed;
-    bottom: $marginItem*2;
+    bottom: 2.1rem;
     left: 0;
     flex-flow: row;
     width: calc(50vw - #{$itemWidth/2});

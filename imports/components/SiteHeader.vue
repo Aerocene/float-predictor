@@ -17,11 +17,17 @@
                 class="a-button" 
                 :class="{'--is-predict': !isPredictor}" 
                 @click="clickA"
+                v-show="archiveAllowed"
             >
                 Archive
             </b-button>
 
-            <main-menu v-if="isMenuVisible" :is-choosing="isChoosing" />
+            <div style="min-width: 32px; min-heigth:32px;">
+                <main-menu 
+                    v-show="isMenuVisible" 
+                    :is-choosing="isChoosing"
+                />
+            </div>
         </div>
 
         <div class="spacer"></div>
@@ -43,7 +49,16 @@ export default {
       return {
       }
   },
-  computed: {  
+  computed: {        
+    archiveAllowed() {
+        // archive not allowed when:
+        // STATE_MOVING_TO_DEPARTURE (1)
+        // STATE_ANIMATION_ACTIVE (2)
+        // STATE_MOVING_TO_DESTINATION (3)
+        return this.$store.state.flightSimulator.visualizationState !== 1 &&
+                this.$store.state.flightSimulator.visualizationState !== 2 &&
+                this.$store.state.flightSimulator.visualizationState !== 3;
+    },
     isPredictor() {
         return this.$store.state.general.isPredictor || false;
     },
@@ -58,19 +73,40 @@ export default {
     },
     isMenuVisible() {
         return ((!this.isOnboard && this.isMobile) || !this.isMobile);
-    },
+        // return true;
+    },    
   },
   methods: {
-      clickFP() {
-          this.$store.commit('general/setIsPredictor', true); 
-          this.$store.commit('general/closeMenu'); 
-          router.push('/flight-simulator');
+    clickFP() {
+        this.$store.commit('general/setIsPredictor', true); 
+        this.$store.commit('general/closeMenu'); 
+
+        if (this.$store.state.flightSimulator.isActive &&
+            this.$store.state.flightSimulator.visualizationState !== 4)
+        {
+            this.$dialog.confirm('This Action will reset the current simulation and start a new one. Please confirm to continue')
+            .then(() => {
+                this.initNew();
+            });
+        } else {
+            this.initNew();
+        }
+
+        router.push('/flight-simulator');
       },
-      clickA() {
-          this.$store.commit('general/setIsPredictor', false); 
-          this.$store.commit('general/closeMenu'); 
-          router.push('/globe-archive');
-      }
+    clickA() {
+        this.$store.commit('general/setIsPredictor', false);
+        this.$store.commit('general/closeMenu'); 
+        this.$store.commit('flightSimulator/setVisualizationState', 10);
+        router.push('/globe-archive');
+    },
+    initNew() {
+        this.$store.dispatch('flightSimulator/resetVisualization');
+        this.$store.commit('general/closeMenu');
+        //   this.$store.commit('flightSimulator/setVisualizationState', 8);
+        this.$store.commit('general/setFormStatus', true);
+        this.$store.commit('general/setModalShow', true);
+    },
   }
 };
 </script>
@@ -110,6 +146,7 @@ export default {
 .site-header {
     position: relative;
     display: flex;
+    height: 65px;
 
     z-index: 50; /* lower than login background! */
     background-color: rgba(0, 0, 0, 0.8) !important;

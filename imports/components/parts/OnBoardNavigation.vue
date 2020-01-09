@@ -33,6 +33,7 @@
     </div>
     </transition>
 </template>
+
 <script>
 /**
  * @author Studio Folder - @StudioFolder / http://studiofolder.it
@@ -101,6 +102,7 @@ export default {
             transform: translate(-50%, -50%);
             position: absolute;
             right: 0;
+            top: 80px;
             padding: 2px;
             cursor: unset;
             &:hover .label {
@@ -209,7 +211,7 @@ export default {
             }
             .close {
                 position: fixed;
-                top: 2.6rem;
+                top: 2.35rem;
                 right: 1.5rem;
             }
             .body {

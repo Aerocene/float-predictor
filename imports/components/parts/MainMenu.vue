@@ -1,5 +1,5 @@
 <template>
-    <div>
+    <div class="main-menu">
 
         <b-nav vertical>
 
@@ -26,7 +26,7 @@
                       v-show="!isChoosing"
                       @click="toggleInfoBox"
                     >
-                        <div class="hover-text">Info and legend</div>
+                        <!-- <div class="hover-text">Info and legend</div> -->
                         <a href="#" target="_self" class="nav-link">
                             <i :class="[isInfoBoxOpen ? 'fp-close' : 'fp-info', 'fp']"></i>
                         </a>
@@ -40,9 +40,9 @@
                         </a>
                     </li> -->
 
-                    <li class="nav-item" v-show="!isChoosing">
+                    <!-- <li class="nav-item" v-show="!isChoosing">
                       <div></div>
-                    </li>
+                    </li> -->
 
                 </div>
             </transition>
@@ -55,17 +55,15 @@
 
 <style lang="scss" scoped>
 
-/* .main-menu {
-  position: fixed;
-  top: 0;
-  right: 0; */
-  /* padding: $marginBase $marginBase 0 0; */
-  /* z-index: 20;
-  @include medium_down {
-    padding: $marginMobile;
-    position: absolute;
-  }
-} */
+.nav-link {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+.fp-info {
+  background-color:rgba(255, 255, 255, 0.5);
+  border-radius: 50%;
+}
 
 </style>
 

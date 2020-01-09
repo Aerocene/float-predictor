@@ -436,7 +436,7 @@ export default {
     top: 0;
     width: 450px;
     margin: 0 auto;
-    background: linear-gradient(180deg, $lightBlack, black);
+    background: black;
     padding: $marginBase $marginBase*4/5;
     color: $gray;
     text-align: center;
@@ -450,7 +450,7 @@ export default {
         width: auto;
         padding: $marginMobile*2/3;
         margin: 80px auto $marginMobile;
-        background: $lightBlack;
+        background: black;
         max-width: 500px;
         form {
             height: 100%;
