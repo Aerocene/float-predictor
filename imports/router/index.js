@@ -38,10 +38,11 @@ const router = new Router({
     {
       path: '/',
       name: 'home-page',
-      component: HomePage,
+      component: FlightSimulator,
       meta: {
         bodyClass: 'home no-scroll',
         position: 'middle',
+        requiresAuth: true,
       },
     },
     {
@@ -342,6 +343,7 @@ router.beforeEach((to, from, next) => {
     store.commit('flightSimulator/setVisualizationState', 11);
   }
 
+  store.commit('general/closeMenu');
   store.commit('general/setTransition', transitionName);
   store.commit('general/setTransitionMode', transitionMode);
 
