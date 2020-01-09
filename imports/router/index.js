@@ -38,7 +38,7 @@ const router = new Router({
     {
       path: '/',
       name: 'home-page',
-      component: FlightSimulator,
+      component: HomePage,
       meta: {
         bodyClass: 'home no-scroll',
         position: 'middle',
