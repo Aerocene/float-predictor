@@ -19,7 +19,7 @@ const USE_SPHERES = false;
 const ATTACK_DECAY = 12;
 const EARTH_RADIUS = 6378.137;
 const SCENE_SCALE = EARTH_RADIUS / 200.0;
-const LINE_SCALE_FACTOR = 300;
+const LINE_SCALE_FACTOR = 1;
 
 class Explorer {
   constructor(scene, color, dayOffset, pars, shift = 0, nPoints = 1) {

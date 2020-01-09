@@ -107,6 +107,7 @@ let bumpTexture, labels, colorTexture, nightMapTexture, container, renderer, ren
 let dropOffMarker;
 let archiveScene;
 let pars = {};
+let cameraOrtho, cameraPersp;
 
 const WEBGL_VERSION = Util.getWebGlVersion();
 
@@ -143,17 +144,28 @@ export default {
       .then((json) => {
         pars = json;
         pars.zoom = (window.matchMedia('(orientation: portrait)').matches) ? 0.4 : 0.5;
-        console.log(pars);
         earthRotation = 0;
         loaded = 0;
         timer = 0;
         fps = 0;
         explorers = [];
         explorerHS = [0, 0, 0, 0, 0, 0, 0, 0];
+
         this.initVis();
+
         if (this.guiVisible) {
           this.addDebugTools();
         }
+
+        // load archive
+        window.setTimeout(() => {
+          archiveScene.downloadArchive(()=> {
+            // success
+          },
+          (error) => {
+            console.error("could not download archive");            
+          });
+        }, 500);
       });
   },
 
@@ -439,6 +451,12 @@ export default {
     showArchiveContent(obj) {
       this.$emit('archive-show', obj);
     },
+    cancelTimeout() {
+      if (this.timeoutId) {
+        window.clearTimeout(this.timeoutId);
+        this.timeoutId = undefined;
+      }
+    },
     /**
      * Init the visualization on component mount. It setup the three.js scene, add the gui and setup the listeners.
      */
@@ -479,15 +497,48 @@ export default {
       this.initWindVisualization();
       this.initFPSChecker();
 
+      // install event listener
       rendererAA.domElement.addEventListener('mousemove', this.onMouseMove, false);
       rendererAA.domElement.addEventListener('click', this.onMouseClick, false);
       rendererNAA.domElement.addEventListener('mousemove', this.onMouseMove, false);
       rendererNAA.domElement.addEventListener('click', this.onMouseClick, false);
 
-      controls.addEventListener('change', () => { labels.update(pars.onboard); });
-      controls.addEventListener('start', () => { this.interacting = true; this.autoMode = false; }, false);
-      controls.addEventListener('end', () => { this.interacting = false; }, false);
-      controls.addEventListener('scale', () => { this.setScale(scene.scale.x); }, false);
+      // control events
+      controls.addEventListener('change', () => { 
+        labels.update(pars.onboard);
+      });
+      controls.addEventListener('start', () => { 
+        
+        this.interacting = true; 
+        this.autoMode = false;
+
+        // stop autorotate on archive
+        if (this.visualizationState === STATE_GLOBE_ARCHIVE) {
+          pars.auto_rotate = false;
+        }
+      }, false);
+      controls.addEventListener('end', () => { 
+
+        this.interacting = false; 
+
+        console.log(controls.getAzimuthalAngle());
+        
+
+        // restart autorotate on archive after timeout
+        if (this.visualizationState === STATE_GLOBE_ARCHIVE) {
+
+          this.cancelTimeout();
+
+          this.timeoutId = window.setTimeout(() => { 
+            pars.auto_rotate = true;
+           }, 10000);
+        }
+
+      }, false);
+      // TODO: needed??
+      controls.addEventListener('scale', () => { 
+        this.setScale(scene.scale.x);
+      }, false);
 
       // set initial state and move to it...
       if (this.$store.state.flightSimulator.visualizationState >= 0) {
@@ -764,7 +815,7 @@ export default {
       const particles = new THREE.Geometry();
       const pMaterial = new THREE.PointsMaterial({
         color: 0xbbbbbb,
-        size: 52,
+        size: 16,
       });
       // now create the individual particles
       for (let p = 0; p < particleCount; p += 1) {
@@ -843,14 +894,21 @@ export default {
 
       /* setup scene, camera, controls */
       scene = new THREE.Scene();
-      // camera = new THREE.PerspectiveCamera(40, rendererAA.getSize().width / rendererAA.getSize().height, 0.1, 10000);
-      camera = new THREE.OrthographicCamera(rendererAA.getSize().width / -2, 
+      cameraPersp = new THREE.PerspectiveCamera(40, 
+                                                rendererAA.getSize().width / rendererAA.getSize().height, 
+                                                0.1, 
+                                                100000);
+      cameraPersp.position.set(0, radius * 0.25, radius * 1.7);
+
+      cameraOrtho = new THREE.OrthographicCamera(rendererAA.getSize().width / -2, 
                                             rendererAA.getSize().width / 2, 
                                             rendererAA.getSize().height / 2, 
                                             rendererAA.getSize().height / -2, 
-                                            0.1, 
-                                            10000);
-      camera.position.set(0, radius * 0.25, radius * 1.7);
+                                            0.001, 
+                                            100000);
+      cameraOrtho.position.set(0, radius * 1.25, radius * 1.7);
+
+      camera = cameraPersp;
 
       //------------------------
       // controls
@@ -1006,13 +1064,14 @@ export default {
         const h = window.innerHeight;
 
 
-        camera.left= w / -2;
-        camera.right = w / 2;
-        camera.top = h / 2;
-        camera.bottom = h / -2;
+        cameraOrtho.left= w / -2;
+        cameraOrtho.right = w / 2;
+        cameraOrtho.top = h / 2;
+        cameraOrtho.bottom = h / -2;
+        cameraOrtho.updateProjectionMatrix();
 
-        // camera.aspect = w / h;
-        camera.updateProjectionMatrix();
+        cameraPersp.aspect = w / h;
+        cameraPersp.updateProjectionMatrix();
 
         rendererNAA.setSize(w, h);
         rendererAA.setSize(w, h);
@@ -1225,12 +1284,44 @@ export default {
       this.guiLoaded = true;
     },
 
+    setCamera(newCamera) {
+      camera = newCamera;
+      controls.setCamera(camera);
+      controls.minDistance = MIN_DIST;
+      controls.maxDistance = MAX_DIST;
+      controls.maxZoom = MAX_ZOOM;
+      controls.minZoom = MIN_ZOOM;
+    },
+
     /**
      * It manages state transition, implementing the different behaviours for each state.
      * @param {Integer} state
      */
     setState(state)
     {
+      console.log("set state: " + state);
+      
+      // clear archive content
+      this.showArchiveContent();
+
+      if (state !== STATE_GLOBE_ARCHIVE && camera !== cameraPersp)
+      {
+        particleSystem.material.size = 16;
+        this.cancelTimeout();
+        this.setScale(this.initialZoom)
+        cameraPersp.position.set(0, radius * 0.25, radius * 1.7);        
+        this.setCamera(cameraPersp);
+      }
+      else if (state === STATE_GLOBE_ARCHIVE && camera !== cameraOrtho)
+      {
+        particleSystem.material.size = 52;
+        this.setScale(this.initialZoom);
+        cameraOrtho.zoom = 1;
+        cameraOrtho.updateProjectionMatrix();
+        cameraOrtho.position.set(0, radius * 1.25, radius * 1.7);
+        this.setCamera(cameraOrtho);        
+      }
+
       switch (state) {
 
         case STATE_ANIMATION_IDLE: {
@@ -1353,7 +1444,7 @@ export default {
         case STATE_UNFOCUSED_PAGES: {
           pars.auto_rotate = true;
           const iv = [controls.target.y, this.getScale(), controls.getPolarAngle()];
-          const ev = [60, 1.65, Math.PI * 0.5];
+          const ev = [60, 0.65, Math.PI * 0.5];
           animator.start({
             init_values: iv,
             end_values: ev,
@@ -1375,7 +1466,7 @@ export default {
           const timeInt = (this.$store.state.general.transitionName === 'middle-to-bottom') ? 0.1 : 0.4;
           pars.auto_rotate = true;
           const iv = [controls.target.y, this.getScale(), controls.getPolarAngle()];
-          const ev = [-60, 1.65, Math.PI * 0.5];
+          const ev = [-60, 0.65, Math.PI * 0.5];
           animator.start({
             init_values: iv,
             end_values: ev,
@@ -1401,7 +1492,7 @@ export default {
           this.active = false;
           this.clear();
           const iv = [controls.target.y, this.getScale(), controls.getPolarAngle()];
-          const ev = [350, 1.4, Math.PI * 0.5];
+          const ev = [130, 0.5, Math.PI * 0.5];
           animator.start({
             init_values: iv,
             end_values: ev,
@@ -1422,13 +1513,26 @@ export default {
         /*
         * GLOBE ARCHIVE (10)
         */
-        case STATE_GLOBE_ARCHIVE:
-          pars.auto_rotate = false;
+        case STATE_GLOBE_ARCHIVE: {
+          pars.auto_rotate = true;
           this.active = false;
+          this.clear();
+          
           this.cachedWinds = this.winds;
           this.winds = 0;
-          const iv = [controls.target.y, this.getScale(), controls.getPolarAngle()];
-          const ev = [0, 1.3, Math.PI * 0.5];
+
+          // rotate earth and shadow to timezone and time
+          var d = new Date();
+          var n = (Math.PI/2) + (d.getTimezoneOffset() / -60 / 12);
+          if (n > 1) n -= 1;
+          if (n < -1) n += 1;
+          // set daytime
+          this.startingDate.setTime(d.getTime());
+          // rotate earth so we see where we are located
+          controls.setAzimuthalAngle(Math.PI * n);
+        
+          const iv = [controls.target.y, cameraOrtho.zoom, controls.getPolarAngle(), controls.getAzimuthalAngle()];
+          const ev = [0, 1.3, Math.PI * 0.5, Math.PI * n];
           
           archiveScene.downloadArchive(() => {
             // success
@@ -1462,7 +1566,7 @@ export default {
           pars.auto_rotate = true;
           this.active = false;
           const iv = [controls.target.y, this.getScale(), controls.getPolarAngle()];
-          const ev = [0, 0.3, Math.PI * 0.5];          
+          const ev = [0, 0.25, Math.PI * 0.5];          
           animator.start({
             init_values: iv,
             end_values: ev,
