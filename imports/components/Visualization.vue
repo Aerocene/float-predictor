@@ -276,7 +276,9 @@ export default {
         this.visualizationState = STATE_INITIAL;
         this.visualizationState = STATE_MOVING_TO_DEPARTURE;
       } else {
-        this.visualizationState = STATE_INITIAL;
+        if (this.visualizationState !== STATE_GLOBE_ARCHIVE) {
+          this.visualizationState = STATE_INITIAL;
+        }
       }
     },
 
