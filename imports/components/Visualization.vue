@@ -327,17 +327,25 @@ export default {
       }
 
       /* update labels, trajectory styles and dashboard data on select changes */
-      if (selected <= 0) {
+      if (selected <= 0)
+      {
         labels.daysLabels.setVisible(false);
         _.each(explorers, (e) => {
           e.setStyle(Explorer.MOVING);
         });
-      } else {
+      } 
+      else
+      {
         this.focusedExplorerSpeed = explorers[selected - 1].getSpeed().toFixed(0);
         this.focusedExplorerDistance = explorers[selected - 1].getDistance().toFixed(0);
         this.focusedExplorerAltitude = explorers[selected - 1].getAltitude().toFixed(2);
-        labels.daysLabels.show(selected - 1, explorers);
-        labels.update(pars.onboard);
+
+        if (this.visualizationState === STATE_ANIMATION_END)
+        {
+          labels.daysLabels.show(selected - 1, explorers);
+          labels.update(pars.onboard);
+        }
+        
         _.each(explorers, (e, index) => {
           if (index === selected - 1) {
             e.setStyle(Explorer.SELECTED);
