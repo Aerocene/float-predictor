@@ -955,7 +955,7 @@ export default {
       });
       emisphereSprite = new THREE.Sprite(spriteMaterial);
       emisphereSprite.scale.set(440, 440, 440);
-      scene.add(emisphereSprite);
+      // scene.add(emisphereSprite);
 
       if (WEBGL_VERSION >= 2)
       {
