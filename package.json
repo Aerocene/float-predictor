@@ -11,7 +11,8 @@
     "lint": "eslint --ext .js,.vue src test/unit",
     "build": "node build/build.js",
     "deploy-staging": "DEPLOY_HOSTNAME=eu-west-1.galaxy-deploy.meteor.com meteor deploy https://staging.aerocene.org --settings settings/staging.json --deploy-polling-timeout 2400000",
-    "deploy-production": "DEPLOY_HOSTNAME=eu-west-1.galaxy-deploy.meteor.com meteor deploy https://floatpredictor.aerocene.org --settings settings/production.json --deploy-polling-timeout 2400000"
+    "deploy-production": "DEPLOY_HOSTNAME=eu-west-1.galaxy-deploy.meteor.com meteor deploy https://floatpredictor.aerocene.org --settings settings/production.json --deploy-polling-timeout 2400000",
+    "deploy-app": "DEPLOY_HOSTNAME=eu-west-1.galaxy-deploy.meteor.com meteor deploy https://app.aerocene.org --settings settings/app.json --deploy-polling-timeout 2400000"
   },
   "dependencies": {
     "@babel/runtime": "^7.4.3",
