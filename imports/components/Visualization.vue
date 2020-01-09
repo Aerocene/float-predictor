@@ -1978,7 +1978,7 @@ export default {
               const data_point = data.prediction[i].trajectory[j];
 
               // normalize height
-              explorerH = (data_point.altitude / altitudeLevels[this.initialAltitudeLevel]) * 5;
+              explorerH = (data_point.altitude / altitudeLevels[this.initialAltitudeLevel]) * 6;
               // console.log(data_point.altitude + " :  explorerH: " + explorerH);
               
 
