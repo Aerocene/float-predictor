@@ -4,12 +4,15 @@
         <div style="width: 100%;">
           <signInForm v-on:success="redirectToQueryLinkOrFlightSimulator">            
           </signInForm>
-          <button
-            class="link-button forgot-button" 
-            @click="showForgotPwd"
-          >
-            Forgot
-          </button>
+
+          <div class="forgot-button-container">
+            <button
+              class="link-button forgot-button" 
+              @click="showForgotPwd"
+            >
+              Forgot
+            </button>
+          </div>
 
         </div>
 
@@ -62,13 +65,21 @@
     background: none;
     border: none;
   }
-  .forgot-button {
-    position: absolute;
-    top: 4.7em;
+
+  .forgot-button-container {
+    position: relative;
+    top: -8em;
     right: 0px;
-    color: #9A1818;
-    padding-right: 0px;
-    margin-right: 0px;
+    width: 100%;
+    height: 0px;
+    display: flex;
+    display: -webkit-box;
+    justify-content: end;  
+  }
+  .forgot-button {    
+    margin-right: 0%;
+    padding-right: 0%;
+    color: #9A1818;    
     font-size: 12px;
   }
 }
