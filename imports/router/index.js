@@ -42,7 +42,7 @@ const router = new Router({
       meta: {
         bodyClass: 'home no-scroll',
         position: 'middle',
-        requiresAuth: true,
+        requiresAuth: false,
       },
     },
     {
@@ -151,7 +151,7 @@ const router = new Router({
       meta: {
         bodyClass: 'flight-simulator no-scroll',
         position: 'middle',
-        requiresAuth: true,
+        requiresAuth: false,
       },
     },
     {
@@ -160,7 +160,7 @@ const router = new Router({
       meta: {
         bodyClass: 'no-scroll',
         position: 'middle',
-        requiresAuth: true,
+        requiresAuth: false,
       },
     },    
     {
@@ -179,7 +179,7 @@ const router = new Router({
       meta: {
         bodyClass: 'aerocene-explorer upper-content',
         position: 'top',
-        requiresAuth: true,
+        requiresAuth: false,
       },
     },
     {
@@ -189,7 +189,7 @@ const router = new Router({
       meta: {
         bodyClass: 'gallery',
         position: 'bottom',
-        requiresAuth: true,
+        requiresAuth: false,
       },
     },
     {
@@ -199,7 +199,7 @@ const router = new Router({
       meta: {
         bodyClass: 'resources-and-api upper-content',
         position: 'top',
-        requiresAuth: true,
+        requiresAuth: false,
       },
     },
     {
@@ -215,22 +215,27 @@ const router = new Router({
 router.beforeEach((to, from, next) => {
   if (to.matched.some(record => record.meta.requiresAuth)) {
     if (!Meteor.userId()) {
+      store.commit('auth/setNeedsLogin', true);
       next({
         path: '/sign-in',
         query: { redirect: to.fullPath },
       });
     } else {
+      store.commit('auth/setNeedsLogin', false);
       next();
     }
   } else if (to.matched.some(record => record.meta.requiresLoggedOutState)) {
     if (Meteor.userId()) {
+      store.commit('auth/setNeedsLogin', false);
       next({
         path: to.query.redirect || '/',
       });
     } else {
+      store.commit('auth/setNeedsLogin', true);
       next();
     }
   } else {
+    store.commit('auth/setNeedsLogin', false);
     next(); // make sure to always call next()!
   }
 });

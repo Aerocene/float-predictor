@@ -1,5 +1,5 @@
 <template>
-    <div class="site-header" :class="{'--logged-out': isLoggedOut}">
+    <div class="site-header">
 
         <div class="spacer"></div>
 
@@ -62,9 +62,6 @@ export default {
     isPredictor() {
         return this.$store.state.general.isPredictor || false;
     },
-    isLoggedOut() {
-      return this.$store.state.auth.user === undefined || this.$store.state.auth.user === null;
-    },    
     isOnboard() { return this.$store.state.flightSimulator.focusedExplorer > 0; },
     isChoosing() { return this.$store.state.general.isChoosingDestination; },
     isHome() { return this.$route.name === 'home-page'; },

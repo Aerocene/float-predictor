@@ -11,7 +11,10 @@
         <div class="router-view" ref="content">
           
           <transition appear>
-            <div class="login-background" v-if="!isLoggedIn">
+            <div 
+              class="login-background" 
+              v-if="showLoginBackground"
+            >
               <img src="/img/background-gradient.png" style="width: 100%;" alt=""><img>
             </div>
           </transition>
@@ -34,7 +37,7 @@
         <div 
           class="main-visualization-wrapper"
           ref="simulator"
-          :class="{'--small': isSmall, '--bottom': isBottom, '--logged-in': isLoggedIn}"
+          :class="{'--small': isSmall, '--bottom': isBottom, '--logged-in': true}"
         >
           <div class="cover" v-if="showCover">
             <router-link to="/flight-simulator" class="link-to-flight-sim"/>
@@ -112,8 +115,8 @@ export default {
     user() {
       return this.$store.state.auth.user;
     },
-    isLoggedIn() {
-      return !!this.$store.state.auth.user;
+    showLoginBackground() {
+      return this.$store.state.auth.needsLogin === true && (this.$store.state.auth.user === null || this.$store.state.auth.user === undefined);
     },
     flightToolsActive() {
       return this.$route.name === 'flight-simulator';
