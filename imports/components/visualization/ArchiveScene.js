@@ -321,7 +321,7 @@ class ArchiveScene
     {
         if (this.hovered)
         {
-            this.hovered.material.material.set( '#FBC445' );
+            this.hovered.material.color.set(this.selected.originalColor);
             this.hovered.renderOrder = 3;
             this.hovered = undefined;
         }
@@ -332,7 +332,7 @@ class ArchiveScene
         {
             this.hovered = obj;
             this.hovered.renderOrder = 10;
-            this.hovered.material.material.set( '#f00' );
+            this.hovered.material.color.set( '#999999' );
         }
     }
 

@@ -152,7 +152,7 @@ article, .page-modal {
 .page-modal {
   padding: 0;
   .modal-content {
-    //height: 100%;
+    height: 100%;
   }
   max-width: unset;
   @include medium_down {
@@ -162,8 +162,8 @@ article, .page-modal {
   }
   .modal-body {
     //max-width: 90%;
-    padding-left: 5%;
-    padding-right: 5%;
+    padding-left: 8%;
+    padding-right: 8%;
     margin: 0 auto;
     overflow: scroll;
   }

@@ -521,9 +521,6 @@ export default {
 
         this.interacting = false; 
 
-        console.log(controls.getAzimuthalAngle());
-        
-
         // restart autorotate on archive after timeout
         if (this.visualizationState === STATE_GLOBE_ARCHIVE) {
 

@@ -54,6 +54,9 @@
             transphobia, body shaming, religion shaming, “geekier-than-thou” shaming,
             education bias, and the dismissal or bullying of children and adults among other.
         </p>
+        <p>
+            <br>
+        </p>
         </div>
     </b-modal>
 </template>
