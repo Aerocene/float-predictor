@@ -5,16 +5,15 @@
     <div id="winnerContent" v-if="modalVisible" @click="closeModal">
 
         <div class="content-container">
+            
         <div>
-        <div class="loader-content">
-          <!-- <img
-            v-if="imageurl" 
-            width="50%" 
-            v-bind:src="imageurl" 
-            alt=""
-          /> -->
-            <div class="aeroglyph" style="text-align: center;" v-html="winningExplorerData.svg"></div>
 
+        <div class="loader-content">
+            
+            <!-- aeroglyph -->
+            <div class="aeroglyph" style="text-align: center;" v-html="winningExplorerData.svg"></div>
+            
+            <p><br></p>
             <div v-if="isPlannedFlight" class="message">
                 The Aerocene Sculpture that left from <b>{{departure.city}}</b>
                 on <strong>{{depDate}}</strong>
@@ -32,7 +31,55 @@
 
             <div style="margin-top: 2em;"></div>
 
-            <ul class="bottom-links">
+            <!-- Begin MailChimp Signup Form -->
+            <!-- <div id="mc_embed_signup">
+
+                <form @submit="onSubmit"
+                    class="flight-form"
+                    action="https://aerocene.us12.list-manage.com/subscribe/post?u=8adb5d542fb2a0cf0dac11583&amp;id=d753b7b620"
+                    method="post"
+                    id="mc-embedded-subscribe-form"
+                    name="mc-embedded-subscribe-form"
+                    target="_blank"
+                    novalidate
+                >
+
+                    <div id="mc_embed_signup_scroll" class="selector-group-wrapper">
+                        <p class="input-label">
+                            Enter your name to get updates on Aerocene.
+                        </p>
+                        <div class="name-selector-group selector-group">
+                            <div class="mc-field-group">
+                                <b-form-input
+                                        type="text"
+                                        placeholder="Your name"
+                                        name="FNAME"
+                                        class=""
+                                        id="mce-FNAME">
+                                </b-form-input>
+                            </div>
+                            <input type="hidden" name="EMAIL" v-model="userEmail" id="mce-EMAIL" />
+                        </div>
+                        <!- real people should not fill this in and expect good things
+                        - do not remove this or risk form bot signups
+                        <div style="position: absolute; left: -5000px;" aria-hidden="true">
+                            <input type="text"
+                                name="b_8adb5d542fb2a0cf0dac11583_d753b7b620"
+                                tabindex="-1"
+                                value="">
+                        </div>
+                        <b-button type="submit"
+                                variant="primary"
+                                value="Subscribe"
+                                name="subscribe"
+                                id="mc-embedded-subscribe"
+                                class="button">Get updates on Aerocene</b-button>
+                    </div>
+                </form>
+            </div> -->
+            <!--End mc_embed_signup-->
+
+            <!-- <ul class="bottom-links">
             <li class="share">
                 <small>Share</small>
                 <social-sharing url="https://floatpredictor.aerocene.org/"
@@ -50,16 +97,16 @@
                         <network network="facebook">
                             <i class="fp fp-facebook"></i>
                         </network>
-                        <!-- <network network="googleplus">
+                        <!- <network network="googleplus">
                             <i class="fp fp-google"></i>
-                        </network> -->
+                        </network> --
                         <network network="twitter">
                             <i class="fp fp-twitter"></i>
                         </network>
                     </div>
                 </social-sharing>
             </li>
-            </ul>
+            </ul> -->
 
         </div>        
       </div>
@@ -266,8 +313,6 @@ export default {
         this.modalShow = false;
     },
     closeModal() {
-        console.log("close");
-        
         this.modalShow = false;
     },
   },
