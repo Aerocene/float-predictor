@@ -1403,9 +1403,13 @@ export default {
               this.focusedExplorer = 0;
             },
           });
+
           labels.daysLabels.show(this.minTrack, explorers);
           labels.update(pars.onboard);
-          break;
+          
+          if (this.winningExplorerData) {
+            insertFlight(this.winningExplorerData);
+          }
         }
 
         /* animation end */
@@ -2192,18 +2196,6 @@ export default {
 
           // setup winning explorer data
           this.winningExplorerData = trajectory;
-
-          // really?
-          const s = JSON.stringify(trajectory);
-          if (s !== this.previousTrajectoryData) {
-
-            insertFlight(trajectory);
-
-          } else {
-            // how would this happen?
-            console.error("END: same trajectory-data! - ignore");            
-          }
-          this.previousTrajectoryData = s;
         },
         (e) => this.error(e),
       );
