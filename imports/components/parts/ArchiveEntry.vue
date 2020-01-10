@@ -67,7 +67,7 @@ export default {
 #archiveContent{
   overflow: hidden;
   position: absolute;
-  z-index: 999;
+  z-index: 49;
   top:0px;
   left:0px;
   /* display: table; */

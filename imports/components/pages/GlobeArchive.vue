@@ -61,10 +61,12 @@
   overflow: hidden;
 
   transition: opacity 0.4s ease;
-
   background: transparent;
+
   text-align: left;
+  
   display: flex;
+  display: -webkit-box;
   flex-direction: column;
   justify-content: end;
 
