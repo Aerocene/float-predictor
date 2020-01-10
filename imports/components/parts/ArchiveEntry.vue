@@ -2,25 +2,32 @@
   <transition name="fade">
   <div id="archiveContent" @click="clearContent">
     <!-- <div style="display: table-cell; vertical-align: middle;"> -->
-      <div class="content-container">
+      <div class="content-container" :class="{'--isProfile': archiveIsProfile}">
       <div>
         <div class="loader-content">
+
           <img
-            v-if="imageurl" 
-            width="50%" 
-            v-bind:src="imageurl" 
+            class="aaa"
+            :class="{'--isProfile': archiveIsProfile}"
+            v-if="archiveImageUrl"             
+            v-bind:src="archiveImageUrl" 
             alt=""
           />
-          <div style="font-size: 18px; margin-top: 1em;">{{ title }}</div>
-          <div style="">{{ subtitle }}</div>
-          <div style="font-size: 12px;">{{ place }}</div>
-          <div style="margin-top: 1em; margin-bottom: 2em;">{{ content }}</div>
+
+          <div class="archive-info">
+            <div style="font-size: 18px;">{{ archiveTitle }}</div>
+            <div style="">{{ archiveRole }}</div>
+            <div style="font-size: 12px;">{{ archivePlace }}</div>
+            <div style="margin-top: 1em;" v-if="archiveContent">{{ archiveContent }}</div>
+            <div style="margin-top: 1em;" v-if="archiveLink"><a target="_blank" rel="noopener noreferrer" v-bind:href="archiveLink">{{archiveLink}}</a></div>
+          </div>
         </div>        
       </div>
       </div>
   </div>
 </transition>
 </template>
+
 
 <script>
 /**
@@ -36,12 +43,20 @@ export default {
       // type: 'fullscreen'
     }
   },
-  props: ['title', 'subtitle', 'place', 'content', 'imageurl'],
+  // props: ['title', 'subtitle', 'place', 'content', 'imageurl', 'isProfile', 'link'],
+  computed: {
+    archiveImageUrl() { return this.$store.state.archive.content.url; },
+    archiveTitle() { return this.$store.state.archive.content.title; },
+    archiveRole() { return this.$store.state.archive.content.role; },
+    archivePlace() { return this.$store.state.archive.content.place; },
+    archiveContent() { return this.$store.state.archive.content.content; },
+    archiveIsProfile() { return this.$store.state.archive.content.isProfile; },
+    archiveLink() { return this.$store.state.archive.content.link; },
+  },
   methods: {
     clearContent() {
-      this.$emit("clear-content");
-      
-    }
+      this.$store.commit('archive/clearArchiveContent');
+    },
   }
 }
 </script>
@@ -72,17 +87,30 @@ export default {
   flex-direction: row;
   justify-content: center;
 
-  background: rgba(0, 0, 0, 0.8);
+  background: rgba(44, 42, 42, 0.85);
   margin-top: 15vh;
   margin-left: 10%;
   margin-right: 10%;
-  border-radius: 20px;
-  padding: 2em;
+  border-radius: 21px;
+  padding: 0%;
 }
 .loader-content {
   display: flex;
   flex-direction: column;
   justify-content: center;
+
+  img {
+    width: 100%;
+    border-radius: 21px;
+    &.--isProfile {
+      width: 50%;
+      border-radius: 0px;
+    }
+  }
+
+  .archive-info {
+    padding: 2em;
+  }
 }
 
 .error-container:before {

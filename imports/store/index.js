@@ -8,6 +8,8 @@ import Vuex from 'vuex';
 import Vue from 'vue';
 import general from './modules/general';
 import flightSimulator from './modules/flightSimulator';
+import archive from './modules/archive';
+
 import authModule from '../vuex/auth';
 
 Vue.use(Vuex);
@@ -16,6 +18,7 @@ export default new Vuex.Store({
   modules: {
     general,
     flightSimulator,
+    archive,
     auth: authModule,
     users: [],
   },

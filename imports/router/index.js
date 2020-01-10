@@ -18,6 +18,8 @@ import FlightSimulator from '../components/pages/FlightSimulator.vue';
 import About from '../components/pages/About.vue';
 import AeroceneExplorer from '../components/pages/AeroceneExplorer.vue';
 import Resources from '../components/pages/Resources.vue';
+import GlobeArchive from '../components/pages/GlobeArchive.vue';
+
 
 import Profile from '../components/pages/Profile.vue';
 import ChangePassword from '../components/pages/ChangePassword.vue';
@@ -157,6 +159,7 @@ const router = new Router({
     {
       path: '/globe-archive',
       name: 'globe-archive',
+      component: GlobeArchive,
       meta: {
         bodyClass: 'globe-archive no-scroll',
         position: 'middle',

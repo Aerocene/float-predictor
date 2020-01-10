@@ -45,19 +45,12 @@
 
           <!-- archive content -->
           <ArchiveEntry 
-            v-if="archiveContent && archiveContent.content" 
-            v-bind:imageurl="archiveContent.url"
-            v-bind:title="archiveContent.title"
-            v-bind:subtitle="archiveContent.role"
-            v-bind:place="archiveContent.place"
-            v-bind:content="archiveContent.content" 
-            @clear-content="clearArchiveContent"
-          />   
+            v-if="archiveTitle" 
+          />
 
           <!-- globe -->
           <visualization 
             v-if="isExhibitionClient"
-            @archive-show="showArchiveContent"
           />
         </div>
       </div>
@@ -85,9 +78,8 @@ import ArchiveEntry from './components/parts/ArchiveEntry'
 // eslint-disable-next-line
 import ScrollToPlugin from 'gsap/ScrollToPlugin';
 
-var he = require('he');
-
 export default {
+  name: 'App',
   components: {
     visualization,
     siteHeader,
@@ -99,8 +91,7 @@ export default {
     meteorUser() {
       this.$store.commit('auth/updateUser', Meteor.user())
     }
-  },
-  name: 'App',
+  },  
   data() {
     return {
       contentOffset: 0,
@@ -108,10 +99,10 @@ export default {
       transitionLeave: false,
       isBottom: false,
       duration: 1,
-      archiveContent: {},
     };
   },
-  computed: {
+  computed: {    
+    archiveTitle() { return this.$store.state.archive.content.title; },
     user() {
       return this.$store.state.auth.user;
     },
@@ -150,50 +141,7 @@ export default {
       this.bodyOverflow(v);
     },
   },
-  methods: {
-    clearArchiveContent() {
-      this.archiveContent = {};
-    },
-    showArchiveContent(obj)
-    {
-      if (obj === undefined)
-      {
-        this.archiveContent = {};
-        return;
-      }     
-
-      // setup content
-      let content = {};
-
-      content.title = he.decode(obj.title.rendered);
-      content.place = he.decode(obj.acf.location.location_text);
-
-      if (obj.type === "community_member")
-      {
-        if (obj.acf && obj.acf.profile_picture)
-        {
-          content.url = obj.acf.profile_picture.url;
-        }
-
-        content.role = obj.acf.role;
-        content.content = obj.acf.biographie;
-      }
-      else if (obj._embedded && 
-              obj._embedded['wp:term'] &&
-              obj._embedded['wp:term'].length > 0 &&
-              obj._embedded['wp:term'][0]['0'])
-      { 
-        if (obj.acf && obj.acf.pictures && obj.acf.pictures.length > 0) 
-        {
-          content.url = obj.acf.pictures[0].url;
-        }
-
-        content.role = obj.acf.date + " - " + obj._embedded['wp:term'][0]['0'].name;
-        content.content = obj.link
-      }
-
-      this.archiveContent = content;
-    },
+  methods: {    
     bodyOverflow(v) {
       if (v) {
         document.body.classList.add('box-open');

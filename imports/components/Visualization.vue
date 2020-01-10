@@ -54,6 +54,8 @@ import THREE from 'three';
 import OrbitControlsFrom from '../custom_modules/three-orbit-controls';
 const OrbitControls = OrbitControlsFrom(THREE);
 
+var he = require('he');
+
 /* Viz assets */
 
 const colorMap = '/img/colormap/4096.jpg';
@@ -449,7 +451,44 @@ export default {
   },  
   methods: {
     showArchiveContent(obj) {
-      this.$emit('archive-show', obj);
+      
+      if (obj === undefined)
+      {
+        this.$store.commit('archive/clearArchiveContent');
+        return;
+      }     
+
+      // setup content
+      let content = {};
+
+      content.title = he.decode(obj.title.rendered);
+      content.place = he.decode(obj.acf.location.location_text);
+
+      if (obj.type === "community_member")
+      {
+        content.isProfile = true;
+
+        if (obj.acf && obj.acf.profile_picture)
+        {
+          content.url = obj.acf.profile_picture.url;
+        }
+
+        content.role = obj.acf.role;
+        content.content = obj.acf.biographie;
+      }
+      else if (obj._embedded && 
+              obj._embedded['wp:term'] &&
+              obj._embedded['wp:term'].length > 0 &&
+              obj._embedded['wp:term'][0]['0'])
+      { 
+        if (obj.acf && obj.acf.pictures && obj.acf.pictures.length > 0) 
+        {
+          content.url = obj.acf.pictures[0].url;
+        }
+
+        content.role = obj.acf.date + " - " + obj._embedded['wp:term'][0]['0'].name;
+      }
+      this.$store.commit('archive/setArchiveContent', content);
     },
     cancelTimeout() {
       if (this.timeoutId) {
@@ -1719,10 +1758,12 @@ export default {
       ev.push(0, 0, 0);
       iv.push(camera.position.length());
       ev.push(radius * 1.72);
+
       if (config.date) {
         iv.push(this.startingDate.getTime());
         ev.push(config.date.getTime());
       }
+
       animator.start({
         init_values: iv,
         end_values: ev,
