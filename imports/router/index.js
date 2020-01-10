@@ -158,7 +158,7 @@ const router = new Router({
       path: '/globe-archive',
       name: 'globe-archive',
       meta: {
-        bodyClass: 'no-scroll',
+        bodyClass: 'globe-archive no-scroll',
         position: 'middle',
         requiresAuth: false,
       },
@@ -345,6 +345,7 @@ router.beforeEach((to, from, next) => {
   else if (to.path === '/globe-archive')
   {
     // to globe archive
+    store.commit('general/setAnimationHeight', 'normal');
     store.commit('flightSimulator/setVisualizationState', 10);
     store.commit('general/setIsPredictor', false);
   }
