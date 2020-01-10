@@ -69,8 +69,7 @@ export default {
         return (window.matchMedia('(max-width: 768px)').matches);
     },
     isMenuVisible() {
-        return ((!this.isOnboard && this.isMobile) || !this.isMobile);
-        // return true;
+        return this.archiveAllowed && ((!this.isOnboard && this.isMobile) || !this.isMobile);
     },    
   },
   methods: {
