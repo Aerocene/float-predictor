@@ -33,7 +33,7 @@
     </fieldset>
 
     <fieldset class="fieldset-class">
-      <div style="display: table;">
+      <div style="display: table; margin: auto;">
 
         <b-form-checkbox
           class="form-input"

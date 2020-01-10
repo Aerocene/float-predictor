@@ -125,7 +125,11 @@
 }
 
 .ok-btn {
+  font-size: 18px;  
   margin-top: 2em;
+  background: none;
+  border: none;
+  text-transform: none;    
 }
 
 </style>
