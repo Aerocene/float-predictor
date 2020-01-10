@@ -1,7 +1,7 @@
 <template>
     <div class="main-nav" @click="closeAction">
 
-
+    <div style="height: 100%;">
         <!-- header -->
         <div class="header">
             <span style="font-size:24px;">MENU</span>
@@ -71,13 +71,13 @@
                 <ul class="list-group link-items">
 
                     <li class="menu-item --nav">
-                         <a target="_blank" href="http://aerocene.org/">
+                        <a target="_blank" href="http://aerocene.org/">
                             Aerocene Project
                         </a>
                     </li>
 
                     <li class="menu-item --nav">
-                         <a target="_blank" href="https://forum.aerocene.org/">
+                        <a target="_blank" href="https://forum.aerocene.org/">
                             Aerocene Forum
                         </a>
                     </li>
@@ -124,6 +124,7 @@
                 </div>
             </div>
         </div> -->
+        </div>
     </div>
     </div>
 </template>
@@ -138,12 +139,16 @@ hr {
 
 .main-nav {
     overflow: hidden !important;
-    padding: 0px 1.5em 0 0 !important;
+    padding-right: 31px !important;
+    /* padding: 0px 1.5em 0 0 !important; */
+    height: 100% !important;
+    width: 100% !important;
+    max-width: none;
 }
 .header {
     text-align: center;
     background: black !important;
-    margin-top: 65px !important;
+    margin-top: 21px !important;
     padding-top: 1.5em;
     padding-left: 1.5em;
     padding-right: 1.5em;
