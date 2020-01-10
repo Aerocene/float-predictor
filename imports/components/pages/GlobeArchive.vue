@@ -54,7 +54,6 @@
   height: 100%;
   width: 100%;
   z-index: 20;
-  /* padding-top: 120px; */
   padding-bottom: 2em;
   padding-left: 0.8em;
   padding-right: 0.8em;
@@ -65,8 +64,8 @@
 
   text-align: left;
   
+  display: -webkit-flex;
   display: flex;
-  display: -webkit-box;
   flex-direction: column;
   justify-content: end;
 
