@@ -1,6 +1,6 @@
 <template>
-<transition appear disappear>
-    <div class="main-content" v-show="!isArchiveContent">
+<transition appear name="fade">
+    <div class="main-content" v-if="!isArchiveContent">
       <article class="form-container" ref="content">
 
         <!-- section 1 -->
@@ -51,23 +51,20 @@
 
 .main-content {
   position: absolute;
-  height: 100%;
   width: 100%;
+  bottom: 0px;
+
   z-index: 20;
+  overflow: hidden;
+
   padding-bottom: 2em;
   padding-left: 0.8em;
   padding-right: 0.8em;
-  overflow: hidden;
 
   transition: opacity 0.4s ease;
   background: transparent;
 
   text-align: left;
-  
-  display: -webkit-flex;
-  display: flex;
-  flex-direction: column;
-  justify-content: end;
 
   pointer-events: none;
 }

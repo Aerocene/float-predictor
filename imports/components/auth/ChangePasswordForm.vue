@@ -94,7 +94,7 @@ export default {
       return changePassword(this.formData.oldPassword, this.formData.newPassword)
         .then(() => { this.$emit('success'); })
         .catch((error) => { this.$store.commit('auth/setLastSessionError', error); });
-  }
+    },
   }
 }
 </script>
