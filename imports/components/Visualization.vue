@@ -34,7 +34,6 @@
  * @author Iacopo Leardini - @iacopolea
 */
 
-
 import _ from 'lodash';
 import { saveAs } from 'file-saver';
 import Loading from './parts/Loading.vue';
@@ -104,6 +103,8 @@ const colors = [0xFF060D, 0xF0E41E, 0x00FA00, 0xFFAC00, 0x8A7CEF, 0xFF81EB, 0x49
 const webColors = ['#FF060D', '#F0E41E', '#00FA00', '#FFAC00', '#8A7CEF', '#FF81EB', '#490073', '#ffffff'];
 const raycaster = new THREE.Raycaster();
 const mouse = new THREE.Vector2();
+
+const defaultControlSpeed = 0.4;
 
 // eslint-disable-next-line
 let bumpTexture, labels, colorTexture, nightMapTexture, container, renderer, rendererAA, rendererNAA, scene, camera, controls, gui, pointLight, ambientLight, earthSphere, sunSphere, selectSphere, earthRotation, loaded, timer, explorers, explorerHS, fps, emisphereSprite, emisphereSphere, departure, destination, windVisualization, windVisualizations, downloader, particleSystem;
@@ -960,7 +961,7 @@ export default {
       controls.autoRotateSpeed = 2; // Default is 2.0, which equates to 30 seconds per rotation at 60fps.
       controls.enablePan = false; // Enable or disable camera panning. Default is true. 
       controls.enableRotate = true; // Enable or disable horizontal and vertical rotation of the camera. Default is true.
-      controls.rotateSpeed = 0.4; //Speed of rotation. Default is 1. 
+      controls.rotateSpeed = defaultControlSpeed; //Speed of rotation. Default is 1. 
       // zoom speed is a bit slow for desktop (macos pinch on touchpad)
       controls.zoomSpeed = 0.28; // Speed of zooming / dollying. Default is 1. 
       controls.enableZoom = pars.zoom_enabled;
@@ -1866,7 +1867,16 @@ export default {
 
           /* auto rotate */
           if (pars.auto_rotate && this.animating) {
-            controls.setAzimuthalAngle(controls.getAzimuthalAngle() - 0.002 * frames);
+
+            if (camera === cameraOrtho && cameraOrtho.zoom > 1) {
+              // take care of scale!              
+              controls.setAzimuthalAngle(controls.getAzimuthalAngle() - ((0.002 * frames)/cameraOrtho.zoom));
+            }
+            else
+            {
+              controls.setAzimuthalAngle(controls.getAzimuthalAngle() - 0.002 * frames);
+            }
+
           }
           if (pars.move_in_time) { this.incrementTime(); }
 
@@ -1968,24 +1978,35 @@ export default {
         // update controls, rotation speed
         controls.update();
 
-        let d = camera.position.distanceTo(new THREE.Vector3()) - radius/2;
-        const max = 200;
-        if (d > max) d = max;
-        var n = (d / max) + 0.1;
-        
+        if (camera === cameraPersp) {
 
-        // counterscale strokes?
-        // for (let i = 0; i < explorers.length; i++) {
-        //   explorers[i].setLineWidthScale(n);
-        // }
+          let d = camera.position.distanceTo(new THREE.Vector3()) - radius/2;
+          const max = 200;
+          if (d > max) d = max;
+          var n = (d / max) + 0.1;
+          
+  
+          // counterscale strokes?
+          // for (let i = 0; i < explorers.length; i++) {
+          //   explorers[i].setLineWidthScale(n);
+          // }
+  
+          labels.setSphereScale(n);
+  
+          if (Util.isMobile())
+          {
+              n = n*0.4;
+          }
+          controls.rotateSpeed = n;
+        } 
+        else if (camera === cameraOrtho) {
 
-        labels.setSphereScale(n);
+          let d = cameraOrtho.zoom;
+          if (d < 1) d = 1;
 
-        if (Util.isMobile())
-        {
-            n = n*0.4;
+          controls.rotateSpeed = defaultControlSpeed / (d);
         }
-        controls.rotateSpeed = n;
+
 
         renderer.clear();
         renderer.render(scene, camera);
