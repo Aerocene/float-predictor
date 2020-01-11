@@ -1056,15 +1056,15 @@ export default {
 
       //------------------------
       /* fake emisphere setup */
-      const spriteMap = new THREE.TextureLoader().load(spriteURL);
-      const spriteMaterial = new THREE.SpriteMaterial({ 
-        map: spriteMap, 
-        color: 0xffffff, 
-        depthWrite: false, 
-        depthTest: false 
-      });
-      emisphereSprite = new THREE.Sprite(spriteMaterial);
-      emisphereSprite.scale.set(440, 440, 440);
+      // const spriteMap = new THREE.TextureLoader().load(spriteURL);
+      // const spriteMaterial = new THREE.SpriteMaterial({ 
+      //   map: spriteMap, 
+      //   color: 0xffffff, 
+      //   depthWrite: false, 
+      //   depthTest: false 
+      // });
+      // emisphereSprite = new THREE.Sprite(spriteMaterial);
+      // emisphereSprite.scale.set(440, 440, 440);
       // scene.add(emisphereSprite);
 
       if (WEBGL_VERSION >= 2)
@@ -1293,12 +1293,14 @@ export default {
         emisphere.add(emisphereSphere.material, 'refractionRatio', 0, 10).onChange(() => { emisphereSphere.material.needsUpdate = true; });
         emisphere.add(emisphereSphere.material, 'shininess', 0, 100).onChange(() => { emisphereSphere.material.needsUpdate = true; });
         emisphere.add(emisphereSphere.scale, 'z', 0.1, 1.5).onChange((z) => { emisphereSphere.scale.set(z, z, z); });
-
-        emisphere.add({ message: 'OPTION 2 - STATIC PNG' }, 'message');
-        emisphere.add(emisphereSprite, 'visible').onChange(() => { emisphereSprite.material.needsUpdate = true; });
-        emisphere.add(emisphereSprite.material, 'opacity', 0, 1).onChange(() => { emisphereSprite.material.needsUpdate = true; });
-        emisphere.addColor(emisphereSprite.material, 'color').onChange(() => { emisphereSprite.material.needsUpdate = true; });
-        emisphere.add(emisphereSprite.scale, 'z', 300, 600).onChange((z) => { emisphereSprite.scale.set(z, z, z); });
+      
+        if (emisphereSprite) {
+          emisphere.add({ message: 'OPTION 2 - STATIC PNG' }, 'message');
+          emisphere.add(emisphereSprite, 'visible').onChange(() => { emisphereSprite.material.needsUpdate = true; });
+          emisphere.add(emisphereSprite.material, 'opacity', 0, 1).onChange(() => { emisphereSprite.material.needsUpdate = true; });
+          emisphere.addColor(emisphereSprite.material, 'color').onChange(() => { emisphereSprite.material.needsUpdate = true; });
+          emisphere.add(emisphereSprite.scale, 'z', 300, 600).onChange((z) => { emisphereSprite.scale.set(z, z, z); });
+        }
 
         const lights = gui.addFolder('lights');
         lights.addColor(pars, 'sun_light_color').onChange((value) => { pointLight.color = new THREE.Color(value); });
