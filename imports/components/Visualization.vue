@@ -105,6 +105,7 @@ const raycaster = new THREE.Raycaster();
 const mouse = new THREE.Vector2();
 
 const defaultControlSpeed = 0.4;
+const archiveAutorotateTimeout = 10000; // ms
 
 // eslint-disable-next-line
 let bumpTexture, labels, colorTexture, nightMapTexture, container, renderer, rendererAA, rendererNAA, scene, camera, controls, gui, pointLight, ambientLight, earthSphere, sunSphere, selectSphere, earthRotation, loaded, timer, explorers, explorerHS, fps, emisphereSprite, emisphereSphere, departure, destination, windVisualization, windVisualizations, downloader, particleSystem;
@@ -498,6 +499,12 @@ export default {
         this.timeoutId = undefined;
       }
     },
+    startArchiveRotateTimeout() {
+      this.cancelTimeout();
+      this.timeoutId = window.setTimeout(() => { 
+        pars.auto_rotate = true;
+      }, archiveAutorotateTimeout);
+    },
     /**
      * Init the visualization on component mount. It setup the three.js scene, add the gui and setup the listeners.
      */
@@ -564,12 +571,7 @@ export default {
 
         // restart autorotate on archive after timeout
         if (this.visualizationState === STATE_GLOBE_ARCHIVE) {
-
-          this.cancelTimeout();
-
-          this.timeoutId = window.setTimeout(() => { 
-            pars.auto_rotate = true;
-           }, 10000);
+          this.startArchiveRotateTimeout();
         }
 
       }, false);
@@ -1350,8 +1352,11 @@ export default {
 
       if (state !== STATE_GLOBE_ARCHIVE && camera !== cameraPersp)
       {
-        particleSystem.material.size = 16;
+        // stop archive rotate timeout
         this.cancelTimeout();
+
+        //
+        particleSystem.material.size = 16;
         this.setScale(this.initialZoom)
         cameraPersp.position.set(0, radius * 0.25, radius * 1.7);        
         this.setCamera(cameraPersp);
@@ -1562,7 +1567,10 @@ export default {
         * GLOBE ARCHIVE (10)
         */
         case STATE_GLOBE_ARCHIVE: {
-          pars.auto_rotate = true;
+
+          // start rotate after a while
+          this.startArchiveRotateTimeout();
+
           this.active = false;
           this.clear();
           
@@ -1570,17 +1578,10 @@ export default {
           this.winds = 0;
 
           // rotate earth and shadow to timezone and time
-          var d = new Date();
-          var n = (Math.PI/2) + (d.getTimezoneOffset() / -60 / 12);
-          if (n > 1) n -= 1;
-          if (n < -1) n += 1;
-          // set daytime
-          this.startingDate.setTime(d.getTime());
-          // rotate earth so we see where we are located
-          controls.setAzimuthalAngle(Math.PI * n);
+          this.setGlobeToCurrentTimezone();
         
-          const iv = [controls.target.y, cameraOrtho.zoom, controls.getPolarAngle(), controls.getAzimuthalAngle()];
-          const ev = [0, 1.3, Math.PI * 0.5, Math.PI * n];
+          const iv = [controls.target.y, cameraOrtho.zoom, controls.getPolarAngle()];
+          const ev = [0, 1.3, Math.PI * 0.5];
           
           archiveScene.downloadArchive(() => {
             // success
@@ -1679,6 +1680,17 @@ export default {
       return t;
     },
 
+    setGlobeToCurrentTimezone() {
+      // rotate earth and shadow to timezone and time
+      var d = new Date();
+      var n = (Math.PI/2) + (d.getTimezoneOffset() / -60 / 12);
+      if (n > 1) n -= 1;
+      if (n < -1) n += 1;
+      // set daytime
+      this.startingDate.setTime(d.getTime());
+      // rotate earth so we see where we are located
+      controls.setAzimuthalAngle(Math.PI * n);
+    },
     /**
     * setup the animator object to rotate to the latitude, longitude passed as parameter.
     * @param {Object} config
@@ -2071,7 +2083,7 @@ export default {
         requestAnimationFrame(this.animate);
       }
     },
-
+    
     /**
     * Resets all the parameters and clear useless buffers. It gets at the beginning and we want to start the simulation again.
     */
@@ -2103,6 +2115,8 @@ export default {
         this.winds = this.cachedWinds;
         this.cachedWinds = undefined;
       }
+
+      this.setGlobeToCurrentTimezone();
     },
 
     /**
