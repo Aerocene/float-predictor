@@ -48,7 +48,8 @@ import WindVisualization from './visualization/WindVisualization';
 import TrajectoryDataDownloader from './visualization/TrajectoryDataDownloader';
 import Labels from './visualization/Labels';
 import insertFlight from '../api/flights/client/insertFlight';
-import ArchiveScene from './visualization/ArchiveScene'
+import ArchiveScene from './visualization/ArchiveScene';
+import AppUtil from '../AppUtil';
 
 import THREE from 'three';
 import OrbitControlsFrom from '../custom_modules/three-orbit-controls';
@@ -586,6 +587,10 @@ export default {
 
       // call initial animate
       this.animate();
+
+      // signal client
+      // hook for mobile apps
+      AppUtil.logVisInit();
     },
 
     /**

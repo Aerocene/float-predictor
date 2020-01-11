@@ -8,10 +8,16 @@
  * @author Iacopo Leardini - @iacopolea
 */
 
+import AppUtil from '../../AppUtil'
+
 class Animator {
+
   constructor() {
     this.active = false;
   }
+
+  // flag we use to signal mobile apps when we are done with first animation
+  init = true;
 
   /**
    * Start the animator with a new start/end values.
@@ -59,6 +65,13 @@ class Animator {
       } else {
         this.active = false;
         if (this.config.onAnimationEnd) { this.config.onAnimationEnd(); }
+
+        if (this.init === true) {
+          this.init = false;
+          // signal client
+          // hook for mobile apps
+          AppUtil.logFirstAnimationDone();
+        }
       }
       this.time += elapsedTime;
     }
