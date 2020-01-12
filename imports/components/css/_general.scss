@@ -228,8 +228,7 @@ body.modal-open {
 }
 .modal-content {
   display: block;
-  border-top-left-radius: 0;
-  border-top-right-radius: 0;
+  background-color: transparent;
 }
 .modal-dialog {
   @include small_down {
@@ -255,6 +254,7 @@ body.modal-open {
       border: none;
       display: flex;
       flex-flow: column;
+      background-color: transparent;
       .modal-body {
         flex: 1 0 auto;
         display: flex;
@@ -272,9 +272,18 @@ body.modal-open {
 // modal large
 
 .modal-lg {
+
+  border-radius: 10px;
+  overflow: hidden;
+
+  @include small_down {
+    padding: 75px 10% 0% 10%;
+  }
+
   .modal-body {
+    border-radius: 10px;
     max-height: 690px;
-    overflow: scroll;
+    overflow-y: scroll;
   }
   //height: calc(100% - (1.75rem * 2));
   @include down($xlarge) {
@@ -282,7 +291,7 @@ body.modal-open {
     //height: 100%;
     .modal-content {
       height: 100%;
-      background-color: $lightBlack;
+      background-color: transparent;
       display: flex;
     }
     .modal-body {
@@ -293,9 +302,12 @@ body.modal-open {
     }
   }
   .modal-body {
-    padding: $marginBase;
-    @include small_down {
-      padding:$marginItem;
+    padding: 0px;
+    .entry-body {
+      padding: $marginBase;
+      @include small_down {
+        padding:$marginItem;
+      }
     }
   }
   .modal-header {
