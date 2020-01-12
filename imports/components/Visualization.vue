@@ -1140,6 +1140,10 @@ export default {
       const afterLoad = (texture) => {        
         /* texture loaded will be 1 after the 3 textures (bump, night, color) are loaded  */
         this.textureLoaded = Math.min(1, this.textureLoaded + 0.34);
+
+        if (this.textureLoaded >= 1) {
+          AppUtil.logTextureLoaded();
+        }
       };
 
       if (window.matchMedia('(min-width: 768px)').matches) 

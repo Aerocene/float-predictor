@@ -3,6 +3,7 @@
 const COMMAND_PREFIX = "__AEROCENE_COMMAND::";
 
 const COMMAND_VIZ_INIT = "VIZ_INIT";
+const COMMAND_VIZ_TEXTURES_LOADED = "VIZ_TEXTURES_LOADED";
 const COMMAND_ANIM_FIRST = "ANIM_FIRST";
 const COMMAND_TOAST = "TOAST:";
 
@@ -22,5 +23,9 @@ export default {
 
     logFirstAnimationDone() {
         console.log(COMMAND_PREFIX + COMMAND_ANIM_FIRST);
-    }
+    },
+
+    logTextureLoaded() {
+        console.log(COMMAND_PREFIX + COMMAND_VIZ_TEXTURES_LOADED);
+    },
 }
