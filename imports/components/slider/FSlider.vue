@@ -135,31 +135,31 @@ export default {
     .title-apice {
         position: absolute;
         width: 100%;
-        top: -20px;
+        top: 0px;
         padding-left: 7rem;
         color: $gray;
         text-transform: uppercase;
         font-size: .85em;
-        @include medium_down {
+        background-color: $lightBlack;
+        padding: 1rem 0 1rem 3.5rem;
+        z-index: 5;
+        /* @include medium_down {
             top: 0px;
-            padding: 1.5rem 0 1.5rem 3.5rem;
-            background-color: $lightBlack;
-            z-index: 5;
         }
         @media screen and (max-height: 600px){
             padding: .5rem 0 .5rem 3.5rem;
-        }
+        } */
     }
     .title-number {
         position: absolute;
         margin: 0;
-        padding-top: #{$marginItem*2};
+        /* padding-top: #{$marginItem}; */
+          padding-top: calc(#{$marginItem*2} + 2.95rem);
         @include small_down {
             margin: 0;
-            padding-top: calc(#{$marginItem*2} + 2.95rem);
         }
         @media screen and (max-height: 600px){
-            padding-top: 2.4rem;
+            padding-top: 3.7rem;
         }
     }
     .f-slider-wrapper {
@@ -168,13 +168,15 @@ export default {
         overflow: hidden;
         position: relative;
         padding-right: 2rem;
+        padding-left: 3rem;
+        padding-top: 1.85rem;
+        padding-right: 1.5rem;
+
         @include medium_down {
-            padding-right: 1.5rem;
-            padding-left: 3rem;
-            padding-top: 3rem;
+          padding-top: 3rem;
         }
         @media screen and (max-height: 600px){
-            padding-top: 2.4rem;
+            padding-top: 2.5rem;
         }
         .f-slider-inner {
             position: relative;
@@ -183,9 +185,22 @@ export default {
             @include medium_up {
                 padding-right: 2rem;
             }
+            @media screen and (max-height: 600px){
+            padding-top: 0.2rem;
+        }
         }
         .f-slide {
-            height: 100%;
+          display: flex;
+          flex-direction: column;
+          height: 100%;
+          padding-bottom: 1em;            
+            
+          @include medium_down {
+            margin-top: -12px;
+          }
+          @media screen and (max-height: 600px){
+            margin-top: -18px;
+        }
         }
     }
     .fp-caret-down {

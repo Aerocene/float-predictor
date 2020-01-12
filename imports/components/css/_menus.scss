@@ -241,17 +241,27 @@ body.upper-content {
  */
 .main-nav {
   background-color: transparent;
-  padding: $marginBase $marginBase $marginBase/2 $marginBase+$marginBase/3;
+  // padding: $marginBase $marginBase $marginBase/2 $marginBase+$marginBase/3;
+  margin-top:65px;
+  
   position: fixed;
   top: 0;
   right: 0;
   // height: 100%;
   width: auto;
-  max-width: 332px;
-  display: flex;
-  flex-flow: column;
+  // max-width: 400px;
   z-index: 50;
-  overflow: scroll;
+  
+  .inside-wrapper {
+    position: absolute;
+    right: 0px;
+    overflow: scroll;
+    margin-right: $marginBase;
+    @include medium_down {
+      margin-right: $marginMobile;
+    }
+  }
+
   // @include small_down {
   //   padding: $marginMobile $marginMobile $marginMobile/2 $marginMobile;
   //   // width: 100%;

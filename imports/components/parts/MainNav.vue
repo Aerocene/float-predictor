@@ -1,7 +1,7 @@
 <template>
     <div class="main-nav" @click="closeAction">
 
-    <div style="height: 100%;">
+    <div class="inside-wrapper" style="height: 100%; max-width: 400px;">
         <!-- header -->
         <div class="header">
             <span style="font-size:24px;">MENU</span>
@@ -35,7 +35,13 @@
                     </li>
 
                     <li class="menu-item --nav" @click="closeAction">
-                        <a href="#" @click.prevent v-b-modal.instruction-modal>How to Float</a>
+                        <!-- <a href="#" @click.prevent v-b-modal.instruction-modal>How to Float</a> -->
+                        <router-link 
+                            to="/how-to-float"
+                            style="white-space:nowrap"
+                        >
+                            How to Float
+                        </router-link>
                     </li>
                     <li class="menu-item --nav" @click="closeAction">
                         <router-link 
@@ -138,17 +144,17 @@ hr {
 }
 
 .main-nav {
-    overflow: hidden !important;
-    padding-right: 31px !important;
+    /* overflow: hidden !important; */
+    
     /* padding: 0px 1.5em 0 0 !important; */
-    height: 100% !important;
+    height: calc(100% - 65px) !important;
+    /* box-sizing: border-box; */
     width: 100% !important;
-    max-width: none;
+    min-width: 380px;
 }
 .header {
     text-align: center;
     background: black !important;
-    margin-top: 21px !important;
     padding-top: 1.5em;
     padding-left: 1.5em;
     padding-right: 1.5em;

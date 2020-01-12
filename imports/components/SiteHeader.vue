@@ -6,7 +6,8 @@
         <div class="container">
 
             <b-button 
-                class="a-button" 
+                class="a-button"
+                id="float"
                 :class="{'--is-predict': isPredictor}" 
                 @click="clickFP"
             >
@@ -15,6 +16,7 @@
 
             <b-button 
                 class="a-button" 
+                id="archive"
                 :class="{'--is-predict': !isPredictor}" 
                 @click="clickA"
                 v-show="archiveAllowed"
@@ -113,9 +115,15 @@ export default {
 @import "./css/_typography.scss";
 
 .spacer {
-    max-width: 50px;
     min-width: 8px;
-    width: 50px;
+    max-width: 20%;
+    width: 20%;
+    /* width: initial; */
+
+    @include small_down {
+        width: 50px;        
+        max-width: 50px;
+  }
 }
 .container {
     height: 100%;
@@ -131,11 +139,22 @@ export default {
     transition: background-color .5s;
     border: none;
     margin-top: 0px !important;
-    padding-left: 14px !important;
-    padding-right: 14px !important;
+
+    padding: 8px 14px 8px 14px !important;
     white-space: nowrap;
+
     &.--is-predict{
         background-color: rgba(74, 144, 226, 0.3928);
+    }
+}
+#archive {
+    @media screen and (max-width: 320px) {
+        visibility: hidden;
+    }
+}
+#float {
+     @media screen and (max-width: 200px) {
+        visibility: hidden;
     }
 }
 
@@ -150,7 +169,6 @@ export default {
     @include large_down {
         position: fixed;
         top: 0;
-        height: 65px;
         width: 100%;
         &.is-onboard {
             display: none;

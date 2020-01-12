@@ -48,6 +48,7 @@
 </template>
 
 <style lang="scss" scoped>
+@import "../css/_variables_and_mixins.scss";
 
 .main-content {
   position: absolute;
@@ -67,7 +68,14 @@
   text-align: left;
 
   pointer-events: none;
+
+  visibility: hidden;
+  @media screen and (min-height: 400px) and (min-width: 320px) {
+    visibility: visible;
+  }
 }
+
+
 
 .form-container {
   width: 90%;

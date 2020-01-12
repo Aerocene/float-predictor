@@ -222,7 +222,21 @@ export default {
 
 
 <style lang="scss">
+.animation-wrapper {
+    text-align: center;
+    flex: 1 1 auto;
+    height: 40%;
+    display: flex;
+    flex-flow: column;
+    justify-content: center;
+}
 .animation {
-    width: 100%;
+    /* width: 100%; */
+    max-width: 100%;
+    max-height: 100%;
+    margin: auto;
+}
+.description {
+    flex-grow: 1.1;
 }
 </style>

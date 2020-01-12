@@ -17,6 +17,7 @@ import Gallery from '../components/pages/Gallery.vue';
 import FlightSimulator from '../components/pages/FlightSimulator.vue';
 import About from '../components/pages/About.vue';
 import AeroceneExplorer from '../components/pages/AeroceneExplorer.vue';
+import Instructions from '../components/pages/Instructions.vue';
 import Resources from '../components/pages/Resources.vue';
 import GlobeArchive from '../components/pages/GlobeArchive.vue';
 
@@ -209,6 +210,16 @@ const router = new Router({
       path: '/test',
       name: 'TestInterface',
       component: TestInterface,
+    },
+    {
+      path: '/how-to-float',
+      name: 'how-to-float',
+      component: Instructions,
+      meta: {
+        bodyClass: 'how-to-float no-scroll',
+        position: 'middle',
+        requiresAuth: false,
+      },
     },
   ],
 });
