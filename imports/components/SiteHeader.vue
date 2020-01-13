@@ -57,9 +57,11 @@ export default {
         // STATE_MOVING_TO_DEPARTURE (1)
         // STATE_ANIMATION_ACTIVE (2)
         // STATE_MOVING_TO_DESTINATION (3)
+        // STATE_WAIT_FOR_FLIGHTS(9)
         return this.$store.state.flightSimulator.visualizationState !== 1 &&
                 this.$store.state.flightSimulator.visualizationState !== 2 &&
-                this.$store.state.flightSimulator.visualizationState !== 3;
+                this.$store.state.flightSimulator.visualizationState !== 3 &&
+                this.$store.state.flightSimulator.visualizationState !== 9;
     },
     isPredictor() {
         return this.$store.state.general.isPredictor || false;
