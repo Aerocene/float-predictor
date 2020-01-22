@@ -31,6 +31,8 @@
 
 import _ from 'lodash';
 import { saveAs } from 'file-saver';
+import suncalc from 'suncalc';
+
 import Loading from './parts/Loading.vue';
 import Util from './visualization/Util';
 import NightMap from './visualization/NightMap';
@@ -109,6 +111,9 @@ let pars = {};
 let cameraOrtho, cameraPersp;
 
 const WEBGL_VERSION = Util.getWebGlVersion();
+
+// messages
+const MSG_NOT_RISING = "Sun does not rise at this location.\nPlease choose a different departure to lift off.";
 
 export default {
   name: 'visualization',
@@ -383,25 +388,47 @@ export default {
         const t = Util.latLon2XYZPosition(d.lat, d.lng, earthSphereRadius);
         labels.departureLabel.set(d.city, t);
 
-        /* 
-          compute the date that make the point light zenithal to departure location
-        */
-        const azimuth = ((d.lng + 90) / 360.0) * 2 * Math.PI;
-        const ts = (-earthRotation - azimuth) / (Math.PI * 2) % 1;
-
-        this.targetDate.setTime(this.startingDate.getTime() + (ts * 24.0 * 60 * 60 * 1000));
-        this.targetDate.setMonth(new Date().getMonth());
-        this.targetDate.setDate(new Date().getDate());
         
-        const r = Util.getEarthAzimuthRotation(this.startingDate);
-        const sunP = new THREE.Vector3(Math.sin(-r) * radius, Math.sin(axesRotation) * radius, Math.cos(-r) * radius);
-        const angle = labels.departureLabel.getPosition().angleTo(sunP);
+        
+        // get sunrise from suncalc-library
+        const suntimes = suncalc.getTimes(new Date(), d.lat, d.lng);
+        this.coordinatesValid = !isNaN(suntimes.sunrise.getTime());
 
-        /* 
-          explorers need sunlight to lift. 
-          do not accept location like Iceland on the 22nd of December
-        */
-        this.coordinatesValid = angle < 1.5;
+        console.log("departure: valid: " + this.coordinatesValid);
+        
+        if (this.coordinatesValid)
+        {
+          // this is a valid date, use it
+          this.targetDate = suntimes.sunrise
+        } 
+        else
+        {
+          // invalid coordinates, sun does never rise
+
+          // try to start at noon
+
+          /* 
+            compute the date that make the point light zenithal to departure location
+          */
+          const azimuth = ((d.lng + 90) / 360.0) * 2 * Math.PI;
+          const ts = (-earthRotation - azimuth) / (Math.PI * 2) % 1;
+
+
+          this.targetDate.setTime(this.startingDate.getTime() + (ts * 24.0 * 60 * 60 * 1000));
+          this.targetDate.setMonth(new Date().getMonth());
+          this.targetDate.setDate(new Date().getDate());
+          
+        }
+        
+        // const r = Util.getEarthAzimuthRotation(this.startingDate);
+        // const sunP = new THREE.Vector3(Math.sin(-r) * radius, Math.sin(axesRotation) * radius, Math.cos(-r) * radius);
+        // const angle = labels.departureLabel.getPosition().angleTo(sunP);
+        
+        // /* 
+        //   explorers need sunlight to lift. 
+        //   do not accept location like Iceland on the 22nd of December
+        // */
+        // this.coordinatesValid = angle < 1.5;
 
       } else {
         departure = undefined;
@@ -1400,8 +1427,11 @@ export default {
           }
 
           pars.auto_rotate = false;
-          // download trajectories
-          this.downloadMulti();
+
+          if (this.coordinatesValid) {
+            // download trajectories only with valid coords
+            this.downloadMulti();
+          }
           // move to lat/lan at noon
           this.resetTo({lat: departure.lat, 
                         lng: departure.lng, 
@@ -1416,7 +1446,12 @@ export default {
                           }
                           else
                           {
-                            this.visualizationState = STATE_WAIT_FOR_FLIGHTS;
+                            if (this.coordinatesValid) {
+                              this.visualizationState = STATE_WAIT_FOR_FLIGHTS;
+                            }
+                            else {
+                              this.$store.commit('general/setErrorContent', MSG_NOT_RISING);
+                            }
                           }
                         } 
                       });
