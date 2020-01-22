@@ -53,6 +53,9 @@
             v-if="isExhibitionClient"
           />
         </div>
+
+        <!-- error -->
+        <Error v-show="isError" />
       </div>
 
       <site-footer />
@@ -73,6 +76,7 @@ import siteHeader from './components/SiteHeader';
 import dashboard from './components/Dashboard';
 import siteFooter from './components/SiteFooter';
 import ArchiveEntry from './components/parts/ArchiveEntry'
+import Error from './components/parts/Error.vue';
 
 // keep this even if it seems it is not needed !!!
 // eslint-disable-next-line
@@ -85,7 +89,8 @@ export default {
     siteHeader,
     dashboard,
     siteFooter,
-    ArchiveEntry
+    ArchiveEntry,
+    Error
   },
   meteor: {
     meteorUser() {
@@ -102,6 +107,9 @@ export default {
     };
   },
   computed: {    
+    isError() {
+      return this.$store.state.general.errorContent !== '';
+    },
     archiveTitle() { return this.$store.state.archive.content.title; },
     user() {
       return this.$store.state.auth.user;

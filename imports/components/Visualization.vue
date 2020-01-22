@@ -13,11 +13,6 @@
       v-bind:content="loadingContent"
     />
 
-    <Error 
-      v-if="errorContent !== ''" 
-      v-bind:content="errorContent"
-    />
-
     <canvas id="labels-canvas"></canvas>
 
   </div>
@@ -37,7 +32,6 @@
 import _ from 'lodash';
 import { saveAs } from 'file-saver';
 import Loading from './parts/Loading.vue';
-import Error from './parts/Error.vue';
 import Util from './visualization/Util';
 import NightMap from './visualization/NightMap';
 import animator from './visualization/Animator';
@@ -133,13 +127,11 @@ export default {
       trajectoryLoaded: false,
       textureLoaded: 0,
       loadingContent: "",
-      errorContent: "",
     };
   },
 
   components: {
     Loading,
-    Error,
   },
 
   mounted() {
@@ -181,6 +173,7 @@ export default {
 
   /* Computed properties */
   computed: {
+    errorContent() { return this.$store.state.general.errorContent; },
     animating() {
       /*
       * Render the next frame if playing, wind panel is hidden, textures are loaded, wind data are loaded.
@@ -2127,8 +2120,11 @@ export default {
     * Error routines. Set the state to initial to start again.
     */
     error(e) {
-      console.log("ERROR: " + e);
-      // TODO: show error?
+      console.log("ERROR: " + e.toString());
+
+      // show error
+      this.$store.commit('general/setErrorContent', e.toString());
+    
       this.visualizationState = STATE_INITIAL;
       animator.stop();
     },

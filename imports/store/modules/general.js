@@ -28,6 +28,7 @@ export default {
     deviceName: '', // (small, medium, big) or (phone, tablet, desktop) ???
     modalShow: true,
     isPredictor: true,
+    errorContent: '',
   },
   mutations: {
     setModalShow(state, v) {
@@ -83,6 +84,9 @@ export default {
     },
     setIsPredictor(state, value) {
       state.isPredictor = value;
+    },
+    setErrorContent(state, value) {
+      state.errorContent = value;
     },
   },
   getters: {

@@ -67,7 +67,9 @@ export default {
         return this.$store.state.general.isPredictor || false;
     },
     isOnboard() { return this.$store.state.flightSimulator.focusedExplorer > 0; },
-    isChoosing() { return this.$store.state.general.isChoosingDestination; },
+    isChoosing() { 
+        return this.$store.state.general.isChoosingDestination || this.$store.state.general.errorContent !== '';
+    },
     isHome() { return this.$route.name === 'home-page'; },
     isMobile() {
         return (window.matchMedia('(max-width: 768px)').matches);
