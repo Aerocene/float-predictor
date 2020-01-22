@@ -2229,7 +2229,10 @@ export default {
 
           this.loadingContent = "100%";
           this.trajectoryLoaded = true;
-          this.visualizationState = STATE_ANIMATION_ACTIVE;
+
+          if (this.visualizationState === STATE_WAIT_FOR_FLIGHTS) {
+            this.visualizationState = STATE_ANIMATION_ACTIVE;
+          }
           
           /* 
             set the winning explorer to the one that got closer to the destination.
