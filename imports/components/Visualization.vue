@@ -126,8 +126,8 @@ export default {
       minTime: 0, /* time when the explorer was closer to the destination */
       minTrack: 0, /* winning track */
       onboardIndex: 0, /* track onboard */
-      startingDate: new Date(), /* initial date */
-      targetDate: new Date(), /* target date for starting (zenithal to destination) */
+      startingDate: new Date(), /* initial date, current date on globe (use for sun position calculation) */
+      targetDate: new Date(), /* target date for starting - time of sunrise */
       windsLoaded: false,
       trajectoryLoaded: false,
       textureLoaded: 0,
@@ -178,6 +178,7 @@ export default {
 
   /* Computed properties */
   computed: {
+    archiveItemVisible() { return this.$store.state.archive.content.title !== undefined; },
     errorContent() { return this.$store.state.general.errorContent; },
     animating() {
       /*
@@ -282,6 +283,14 @@ export default {
   },
 
   watch: {
+    archiveItemVisible(on) {
+      if (on) {
+        this.cancelTimeout();
+      } else {
+        this.startArchiveRotateTimeout();
+      }    
+    },
+
     guiVisible(gv) {
       if (gv) this.addDebugTools();
     },
@@ -522,7 +531,9 @@ export default {
     startArchiveRotateTimeout() {
       this.cancelTimeout();
       this.timeoutId = window.setTimeout(() => { 
-        pars.auto_rotate = true;
+        if (!this.archiveItemVisible) {
+          pars.auto_rotate = true;
+        }
       }, archiveAutorotateTimeout);
     },
     /**
