@@ -1,41 +1,44 @@
 <template>
 <transition appear name="fade">
-    <div class="main-content" v-if="!isArchiveContent">
+    <div 
+      id="main-archive"
+      class="main-content" 
+      v-if="!isArchiveContent"
+    >
       <article class="form-container" ref="content">
 
         <!-- section 1 -->
-        <div class="flight-section-1">
-
-          <div class="legend-item">
-            Tethered Flights
-            <div class="iconbox">
-              <img src="/img/marker-tethered.png"/>
-            </div>
-          </div>
-
-          <div class="legend-item">
-            Free Flights
-            <div class="iconbox">
-              <img src="/img/marker-free.png"/>
-            </div>
-          </div>
-
-          <div class="legend-item">
-            Human Flights
-            <div class="iconbox">
-              <img src="/img/marker-human.png"/>
-            </div>
+        <div class="legend-item" @click="onTethered">
+          Tethered Flights
+          <div class="iconbox">
+            <img src="/img/marker-tethered.png"/>
           </div>
         </div>
 
-        <div class="legend-item">
+        <div class="legend-item" @click="onFree">
+          Free Flights
+          <div class="iconbox">
+            <img src="/img/marker-free.png"/>
+          </div>
+        </div>
+
+        <div class="legend-item" @click="onHuman">
+          Human Flights
+          <div class="iconbox">
+            <img src="/img/marker-human.png"/>
+          </div>
+        </div>
+
+        <hr>
+
+        <div class="legend-item" @click="onMuseo">
           Museo Aerosolar
           <div class="iconbox2">
             <img src="/img/marker-museo.png"/>
           </div>
         </div>
         
-        <div class="legend-item">
+        <div class="legend-item" @click="onMember">
           Community Member
           <div class="iconbox2">
             <img src="/img/marker-member.png"/>
@@ -67,7 +70,7 @@
 
   text-align: left;
 
-  pointer-events: none;
+  /* pointer-events: none; */
 
   visibility: hidden;
   @media screen and (min-height: 400px) and (min-width: 320px) {
@@ -81,7 +84,7 @@
   width: 90%;
   max-width: 400px;
   min-width: 250px;
-  background: #252423;
+  background: rgba(59, 59, 59, 0.925);
   border-radius: 14px;
   padding: 0.8em;
   font-size: 14px;
@@ -94,13 +97,19 @@
   text-indent: 7px;
 
   .flight-section-1 {
-    background: rgba(91, 87, 87, 0.91);
+    background: rgba(107, 102, 102, 0.91);
     border-radius: 14px;
     width: 100%;
     margin-left: 1em;
     margin-right: 1em;
     margin-bottom: 0.5em;
     padding: 0.2em 0 0 0;
+  }
+
+  hr {
+    width: 100%; 
+    border-top:1px solid white;
+    margin: 0.8em;
   }
 
   .legend-item {
@@ -141,6 +150,12 @@ export default {
     return {
     };
   },
+  mounted() {
+    // disable all events on the legend
+    $('main-archive').bind('blur change click dblclick error focus focusin focusout hover keydown keypress keyup load mousedown mouseenter mouseleave mousemove mouseout mouseover mouseup resize scroll select submit', function(event){
+      event.stopPropagation();
+    });
+  },
   computed: {
     archiveContent() {
       return this.$store.state.archive.content;
@@ -148,6 +163,18 @@ export default {
     isArchiveContent() {
       return this.$store.state.archive.content.title || false;
     },    
+  },
+  methods: {    
+    onTethered(e) {    
+    },
+    onFree(e) {
+    },
+    onHuman(e) {
+    },
+    onMuseo(e) {
+    },
+    onMember(e) {
+    }
   }
 };
 </script>
