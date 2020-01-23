@@ -150,7 +150,6 @@ hr {
     height: calc(100% - 65px) !important;
     /* box-sizing: border-box; */
     width: 100% !important;
-    min-width: 380px;
 }
 .header {
     text-align: center;
