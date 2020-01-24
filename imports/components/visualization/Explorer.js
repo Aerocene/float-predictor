@@ -21,8 +21,10 @@ const EARTH_RADIUS = 6378.137;
 const SCENE_SCALE = EARTH_RADIUS / 200.0;
 const LINE_SCALE_FACTOR = 1;
 
-class Explorer {
-  constructor(scene, color, dayOffset, pars, shift = 0, nPoints = 1) {
+class Explorer 
+{
+  constructor(scene, color, dayOffset, pars, shift = 0, nPoints = 1)
+  {
     this.nPoints = nPoints;
     this.dayOffset = dayOffset;
     this.max_points = 128 * this.nPoints;
@@ -63,7 +65,18 @@ class Explorer {
       segmentIndexes.push(((i) * 2) + 1);
     }
 
-    this.animatingSphere = new THREE.Mesh(new THREE.TetrahedronGeometry(1.5, 0), this.animatingSphereMaterial);
+    // kite geometry
+    this.animatingSphere = new THREE.Group();
+
+    const kite_radius = 1.5;
+    this.kite = new THREE.Mesh(
+      new THREE.TetrahedronGeometry(kite_radius, 0),
+      this.animatingSphereMaterial
+    );                                        
+    this.kite.rotation.x = 3*Math.PI/4;
+    this.kite.rotation.y = 3*Math.PI/4;
+    this.kite.position.set(0, 0, -kite_radius);
+    this.animatingSphere.add(this.kite);
     scene.add(this.animatingSphere);
     // this.animatingSphere.visible=false;
 
@@ -251,6 +264,8 @@ class Explorer {
     this.mesh.visible = false;
     this.segments.visible = false;
     this.line.visible = true;
+
+    this.startDatetime = undefined;
   };
 
   setMaxLength = function setMaxLength(newMax)
@@ -330,33 +345,32 @@ class Explorer {
   };
 
   /**
+   * Set the trajectory date.
+   * @param {Float} alpha [0 - 1]
+   */
+  setDate = function setDate(date)
+  {    
+    if (this.length === 0) return;  
+    if (isNaN(this.duration) || this.duration === 0) return;
+
+    // calculate alpha
+    const alpha = (date.getTime() - this.startDatetime.getTime()) / this.duration;
+    this.setAlpha(alpha);
+  }
+
+  /**
    * Set the trajectory alpha.
    * @param {Float} alpha [0 - 1]
    */
   setAlpha = function setAlpha(alpha)
   {
-    if (this.length === 0) 
-    {
-      return false;
-    }
-
-    if (alpha < this.dayOffset / 16) 
-    {
-      return true;
-    }
-    // alpha: 0 -> 1 from day 1 to day 16
-    // scale alpha...
-    alpha = (alpha - (this.dayOffset / 16)) / (1 - (this.dayOffset / 16));
-
-    // if (alpha < this.dayOffset / 16) return false;
-    if (alpha < 0) 
-    {
-      return true;
-    }
+    if (this.length === 0) return;
+    if (alpha < 0) return;
     
-    this.alpha = Math.min(1, Math.max(0, alpha));
+    this.alpha = Math.min(1, alpha);
     const t = Math.max(0, this.alpha * (this.max_points - 1.0));
     this.index = Math.floor(t);
+
     const ipo = Math.min(this.index + 1, this.max_points - 1.0);
     const a = t - this.index;
     const oma = 1 - a;
@@ -374,6 +388,8 @@ class Explorer {
       );
 
       if (this.animatingSphere.visible) {
+        // rotate the group...
+        this.animatingSphere.lookAt(new THREE.Vector3(0, 0, 0));
         this.animatingSphere.position.copy(point);
       }
 
@@ -381,8 +397,8 @@ class Explorer {
       this.segments.geometry.setDrawRange(0, (this.index + 1) * 2);
       this.mesh.frustumCulled = false;
       this.segments.frustumCulled = false;
-      this.segments.geometry.attributes.position.needsUpdate = true;
       this.mesh.geometry.attributes.position.needsUpdate = true;
+      this.segments.geometry.attributes.position.needsUpdate = true;
       
       if (this.last_alpha !== alpha)
       {
@@ -393,15 +409,11 @@ class Explorer {
 
         this.last_alpha = alpha;
       }
-
-      return true;
     }
     else
     {
       console.log("ipo >= length: " + this.length);
-      
     }
-    return false;
   };
 
   /**
@@ -410,7 +422,7 @@ class Explorer {
    * @param {Float} h base height
    * @param {Float} hs height shift based on sunlight exposure
    */
-  addDataSample = function addDataSample(position, h, hs, altitude)
+  addDataSample = function addDataSample(position, altitudeRatio, altitude)
   {
     // let s = 0;
     // const pIndex = this.length;
@@ -437,46 +449,52 @@ class Explorer {
 
     if (this.length < this.max_points) {
       // trajectory on earth surface
-      this.array[2 * this.length * 3] = position.x / h;
-      this.array[2 * this.length * 3 + 1] = position.y / h;
-      this.array[2 * this.length * 3 + 2] = position.z / h;
+      this.array[2 * this.length * 3] = position.x;
+      this.array[2 * this.length * 3 + 1] = position.y;
+      this.array[2 * this.length * 3 + 2] = position.z;
 
       // this.array[(1 + 2 * this.length) * 3] = position.x <* heightShift;
       // this.array[(1 + 2 * this.length) * 3 + 1] = position.y * heightShift;
       // this.array[(1 + 2 * this.length) * 3 + 2] = position.z * heightShift;
 
       // trajectory in the air
-      this.array[(1 + 2 * this.length) * 3] = position.x;
-      this.array[(1 + 2 * this.length) * 3 + 1] = position.y;
-      this.array[(1 + 2 * this.length) * 3 + 2] = position.z;
+      this.array[(1 + 2 * this.length) * 3] = position.x * altitudeRatio;
+      this.array[(1 + 2 * this.length) * 3 + 1] = position.y * altitudeRatio;
+      this.array[(1 + 2 * this.length) * 3 + 2] = position.z * altitudeRatio;
 
+      this.altitudeRatio[this.length] = altitudeRatio; // (earth-radius + flight-height) / earth-radius
+      this.altitude[this.length] = altitude;
+      
       if (this.length > 0) {
         const d = position.distanceTo(this.lastPosition) * SCENE_SCALE;
         this.distance[this.length] = this.distance[this.length - 1] + d;
-        this.speed[this.length] = d;
-        this.altitudeRatio[this.length] = h; //(heightShift - 1.0) / h;
-        this.altitude[this.length] = altitude;
+        this.speed[this.length] = d;            
       }
-    } else {
-      console.log('this is strange...got more points than expected - Explorer');
     }
 
     /* Set flight data at the end */
     if (this.length === this.max_points - 1)
-    {      
+    {    
+      // average speed  
       this.avgSpeed = 0;
-      for (let i = 0; i < this.speed.length; i += 1)
+      for (let i = 0; i < this.speed.length; i++)
       {
         this.avgSpeed += this.speed[i];
       }
-
       this.avgSpeed = this.avgSpeed / this.speed.length;
+
+      // total distance
       this.totalDistance = (this.distance[this.distance.length - 1]);
     }
 
     this.lastPosition.set(position.x, position.y, position.z);
     this.length += 1;
   }
+
+  setDates = function setDates(start, end) {
+    this.startDatetime = start;
+    this.duration = end.getTime() - start.getTime();
+  };
 
   getSpeed = function getSpeed() {
     return this.speed[this.index];

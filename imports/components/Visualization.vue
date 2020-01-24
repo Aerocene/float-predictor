@@ -403,8 +403,6 @@ export default {
         const suntimes = suncalc.getTimes(new Date(), d.lat, d.lng);
         this.coordinatesValid = !isNaN(suntimes.sunrise.getTime());
 
-        console.log("departure: valid: " + this.coordinatesValid);
-        
         if (this.coordinatesValid)
         {
           // this is a valid date, use it
@@ -1380,8 +1378,6 @@ export default {
      */
     setState(state)
     {
-      console.log("set state: " + state);
-      
       // clear archive content
       this.showArchiveContent();
 
@@ -1471,6 +1467,13 @@ export default {
 
         /* animation active */
         case STATE_ANIMATION_ACTIVE: {
+
+          if (this.realLaunchTime) {
+            this.startingDate.setFullYear(this.realLaunchTime.getFullYear())
+            this.startingDate.setMonth(this.realLaunchTime.getMonth());
+            this.startingDate.setDate(this.realLaunchTime.getDate());
+          }
+
           pars.auto_rotate = false;
           break;
         }
@@ -1911,20 +1914,25 @@ export default {
     * animation function. Called 60 times per second, it's responsible for rendering and animating.
     */
     animate() {
+      
       fps += 1;
       /* by setting pars.skip_frame it's possible to reduce computation cost, lowering fps.
       * if pars.skip_frame == 0 -> fps = 60. If == 1  -> fps = 30, if == 2 -> fps = 20  */
-      if (timer % (1 + pars.skip_frame) === 0) {
+      if (timer % (1 + pars.skip_frame) === 0)
+      {
         const frames = pars.frame_multiplier * (1 + pars.skip_frame);
+
         this.windsLoaded = windVisualization ? windVisualization.update(pars.elapsed_days, frames) : false;
+        
         /* stop if user is mouse selecting */
-        if (!this.selecting) {
+        if (!this.selecting)
+        {
           /* update animator */
           animator.update(frames * pars.speed_d_x_sec / 60.0);
 
           /* auto rotate */
-          if (pars.auto_rotate && this.animating) {
-
+          if (pars.auto_rotate && this.animating)
+          {
             if (camera === cameraOrtho && cameraOrtho.zoom > 1) {
               // take care of scale!              
               controls.setAzimuthalAngle(controls.getAzimuthalAngle() - ((0.002 * frames)/cameraOrtho.zoom));
@@ -1935,13 +1943,16 @@ export default {
             }
 
           }
-          if (pars.move_in_time) { this.incrementTime(); }
+          if (pars.move_in_time) { 
+            this.incrementTime();
+          }
 
           /* sun (point light) position set */
           const d = new Date(this.startingDate);
           d.setTime(d.getTime() + 1000 * 60 * 60 * 24 * pars.elapsed_days);
           earthRotation = Util.getEarthAzimuthRotation(d);
 
+          
           if (pointLight)
           {
             pointLight.position.set(Math.sin(-earthRotation) * radius * 90, Math.sin(axesRotation) * radius * 90, Math.cos(-earthRotation) * radius * 90);
@@ -1955,24 +1966,33 @@ export default {
 
 
           /* manage viz states */
-          switch (pars.state) {
-            case STATE_ANIMATION_ACTIVE: {
-              const alpha = Math.min(1, pars.elapsed_days / 16.0);
-              /* check if trajectory are loaded  for current elapsed days */
-              for (let i = 0; i < explorers.length; i++) { // explorers.length
-                explorers[i].setAlpha(alpha);
+          switch (pars.state)
+          {
+            case STATE_ANIMATION_ACTIVE:
+            {
+              const alpha = Math.min(1, pars.elapsed_days / 16.0);              
+              
+              for (let i = 0; i < explorers.length; i++)
+              {
+                explorers[i].setDate(d);
               }
 
               // NOTE: STATE_ANIMATION_ACTIVE is only set if this.trajectoryLoaded === true
               // this check therefore is not needed!
-              if (this.trajectoryLoaded) {
-                if (!this.interacting) {
+              if (this.trajectoryLoaded)
+              {
+                if (!this.interacting)
+                {
                   /* if user is not interacting with the camera update camera and target position */
-                  if (pars.onboard) {
+                  if (pars.onboard)
+                  {
                     /* position the camera to a previous explorer position and the camera target to the current one */
                     if (this.animating) labels.cityLabels.update(explorers[this.onboardIndex].animatingSphere.position);
+
                     const pAlpha = Math.min(1, Math.max(0, alpha - pars.camera_shift));
-                    if (explorers[this.onboardIndex].getLength() > 2) {
+
+                    if (explorers[this.onboardIndex].getLength() > 2)
+                    {
                       const c = explorers[this.onboardIndex].getPosition(pAlpha);
                       const v = pars.camera_smooth ** frames;
                       const umv = 1 - v;
@@ -1994,18 +2014,25 @@ export default {
                         controls.target.z * v + umv * explorers[this.onboardIndex].animatingSphere.position.z,
                       );
                     }
-                  } else {
+                  } 
+                  else
+                  {
+                    // not onboard
+
                     /* position the camera to the average of all explorers position and the camera target to the earth center */
                     const v = new THREE.Vector3();
-                    for (let i = 0; i < explorers.length; i++) { // explorers.length
+                    for (let i = 0; i < explorers.length; i++) {
                       v.add(explorers[i].animatingSphere.position);
                     }
+
                     v.divideScalar(explorers.length);
                     v.setLength(radius * 1.65);
                     const a = pars.camera_smooth ** frames;
                     const uma = 1 - a;
                     controls.target.set(controls.target.x * a, controls.target.y * a, controls.target.z * a);
-                    if (this.autoMode) {
+                    
+                    if (this.autoMode)
+                    {
                       const t = this.getScale() * a + this.initialZoom * uma;
                       this.setScale(t);
                       camera.position.set(camera.position.x * a + v.x * uma, camera.position.y * a + v.y * uma, camera.position.z * a + v.z * uma);
@@ -2138,19 +2165,17 @@ export default {
       this.selectedExplorer = 0;
       this.focusedExplorer = 0;
       downloader = new TrajectoryDataDownloader();
-      this.startingDate.setMonth(new Date().getMonth());
-      this.startingDate.setDate(new Date().getDate());
+      this.startingDate = new Date();
       pars.elapsed_days = 0;
       labels.daysLabels.setVisible(false);
-      _.each(explorers, (e) => { e.reset(); });
       labels.setVisible(false);
+      _.each(explorers, (e) => { e.reset(); });
       this.minDist = 10000000000000000;
       this.bestDropOff = {lat: 0, lng: 0};
       dropOffMarker.visible = false;
       this.minTrack = 0;
       this.minTime = 0;
       this.onboardIndex = 0;
-      this.elapsed_days = 0;
       this.api_data = [];
       this.setOnboard(false);
       this.loadingContent = "";
@@ -2158,7 +2183,7 @@ export default {
         this.winds = this.cachedWinds;
         this.cachedWinds = undefined;
       }
-
+      this.realLaunchTime = undefined;
       this.setGlobeToCurrentTimezone();
     },
 
@@ -2166,7 +2191,7 @@ export default {
     * Error routines. Set the state to initial to start again.
     */
     error(e) {
-      console.log("ERROR: " + e.toString());
+      console.error(e.toString());
 
       // show error
       this.$store.commit('general/setErrorContent', e.toString());
@@ -2186,21 +2211,25 @@ export default {
                                                 earthSphereRadius);
 
       this.loadingContent = "0%";
+      const color = this.$store.state.flightSimulator.balloonColor
 
-      downloader.downloadMulti(departure, destination, altitudeLevels[this.initialAltitudeLevel],
+      downloader.downloadMulti(departure, destination, altitudeLevels[this.initialAltitudeLevel], color,
         // on update callback
         (data, explorerIndex) => {
 
-          // ON UPDATE          
+          // ON UPDATE
+
+          if (explorerIndex === 0) {
+            this.realLaunchTime = new Date(data.request.launch_datetime);
+          }
 
           // set loadingContent
-          const p = 100*(explorerIndex+1)/8;
-          this.loadingContent = p.toFixed(0) + "%";
+          this.loadingContent = (100*(explorerIndex+1)/8).toFixed(0) + "%";
           
-          const duration = new Date(data.request.stop_datetime).getTime() - new Date(data.request.launch_datetime).getTime();
-          // console.log("duration: " + duration + " ms -> " + (duration / 1000 / 60 / 60) + " hours");
-
+          const launch_datetime = new Date(data.request.launch_datetime);
+          const duration = new Date(data.request.stop_datetime).getTime() - launch_datetime.getTime();
           const float_alt = data.request.float_altitude;
+
           let explorerH = 0;
 
           // count points to reset explorer
@@ -2215,6 +2244,12 @@ export default {
           // setup explorer with amount of points
           explorers[explorerIndex].setMaxLength(point_count);
 
+          // set start date of flight
+          const last_prediction = data.prediction[data.prediction.length-1];
+          explorers[explorerIndex].setDates(new Date(data.prediction[0].trajectory[0].datetime),
+                                            new Date(last_prediction.trajectory[last_prediction.trajectory.length-1].datetime));
+
+
           for (let i=0; i<data.prediction.length; i++)
           {
             for (let j = 0; j < data.prediction[i].trajectory.length; j++) 
@@ -2225,24 +2260,16 @@ export default {
               explorerH = (data_point.altitude / altitudeLevels[this.initialAltitudeLevel]) * 6;
               // console.log(data_point.altitude + " :  explorerH: " + explorerH);
               
-
-              // get point on the ground
+              // get point in the ground
+              const ground_r = radius/1.009;
               const point = Util.latLon2XYZPosition(data_point.latitude, 
-                                                data_point.longitude, 
-                                                earthSphereRadius + explorerH);                         
+                                                    data_point.longitude, 
+                                                    ground_r);                         
 
-              // const r = Util.getEarthAzimuthRotation(new Date(data_point.datetime));
-              // const sunP = new THREE.Vector3(Math.sin(-r) * radius, Math.sin(axesRotation) * radius, Math.cos(-r) * radius);
-              // const g = sunP.angleTo(point);// Math.max(0,pointLight.position.angleTo(t)/(Math.PI*0.5));
-              // const s = (Math.PI * 0.5 - g) / (Math.PI * 0.5);
+              const altitudeRatio = (ground_r + explorerH) / ground_r;
 
-              // if (g < Math.PI * 0.45) {
-              //   explorerHS[explorerIndex] += s * 0.005;
-              // } else { explorerHS[explorerIndex] -= 0.0015; }
-
-              // explorerHS[explorerIndex] = Math.min(pars.explorer_height_shift, Math.max(explorerHS[explorerIndex], 0));
-
-              explorers[explorerIndex].addDataSample(point, (earthSphereRadius + explorerH)/earthSphereRadius, 0, data_point.altitude);
+              // add data sample
+              explorers[explorerIndex].addDataSample(point, altitudeRatio, data_point.altitude);
 
               if (this.flightType === 'planned')
               {

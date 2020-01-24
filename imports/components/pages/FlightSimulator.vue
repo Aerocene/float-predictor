@@ -81,30 +81,46 @@
                   </transition>
               </div>
 
-              <!-- altitude selector -->
-              <div class="altitude-selector-group">
-                  <div class="input-group altitude-select">
-                      <label class="small">Float Altitude</label>
-                      <div class="alt-select" @click="toggleAltPanel">
-                          <span>{{ form.altValues[selectedAlt] }}</span>
-                          <i class="fp fp-caret-down"
-                             :class="{'isOpen': isAltPanelOpen}">
-                          </i>
-                      </div>
-                  </div>
-                  <transition name="select-slide">
-                      <div v-if="isAltPanelOpen"
-                           class="alt-panel-wrapper"
-                           @click="closeAltPanel">
-                          <altitude-panel :isFull="false">
-                          </altitude-panel>
-                      </div>
+              <!-- ballooon color -->
 
-                  </transition>
-                  <p class="input-label">
-                      Aerocene sculptures always leave at noon with sun light.
-                  </p>
+              <div class="input-group altitude-select">
+                <label class="small left">Balloon Color</label>
               </div>
+              <b-dropdown class="balloon-color" v-bind:text="selectedColor" block>                  
+                <b-dropdown-text>The color defines how a balloon floats</b-dropdown-text>
+                <b-dropdown-divider></b-dropdown-divider>
+                
+                <b-dropdown-item-button 
+                  v-for="(item, index) in form.colorValues" 
+                  v-bind:key="index" 
+                  @click="onColorSelect"
+                  :class="[item === selectedColor ? 'selected' : 'not-selected']"
+                >
+                  {{item}}
+                </b-dropdown-item-button>
+              </b-dropdown>
+                            
+              <!-- altitude selector -->
+              <div class="input-group altitude-select" :class="[altSelectDisabled ? 'disabled' : '']">
+                <label class="small left">Float Altitude</label>
+              </div>
+              <b-dropdown 
+                class="balloon-color" 
+                v-bind:text="selectedAlt" 
+                block
+                v-bind:disabled="altSelectDisabled"
+              >                  
+                <b-dropdown-text>Float Altitude:<br>How high do you want to float?</b-dropdown-text>
+                <b-dropdown-divider></b-dropdown-divider>
+                <b-dropdown-item-button 
+                  v-for="(item, index) in form.altValues" 
+                  v-bind:key="index" 
+                  @click="onAltSelect"
+                  :class="[item === selectedAlt ? 'selected' : 'not-selected']"
+                >
+                  {{item}}
+                </b-dropdown-item-button>
+              </b-dropdown>
 
               <!-- launch button -->
               <button 
@@ -128,13 +144,19 @@
 import VueGoogleAutocomplete from 'vue-google-autocomplete';
 import _ from 'lodash';
 import altitudePanel from '../parts/AltitudePanel';
+import balloonPanel from '../parts/BalloonPanel';
 
 export default {
   name: 'FlightSimulator',
-  components: { VueGoogleAutocomplete, altitudePanel },
+  components: { 
+    VueGoogleAutocomplete, 
+    altitudePanel,
+    balloonPanel,
+  },
   data() {
     return {
       upperHeight: 0,
+      isColorPanelOpen: false,
       form: {
         errors: {
         },
@@ -146,6 +168,10 @@ export default {
           '16,000 m',
           '21,500 m', 
           '26,500 m',
+        ],
+        colorValues: [
+          'Silver',
+          'Black', 
         ],
       },
     };
@@ -159,13 +185,24 @@ export default {
         this.$store.commit('general/setAltPanel', v);
       },
     },
+    altSelectDisabled() {
+      return this.$store.state.flightSimulator.balloonColor === this.form.colorValues[1];
+    },
     selectedAlt: {
       get() {
-        return this.$store.state.flightSimulator.altitudeLevel;
+        return this.form.altValues[this.$store.state.flightSimulator.altitudeLevel];
       },
       set(v) {
         const alt = parseInt(v, 10);
         this.$store.commit('flightSimulator/setAltitudeLevel', alt);
+      },
+    },
+    selectedColor: {
+      get() {
+        return this.$store.state.flightSimulator.balloonColor;
+      },
+      set(v) {
+        this.$store.commit('flightSimulator/setBalloonColor', v);
       },
     },
     hasErrors() {
@@ -233,6 +270,16 @@ export default {
     isPlanned() { return (this.$store.getters['flightSimulator/isPlannedFlight']); },
   },
   methods: {
+    onColorSelect(e) {      
+      this.selectedColor = e.target.innerText;
+      if (this.selectedColor === this.form.colorValues[1]) {
+        // select 10.000m
+        this.selectedAlt = 3;
+      }
+    },
+    onAltSelect(e) {         
+      this.selectedAlt = this.form.altValues.indexOf(e.target.innerText);
+    },
     setFocus() {
       const ua = navigator.userAgent.toLowerCase();
       if (ua.indexOf('android') > -1
@@ -265,6 +312,12 @@ export default {
     toggleAltPanel() {
       this.isAltPanelOpen = !this.isAltPanelOpen;
     },
+    closeColorPanel() {
+      this.isColorPanelOpen = false;
+    },
+    toggleColorPanel() {
+      this.isColorPanelOpen = !this.isColorPanelOpen;
+    },
     onSubmit(e) {
       e.preventDefault();
       this.validateForm()
@@ -272,7 +325,9 @@ export default {
           this.form.errors = {}; // reset previous errors
           // reset elapsed days from previous simulation if necessary
           this.$store.commit('flightSimulator/setElapsedDays', 0);
-          this.$store.commit('flightSimulator/setAltitudeLevel', this.selectedAlt);
+          // this.$store.commit('flightSimulator/setAltitudeLevel', this.selectedAlt);
+          console.log("alt level: " + this.selectedAlt);
+          
           this.startAnimation();
           this.upperHeight = 0;
         }).catch((errors) => {
@@ -412,6 +467,86 @@ export default {
 /* @import "../css/_typography.scss"; */
 @import "../css/_variables_and_mixins.scss";
 
+.input-group.altitude-select.disabled * {
+  color:rgb(97, 97, 97);
+}
+
+.balloon-color {
+  margin-bottom: 1em;
+  
+  .dropdown-toggle {
+    color: white;
+    margin-top: 0px;
+
+    text-align: left;
+    text-transform: none;
+    font-size: 14px;
+
+    padding: 4px 8px 4px 0;
+
+    background-color: black;
+
+    border: none;
+
+    border-radius: 0px;
+    border-bottom-color: currentcolor;
+    border-bottom-style: none;
+    border-bottom-width: medium;
+
+    border-bottom: 1px solid #979797
+  }
+  .btn-secondary.dropdown-toggle:active {
+    background-color: transparent;
+  }
+  .btn-secondary.dropdown-toggle {
+    background-color: transparent;
+  }
+  .btn-secondary.disabled {
+    /* background-color: red; */
+    color: rgb(97, 97, 97);
+  }
+  .dropdown-toggle::after {
+    float: right;
+    text-align: right;
+    margin-top: 0.9em;
+  }
+
+  .dropdown-menu {
+    color: rgb(100, 100, 100);
+    background-color: #2b2b2b;
+    /* width: 100%; */
+    font-size: 15px;
+    /* border-radius: 8px; */
+
+    .b-dropdown-text {
+      color: rgb(85, 85, 85);
+    }
+
+    .dropdown-divider {
+      border-top-color: gray; 
+    }
+
+    button {
+      color: rgb(129, 129, 129);
+      padding-top: 6px;
+      padding-bottom: 6px;
+    }
+
+    .selected * {
+      color: white;
+    }
+    .dropdown-item:hover {
+      background-color: rgb(66, 66, 66);
+    }
+    .dropdown-item:active {
+      background-color: rgb(26, 26, 26);
+    }
+  }
+}
+.test {
+  background-color: red;
+}
+
 .main-content.over .flight-form{
     transition: margin-top .3s ease-in-out;
     background-color: black;
@@ -536,7 +671,7 @@ export default {
     .form-control {
         font-size: 1em;
         padding: 0.1em 0 0.3em 0;
-        margin-bottom: 1.4em;
+        margin-bottom: 1.0em;
         color: white;
         border-bottom-color: #979797;
     }
@@ -566,7 +701,7 @@ export default {
 .input-group {
     .small {
         font-size: .6em;
-        padding-top: 9px;
+        padding-top: 0px;
         @include small_down {
             padding-top: 4px;
         }
@@ -625,6 +760,25 @@ export default {
         bottom: -220px;
         left: 0;
         height: 220px;
+        background-color: $lightBlack;
+        padding: 5px 1em;
+        @include small_down {
+            bottom: 45px;
+        }
+        .altitude-panel {
+            .altitude-panel-inner {
+                padding-top: 0;
+            }
+        }
+    }
+
+    .color-panel-wrapper {
+        overflow: hidden;
+        box-shadow: 0 0 30px 1px rgba(0,0,0,.5);
+        position: absolute;
+        bottom: -80px;
+        left: 0;
+        height: 80px;
         background-color: $lightBlack;
         padding: 5px 1em;
         @include small_down {
@@ -695,7 +849,7 @@ export default {
   border-radius: 9px;
   border: none;
   color:white;
-  margin-top: 2em;
+  margin-top: 1em;
   margin-left: auto;
   margin-right: auto;
   min-height: 37px;
