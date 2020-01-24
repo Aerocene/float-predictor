@@ -143,15 +143,11 @@
 */
 import VueGoogleAutocomplete from 'vue-google-autocomplete';
 import _ from 'lodash';
-import altitudePanel from '../parts/AltitudePanel';
-import balloonPanel from '../parts/BalloonPanel';
 
 export default {
   name: 'FlightSimulator',
   components: { 
     VueGoogleAutocomplete, 
-    altitudePanel,
-    balloonPanel,
   },
   data() {
     return {
