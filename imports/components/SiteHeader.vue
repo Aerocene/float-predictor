@@ -80,6 +80,7 @@ export default {
   },
   methods: {
     clickFP() {
+        this.$store.commit('archive/clearArchiveContent');
         this.$store.commit('general/setIsPredictor', true); 
         this.$store.commit('general/closeMenu'); 
 
