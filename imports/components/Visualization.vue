@@ -2344,17 +2344,16 @@ export default {
             This will add it to the gallery.
           */
 
-          const trajectory = new Trajectory();
-          trajectory.load(this, 
+          this.winningExplorerData = new Trajectory();
+          this.winningExplorerData.load(this, 
             departure,
             destination,
             explorers[this.minTrack],
             altitudeLevels[this.initialAltitudeLevel],
-            this.toSVG()
+            this.toSVG(),
+            this.$store.state.flightSimulator.balloonColor
           );
 
-          // setup winning explorer data
-          this.winningExplorerData = trajectory;
         },
         (e) => this.error(e),
       );
