@@ -28,6 +28,13 @@ class ArchiveScene
         this.radius = radius * 0.9999;
         this.scene = new THREE.Scene();
 
+        // archives
+        this.archiveTethered = [];
+        this.archiveFree = [];
+        this.archiveHuman = [];
+        this.archiveMuseo = [];
+        this.archiveMember = [];
+
         this.earthCircle = new THREE.Mesh(
             new THREE.CircleBufferGeometry(this.radius, 80, 0, Math.PI * 2 ), 
             new THREE.MeshBasicMaterial( {
@@ -109,7 +116,7 @@ class ArchiveScene
         delete this.collectedIds;
     }
 
-    downloadArchive(successCb, errorCb)
+    downloadArchive(successCb, errorCb, updateCb)
     {
         this.collectedIds = [];
 
@@ -120,6 +127,7 @@ class ArchiveScene
 
         // download all the archives on after another
         this.downloadArchive1(() => {
+            if (updateCb) updateCb();
             this.downloadArchive2(this.sCb, errorCb);
         }, this.sCb, errorCb);
     }
@@ -179,8 +187,8 @@ class ArchiveScene
 
     addData(jsonData)
     {
-        
-        // expect jsonData to an array
+        // expect jsonData to be an array
+        // TODO check this
         
         for (var i=0; i<jsonData.length; i++)
         {
@@ -226,6 +234,7 @@ class ArchiveScene
                     let pos = Util.latLon2XYZPosition(obj.acf.map.lat, obj.acf.map.lng, this.radius);    
     
                     this.addSprite(pos, obj, this.materialMember.clone());
+                    obj.archive_type = "member";
                 }
             }
             else if (obj._embedded && 
@@ -239,15 +248,19 @@ class ArchiveScene
                 {
                     case "Museo Aero Solar":
                         material = this.materialMuseo.clone();
+                        obj.archive_type = "museo";
                         break;
                     case "Tethered Flight":
                         material = this.materialTethered.clone();
+                        obj.archive_type = "tethered";
                         break;
                     case "Human Flight":
                         material = this.materialHuman.clone();
+                        obj.archive_type = "human";
                         break;
                     case "Free Flight":
                         material = this.materialFree.clone();
+                        obj.archive_type = "free";
                         break;
                     default:
                         console.error("unknown flight type: " + flightname);                        
@@ -269,7 +282,41 @@ class ArchiveScene
             {
                 console.log("unknown type: " + obj.type + " at index: " + i);            
             }
+        } // for
+
+        // compile our archives
+
+        this.archiveTethered = [];
+        this.archiveFree = [];
+        this.archiveHuman = [];
+        this.archiveMuseo = [];
+        this.archiveMember = [];
+
+        for (var prop in this.idSpriteMap) {
+            if (Object.prototype.hasOwnProperty.call(this.idSpriteMap, prop)) {
+                // add it...                
+                const obj = this.idSpriteMap[prop].user;
+
+                switch(obj.archive_type) {
+                    case "member":
+                        this.archiveMember.push(obj);
+                        break;
+                    case "museo":
+                        this.archiveMuseo.push(obj);
+                        break;
+                    case "tethered":
+                        this.archiveTethered.push(obj);
+                        break;
+                    case "human":
+                        this.archiveHuman.push(obj);
+                        break;
+                    case "free":
+                        this.archiveFree.push(obj);
+                        break;
+                }
+            }
         }
+
     }
 
     findSprites(point, margin)
@@ -343,6 +390,13 @@ class ArchiveScene
             this.labelGroup.remove(this.labelGroup.children[0]);
         }
         this.idSpriteMap = {};
+
+        // archives
+        this.archiveTethered = [];
+        this.archiveFree = [];
+        this.archiveHuman = [];
+        this.archiveMuseo = [];
+        this.archiveMember = [];
     }
 
     render(renderer, camera)

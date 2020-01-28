@@ -161,12 +161,7 @@ export default {
 
         // load archive
         window.setTimeout(() => {
-          archiveScene.downloadArchive(()=> {
-            // success
-          },
-          (error) => {
-            console.error("could not download archive");            
-          });
+          this.downloadArchive();
         }, 500);
       });
   },
@@ -480,6 +475,29 @@ export default {
     },
   },  
   methods: {
+    downloadArchive() {
+      archiveScene.downloadArchive(() => {
+        // success
+        this.updateArchive();
+      },
+      (error) => {
+        // error
+        console.error(error);
+      },
+      () => {
+        console.log("ARCHIVE UPDATE CALLBACK: " + archiveScene.archiveMember.length);
+        
+        // update: called after downloading first archive
+        this.updateArchive();
+      });
+    },
+    updateArchive() {
+      this.$store.commit('archive/setArchiveTethered', archiveScene.archiveTethered);
+      this.$store.commit('archive/setArchiveFree', archiveScene.archiveFree);
+      this.$store.commit('archive/setArchiveHuman', archiveScene.archiveHuman);
+      this.$store.commit('archive/setArchiveMuseo', archiveScene.archiveMuseo);
+      this.$store.commit('archive/setArchiveMember', archiveScene.archiveMember);
+    },
     showArchiveContent(obj) {
       
       if (obj === undefined)
@@ -1629,13 +1647,7 @@ export default {
           const iv = [controls.target.y, cameraOrtho.zoom, controls.getPolarAngle()];
           const ev = [0, 1.3, Math.PI * 0.5];
           
-          archiveScene.downloadArchive(() => {
-            // success
-          },
-          (error) => {
-            // error
-            console.error(error);
-          });
+          this.downloadArchive();
 
           animator.start({
             init_values: iv,
