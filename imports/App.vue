@@ -161,38 +161,53 @@ export default {
       this.transitionEnter = true;
     },
     onEnter() {
-      if (this.transitionName === 'bottom-to-top') {
+      if (this.transitionName === 'bottom-to-top')
+      {
         const height = document.querySelector('.bottom-to-top-enter-active article').offsetHeight;
         TweenLite.fromTo(window, this.duration * 2, { scrollTo: height }, { scrollTo: 0 });
-      } else if (this.transitionName === 'fade') {
+      } 
+      else if (this.transitionName === 'fade')
+      {
         TweenLite.to(window, this.duration, { scrollTo: 0 });
         // this.$store.commit('general/setAnimationHeight', 'small');
       }
     },
     afterEnter() {
       // after enter of new element
-      if (this.transitionName === 'fade-middle-to-top') {
+      if (this.transitionName === 'fade-middle-to-top')
+      {
         // this.$store.commit('general/setAnimationHeight', 'small');
-      } else {
+      } 
+      else      
+      {
         this.$store.commit('general/setAnimationHeight', 'normal');
       }
+
       // for the cases in which this pages are landing pages
-      if (this.$route.name === 'about'
-        || this.$route.name === 'aerocene-explorer'
-        || this.$route.name === 'resources-and-api') {
+      if (this.$route.name === 'about' ||
+          this.$route.name === 'aerocene-explorer' ||
+          this.$route.name === 'resources-and-api')
+      {
         this.$store.commit('general/setAnimationHeight', 'small');
         this.$store.commit('flightSimulator/setVisualizationState', 6);
-      } else if (this.$route.name === 'gallery') {
+      } 
+      else if (this.$route.name === 'gallery')
+      {
         this.$store.commit('flightSimulator/setVisualizationState', 7);
       }
+
       // animate nav brand
-      if (this.$route.name === 'home-page') {
+      if (this.$route.name === 'home-page')
+      {
         this.$refs.siteHeader.$el.classList.remove('--pages');
         this.$refs.siteHeader.$el.classList.add('--home');
-      } else {
+      } 
+      else 
+      {
         this.$refs.siteHeader.$el.classList.remove('--home');
         this.$refs.siteHeader.$el.classList.add('--pages');
       }
+
       // set bottom class
       this.isBottom = (this.$route.name === 'gallery');
       this.transitionEnter = false;
