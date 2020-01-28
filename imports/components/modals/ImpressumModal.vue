@@ -26,7 +26,7 @@
                 </p>
                 <h4>VISUALISATION, DESIGN AND DEVELOPMENT</h4>
                 <p>
-                    Ingo Randolf, Roham Fayazy, Studio Folder, Angelo Semeraro.                    
+                    Ingo Randolf, Roham Fayazi, Studio Folder, Angelo Semeraro.                    
                 </p>
                 <h4>PROJECT DEVELOPMENT AND COORDINATION</h4>
                 <p>
