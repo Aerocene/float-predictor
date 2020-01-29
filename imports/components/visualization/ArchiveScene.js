@@ -22,6 +22,7 @@ class ArchiveScene
 {
     constructor(camera, radius, selectCb)
     {
+        this.preventClick = false;
         this.selectCb = selectCb;
         this.idSpriteMap = {};
         this.camera = camera;
@@ -50,36 +51,44 @@ class ArchiveScene
         this.labelGroup = new THREE.Group();
         this.scene.add(this.labelGroup);
 
+        const dw = true;
+
         // create base material so we can use it later
         this.baseMaterial = new THREE.SpriteMaterial( { 
             material: '#fff', 
             map: new THREE.TextureLoader().load(MARKER_PATH),
             depthTest: true,
+            depthWrite: dw,
         });
         this.materialFree = new THREE.SpriteMaterial( { 
             material: '#fff', 
             map: new THREE.TextureLoader().load(MARKER_FREE),
             depthTest: true,
+            depthWrite: dw,
         });
         this.materialHuman = new THREE.SpriteMaterial( { 
             material: '#fff', 
             map: new THREE.TextureLoader().load(MARKER_HUMAN),
             depthTest: true,
+            depthWrite: dw,
         });
         this.materialTethered = new THREE.SpriteMaterial( { 
             material: '#fff', 
             map: new THREE.TextureLoader().load(MARKER_TETHERED),
             depthTest: true,
+            depthWrite: dw,
         });
         this.materialMember = new THREE.SpriteMaterial( { 
             material: '#fff', 
             map: new THREE.TextureLoader().load(MARKER_MEMBER),
             depthTest: true,
+            depthWrite: dw,
         });
         this.materialMuseo = new THREE.SpriteMaterial( { 
             material: '#fff', 
             map: new THREE.TextureLoader().load(MARKER_MUSEO),
             depthTest: true,
+            depthWrite: dw,
         });
     }
 
@@ -168,10 +177,11 @@ class ArchiveScene
     }
 
 
-    addSprite(pos, obj, material)
+    addSprite(pos, obj, material, order)
     {
         let sprite = new THREE.Sprite( material ); 
         sprite.originalColor = 0xffffff;
+        sprite.originalRenderOrder = 3;
         sprite.renderOrder = 3;
         sprite.scale.set(spriteScale, spriteScale, spriteScale);
         sprite.position.set( pos.x, pos.y, pos.z );
@@ -183,6 +193,48 @@ class ArchiveScene
 
         // add to scene
         this.labelGroup.add(sprite);
+    }
+
+    deleteObj(obj) {
+        // remove that sprite from scene
+        this.labelGroup.remove(this.idSpriteMap[obj.id]);
+
+        // remove from map
+        delete this.idSpriteMap[obj.id];
+    }
+
+    setArchiveType(obj) {
+        // set archive_type
+        if (obj.type === "community_member") 
+        {
+            obj.archive_type = "member";
+        }
+        else if (obj._embedded && 
+            obj._embedded['wp:term'] &&
+            obj._embedded['wp:term'].length > 0 &&
+            obj._embedded['wp:term'][0]['0'])
+        {
+            switch (obj._embedded['wp:term'][0]['0'].name) {
+                case "Museo Aero Solar":
+                    obj.archive_type = "museo";
+                    break;
+                case "Tethered Flight":
+                    obj.archive_type = "tethered";
+                    break;
+                case "Human Flight":
+                    obj.archive_type = "human";
+                    break;
+                case "Free Flight":
+                    obj.archive_type = "free";
+                    break;
+                default:
+                    console.error("unknown flight type: " + flightname);
+            }
+        }
+        else
+        {
+            console.log("unknown type: " + obj.type);      
+        }
     }
 
     addData(jsonData)
@@ -203,21 +255,37 @@ class ArchiveScene
                 // check if we cached an id
                 if (this.idSpriteMap[obj.id] !== undefined)
                 {
-                    // remove that sprite from scene
-                    this.labelGroup.remove(this.idSpriteMap[obj.id]);
-
-                    // remove from map
-                    delete this.idSpriteMap[obj.id];
+                    this.deleteObj(obj);
                 }
 
+                continue;
+            }
+
+            //--------------------
+            // published entry
+
+            // figure out archive type
+            this.setArchiveType(obj);
+
+            // if no known archive type, delete this
+            if (obj.archive_type === undefined)
+            {
+                this.deleteObj(obj);
+                continue;
+            }
+
+            // check if we got a location
+            if (!obj.acf || !obj.acf.map)
+            {   
+                console.log("no acf or afc.map for index: " + i);
+                this.deleteObj(obj);
                 continue;
             }
 
             // this id should show up in map, so collect it
             this.collectedIds.push(obj.id);
 
-            // item is published
-            // check if we got it already
+            // check if we got id already
             if (this.idSpriteMap[obj.id] !== undefined)
             {
                 // just update obj...
@@ -226,62 +294,44 @@ class ArchiveScene
                 continue;
             }
 
-            // going to it as a new sprite
-            if (obj.type === "community_member")
-            {
-                if (obj.acf && obj.acf.map)
-                {
-                    let pos = Util.latLon2XYZPosition(obj.acf.map.lat, obj.acf.map.lng, this.radius);    
-    
-                    this.addSprite(pos, obj, this.materialMember.clone());
-                    obj.archive_type = "member";
-                }
+            let order = 3;
+            let material;
+
+            switch(obj.archive_type) {
+                case "member":
+                    order = 9;
+                    material = this.materialMember.clone();
+                    break;
+
+                case "museo":
+                    order = 8;
+                    material = this.materialMuseo.clone();
+                    break;
+
+                case "tethered":
+                    order = 5;
+                    material = this.materialTethered.clone();
+                    break;
+
+                case "human":
+                    order = 6;
+                    material = this.materialHuman.clone();
+                    break;
+
+                case "free":
+                    order = 7;
+                    material = this.materialFree.clone();
+                    break;
+
+                default:
+                    this.deleteObj(obj);
+                    continue;
             }
-            else if (obj._embedded && 
-                    obj._embedded['wp:term'] &&
-                    obj._embedded['wp:term'].length > 0 &&
-                    obj._embedded['wp:term'][0]['0'])
-            {
-                let material;
-                const flightname = obj._embedded['wp:term'][0]['0'].name;            
-                switch (flightname)
-                {
-                    case "Museo Aero Solar":
-                        material = this.materialMuseo.clone();
-                        obj.archive_type = "museo";
-                        break;
-                    case "Tethered Flight":
-                        material = this.materialTethered.clone();
-                        obj.archive_type = "tethered";
-                        break;
-                    case "Human Flight":
-                        material = this.materialHuman.clone();
-                        obj.archive_type = "human";
-                        break;
-                    case "Free Flight":
-                        material = this.materialFree.clone();
-                        obj.archive_type = "free";
-                        break;
-                    default:
-                        console.error("unknown flight type: " + flightname);                        
-                        continue;
-                }
-                
-                // a flight...
-                if (obj.acf && obj.acf.map)
-                {
-                    let pos = Util.latLon2XYZPosition(obj.acf.map.lat, obj.acf.map.lng, this.radius);    
-                    
-                    this.addSprite(pos, obj, material);
-                }
-                else {
-                    console.log("no acf or afc.map for index: " + i);                
-                }                
-            }
-            else 
-            {
-                console.log("unknown type: " + obj.type + " at index: " + i);            
-            }
+
+            // add sprite
+            let pos = Util.latLon2XYZPosition(obj.acf.map.lat, obj.acf.map.lng, this.radius);    
+            this.addSprite(pos, obj, material, order);
+
         } // for
 
         // compile our archives
@@ -341,12 +391,21 @@ class ArchiveScene
         return obj;
     }
 
+    preventNextClick() {
+        this.preventClick = true;
+    }
+
     onMouseClick(point)
     {
+        if (this.preventClick) {
+            this.preventClick = false;
+            return;
+        }
+        
         if (this.selected)
         {
             this.selected.material.color.set(this.selected.originalColor);
-            this.selected.renderOrder = 3;
+            this.selected.renderOrder = this.selected.originalRenderOrder;
             this.selected = undefined;
         }
 
@@ -355,6 +414,7 @@ class ArchiveScene
         if (obj)
         {
             this.selected = obj;
+            this.selected.renderOrder = 10;
             this.selected.material.color.set( '#999999' );
             this.hovered = undefined;
 
@@ -369,7 +429,7 @@ class ArchiveScene
         if (this.hovered)
         {
             this.hovered.material.color.set(this.selected.originalColor);
-            this.hovered.renderOrder = 3;
+            this.hovered.renderOrder = this.hovered.originalRenderOrder;
             this.hovered = undefined;
         }
 

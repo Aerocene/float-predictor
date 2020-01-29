@@ -50,8 +50,6 @@ import THREE from 'three';
 import OrbitControlsFrom from '../custom_modules/three-orbit-controls';
 const OrbitControls = OrbitControlsFrom(THREE);
 
-var he = require('he');
-
 /* Viz assets */
 
 const colorMap = '/img/colormap/4096.jpg';
@@ -101,7 +99,7 @@ const raycaster = new THREE.Raycaster();
 const mouse = new THREE.Vector2();
 
 const defaultControlSpeed = 0.4;
-const archiveAutorotateTimeout = 10000; // ms
+const archiveAutorotateTimeout = 30000; // ms
 
 // eslint-disable-next-line
 let bumpTexture, labels, colorTexture, nightMapTexture, container, renderer, rendererAA, rendererNAA, scene, camera, controls, gui, pointLight, ambientLight, earthSphere, sunSphere, selectSphere, earthRotation, loaded, timer, explorers, explorerHS, fps, emisphereSprite, emisphereSphere, departure, destination, windVisualization, windVisualizations, downloader, particleSystem;
@@ -199,6 +197,9 @@ export default {
     isArchive() { 
       return this.visualizationState === STATE_GLOBE_ARCHIVE;
     },
+    archiveLocation() {
+      return this.$store.state.archive.location;
+    },
     focusedExplorer: {
       get() { return this.$store.state.flightSimulator.focusedExplorer; },
       set(fe) { this.$store.commit('flightSimulator/setFocusedExplorer', fe); },
@@ -274,10 +275,59 @@ export default {
     trajectoryId: {
       get() { return this.$store.state.flightSimulator.trajectoryId; },
       set(a) { this.$store.commit('flightSimulator/setTrajectoryId', a); },
-    },
+    },    
   },
 
   watch: {
+
+    archiveLocation(loc)
+    {
+      // whenever a list-archive item is clicked rotate globe#
+      if (loc && loc.lat && loc.lng)
+      {
+        this.cancelTimeout();
+        pars.auto_rotate = false;
+
+        let polar = (1.0 - ((loc.lat + 270) / 180.0) % 1) * Math.PI;
+        let azimuth = ((loc.lng + 90) / 360.0) * 2 * Math.PI;
+        // controls.setAzimuthalAngle(azimuth-Math.PI*0.5);
+        // controls.setPolarAngle(polar);
+        while (azimuth < controls.getAzimuthalAngle() - Math.PI) {
+          azimuth += Math.PI * 2;
+        }
+        while (azimuth > controls.getAzimuthalAngle() + Math.PI) {
+          azimuth -= Math.PI * 2;
+        }
+
+        while (polar < controls.getPolarAngle() - Math.PI * 2) {
+          polar += Math.PI * 2;
+        }
+        while (polar > controls.getPolarAngle() + Math.PI * 2) {
+          polar -= Math.PI * 2;
+        }
+        const iv = [controls.getAzimuthalAngle(), controls.getPolarAngle()];
+        const ev = [azimuth, polar];
+
+        animator.start({
+          init_values: iv,
+          end_values: ev,
+          time_start: 0,
+          time_interval: 0.5,
+          sine_interpolation: true,
+          onAnimationEnd: () => {
+            // end
+          },
+          onAnimationUpdate: (v) => {
+            controls.setAzimuthalAngle(v[0]);
+            controls.setPolarAngle(v[1]);            
+          },
+        });
+      //   this.resetTo({lat: loc.lat, 
+      //                 lng: loc.lng, 
+      //                 time: 0.5});
+      }
+    },
+
     archiveItemVisible(on) {
       if (on) {
         this.cancelTimeout();
@@ -485,8 +535,6 @@ export default {
         console.error(error);
       },
       () => {
-        console.log("ARCHIVE UPDATE CALLBACK: " + archiveScene.archiveMember.length);
-        
         // update: called after downloading first archive
         this.updateArchive();
       });
@@ -498,46 +546,11 @@ export default {
       this.$store.commit('archive/setArchiveMuseo', archiveScene.archiveMuseo);
       this.$store.commit('archive/setArchiveMember', archiveScene.archiveMember);
     },
-    showArchiveContent(obj) {
-      
-      if (obj === undefined)
-      {
-        this.$store.commit('archive/clearArchiveContent');
-        return;
-      }     
 
-      // setup content
-      let content = {};
-
-      content.title = he.decode(obj.title.rendered);
-      content.place = he.decode(obj.acf.location.location_text);
-
-      if (obj.type === "community_member")
-      {
-        content.isProfile = true;
-
-        if (obj.acf && obj.acf.profile_picture)
-        {
-          content.url = obj.acf.profile_picture.url;
-        }
-
-        content.role = obj.acf.role;
-        content.content = obj.acf.biographie;
-      }
-      else if (obj._embedded && 
-              obj._embedded['wp:term'] &&
-              obj._embedded['wp:term'].length > 0 &&
-              obj._embedded['wp:term'][0]['0'])
-      { 
-        if (obj.acf && obj.acf.pictures && obj.acf.pictures.length > 0) 
-        {
-          content.url = obj.acf.pictures[0].url;
-        }
-
-        content.role = obj.acf.date + " - " + obj._embedded['wp:term'][0]['0'].name;
-      }
-      this.$store.commit('archive/setArchiveContent', content);
+    showArchiveContent(obj) {      
+      this.$store.commit('archive/setArchiveContent', Util.convertArchiveItem(obj));
     },
+
     cancelTimeout() {
       if (this.timeoutId) {
         window.clearTimeout(this.timeoutId);
@@ -603,17 +616,16 @@ export default {
         labels.update(pars.onboard);
       });
       controls.addEventListener('start', () => { 
-        
         this.interacting = true; 
         this.autoMode = false;
 
         // stop autorotate on archive
         if (this.visualizationState === STATE_GLOBE_ARCHIVE) {
+          this.cancelTimeout();
           pars.auto_rotate = false;
         }
       }, false);
       controls.addEventListener('end', () => { 
-
         this.interacting = false; 
 
         // restart autorotate on archive after timeout
@@ -658,6 +670,11 @@ export default {
 
       if (this.visualizationState === STATE_GLOBE_ARCHIVE)
       {
+        if (event.buttons > 0) {
+          // dragging
+          archiveScene.preventNextClick();
+        }
+        
         // // get point on earthSphere
         // const intersects = raycaster.intersectObject(earthSphere, false);
 

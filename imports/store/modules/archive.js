@@ -12,6 +12,7 @@ export default {
     archiveHuman: [],
     archiveMuseo: [],
     archiveMember: [],
+    location: {},
   },
   mutations: {
     setArchiveContent(state, v) {
@@ -35,5 +36,8 @@ export default {
     setArchiveMember(state, v) {
       state.archiveMember = v;
     },
+    setLocation(state, v) {
+      state.location = v;
+    }
   },
 };

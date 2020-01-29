@@ -9,6 +9,7 @@
 
 /* eslint-disable no-mixed-operators, no-console, no-param-reassign */
 const THREE = require('three');
+const he = require('he');
 
 const EARTH_RADIUS_KM = 6371;
 const EARTH_RADIUS = 6371000;
@@ -23,6 +24,48 @@ const IS_MOBILE = window.mobilecheck();
 const IS_ANDROID = /(android)/i.test(navigator.userAgent);
 
 export default {
+
+  convertArchiveItem(obj) {
+
+    if (obj === undefined)
+    {
+      return {};
+    }     
+
+    // setup content
+    const content = {};
+
+    content.title = he.decode(obj.title.rendered).trim();
+    content.place = he.decode(obj.acf.location.location_text).trim();
+
+    if (obj.type === "community_member")
+    {
+      content.isProfile = true;
+
+      if (obj.acf && obj.acf.profile_picture)
+      {
+        content.url = obj.acf.profile_picture.url;
+      }
+
+      content.role = obj.acf.role ? obj.acf.role.trim() : "";
+      content.content = obj.acf.biographie ? obj.acf.biographie.trim() : "";
+    }
+    else if (obj._embedded && 
+            obj._embedded['wp:term'] &&
+            obj._embedded['wp:term'].length > 0 &&
+            obj._embedded['wp:term'][0]['0'])
+    { 
+      if (obj.acf && obj.acf.pictures && obj.acf.pictures.length > 0) 
+      {
+        content.url = obj.acf.pictures[0].url;
+      }
+
+      const type = obj._embedded['wp:term'][0]['0'].name;
+      content.role = obj.acf.date + " - " + type ? type.trim() : "";
+    }
+
+    return content;
+  },
 
   getWebGlVersion() {
     const testCanvas = document.createElement('canvas');

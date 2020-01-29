@@ -1,8 +1,7 @@
 <template>
-    <div 
-      class="main-content"       
-      
-    >
+    
+    <div class="main-content">
+
 <transition name="fadeout">
       <article 
         class="form-container" 
@@ -14,14 +13,15 @@
         <div class="legend-item">
 
           <div class="item-header" v-b-toggle.accordion-1>
-            Tethered Flights
+            <span>Tethered Flights</span>
             <div class="iconbox">
               <img src="/img/marker-tethered.png"/>
             </div>
           </div>
 
-          <b-collapse id="accordion-1" class="item-content" visible accordion="archive-accordion" role="tabpanel">
-            <div v-for="(item, key) in tethered" v-bind:key="key">
+          <b-collapse id="accordion-1" class="item-content" accordion="archive-accordion" role="tabpanel">
+            <div class="archive-item" v-for="(item, key) in tethered" v-bind:key="key" @click="onItemClicked(item)">
+              <hr>
               {{getTitle(item)}}
             </div>
           </b-collapse>
@@ -29,14 +29,15 @@
 
         <div class="legend-item">
           <div class="item-header" v-b-toggle.accordion-2>
-            Free Flights
+            <span>Free Flights</span>
             <div class="iconbox">
               <img src="/img/marker-free.png"/>
             </div>
           </div>
 
           <b-collapse id="accordion-2" class="item-content" accordion="archive-accordion" role="tabpanel">
-            <div v-for="(item, key) in free" v-bind:key="key">
+            <div class="archive-item" v-for="(item, key) in free" v-bind:key="key" @click="onItemClicked(item)">
+              <hr>
               {{getTitle(item)}}
             </div>
           </b-collapse>
@@ -44,14 +45,15 @@
 
         <div class="legend-item">      
           <div class="item-header" v-b-toggle.accordion-3>
-            Human Flights
+            <span>Human Flights</span>
             <div class="iconbox">
               <img src="/img/marker-human.png"/>
             </div>
           </div>
 
           <b-collapse id="accordion-3" class="item-content" accordion="archive-accordion" role="tabpanel">
-            <div v-for="(item, key) in human" v-bind:key="key">
+            <div class="archive-item" v-for="(item, key) in human" v-bind:key="key" @click="onItemClicked(item)">
+              <hr>
               {{getTitle(item)}}
             </div>
           </b-collapse>
@@ -61,14 +63,15 @@
 
         <div class="legend-item">      
           <div class="item-header" v-b-toggle.accordion-4>
-            Museo Aerosolar
+            <span>Museo Aerosolar</span>
             <div class="iconbox2">
               <img src="/img/marker-museo.png"/>
             </div>
           </div>
 
           <b-collapse id="accordion-4" class="item-content" accordion="archive-accordion" role="tabpanel">
-            <div v-for="(item, key) in museo" v-bind:key="key">
+            <div class="archive-item" v-for="(item, key) in museo" v-bind:key="key" @click="onItemClicked(item)">
+              <hr>
               {{getTitle(item)}}
             </div>
           </b-collapse>
@@ -76,14 +79,15 @@
 
         <div class="legend-item">      
           <div class="item-header" v-b-toggle.accordion-5>
-            Community Member
+            <span>Community Member</span>
             <div class="iconbox2">
               <img src="/img/marker-member.png"/>
             </div>
           </div>
 
           <b-collapse id="accordion-5" class="item-content" accordion="archive-accordion" role="tabpanel">
-              <div v-for="(item, key) in member" v-bind:key="key">
+              <div class="archive-item" v-for="(item, key) in member" v-bind:key="key" @click="onItemClicked(item)">
+                <hr>
                 {{getTitle(item)}}
               </div>
           </b-collapse>
@@ -153,7 +157,7 @@
   min-width: 250px;
   background: rgba(59, 59, 59, 0.925);
   border-radius: 14px;
-  padding: 0.8em;
+  padding: 0.8em 0.8em 0.8em 0.2em;
   font-size: 14px;
   line-height: 26px;
 
@@ -174,7 +178,7 @@
   }
 
   hr {
-    width: 100%; 
+    width: 85%; 
     border-top:1px solid white;
     margin: 0.8em;
   }
@@ -182,11 +186,23 @@
   .legend-item {
     width: 100%;
     
+    .item-header::before {
+      content: url('/assets/icons/arrow_acc-open.svg');
+    }
+    .item-header.collapsed::before {
+      content: url('/assets/icons/arrow_acc-close.svg');
+    }
     .item-header {
       width: 100%;
       display: flex;    
       justify-content: space-between;
       white-space: nowrap;
+
+      cursor: pointer;
+
+      span {
+        flex-grow: 1;
+      }
 
       .iconbox {
         max-height: 30px;
@@ -213,14 +229,28 @@
 
     .item-content {
       overflow-y: scroll;
+      overflow-x: hidden;
       padding-left: 1em;
       padding-right: 1em;
       font-size: 12px;
-      white-space: nowrap;
+      /* white-space: nowrap; */
 
       max-height: 40vh;
+      cursor: pointer;
 
       /* transition: height 0.3s ease; */
+      /* div::before {
+        content: "";
+        margin-left: -0.6em;
+      } */
+    }
+
+    .archive-item {
+      hr {
+        margin: 0;
+        width: 100%;
+        border-top:1px solid rgba(255, 255, 255, 0.3);
+      }
     }
 
   }
@@ -230,24 +260,30 @@
 
 <script>
 
+import Util from '../visualization/Util';
+import router from '../../router';
+
 var he = require('he');
 
 export default {
   name: 'GlobeArchive',
   data() {
-    return {      
-      // tethered: [{title: "uno"}, {title: "uno"}, {title: "uno"}],
-      // free: ["free1", "free2", "free3", "free4"],
-      // human: ["human_1", "human_1", "human_5"],
-      // museo: ["uno", "dos", "tres"],
-      // member: ["uno", "dos", "tres"],
+    return {
     };
   },
+  props: ['page'],
   mounted() {
     // disable all events on the legend
     $('main-archive').bind('blur change click dblclick error focus focusin focusout hover keydown keypress keyup load mousedown mouseenter mouseleave mousemove mouseout mouseover mouseup resize scroll select submit', function(event){
       event.stopPropagation();
     });
+
+    // if "page"
+    if (this.page) {
+      console.log("page: " + this.page);
+      // get
+    }
+    
   },
   computed: {
     archiveContent() {
@@ -260,51 +296,47 @@ export default {
       return this.$store.state.archive.archiveTethered || [];
     },
     free() {
-      return this.$store.state.archive.archiveTethered || [];
+      return this.$store.state.archive.archiveFree || [];
     },
     human() {
-      return this.$store.state.archive.archiveTethered || [];
+      return this.$store.state.archive.archiveHuman || [];
     },
     museo() {
-      return this.$store.state.archive.archiveTethered || [];
+      return this.$store.state.archive.archiveMuseo || [];
     },
     member() {
-      return this.$store.state.archive.archiveTethered || [];
+      return this.$store.state.archive.archiveMember || [];
     },
+  },  
+  watch: {
+    page(v) {
+      console.log("page changed: "+ v);
+    }
   },
   methods: {    
     getTitle(item) {
-      return he.decode(item.title.rendered);
+      return he.decode(item.title.rendered).trim();
     },
-    setArchiveContent(title) {
-      content = {};
-      content.title = title || "Test";
-      this.$store.commit('archive/setArchiveContent', content);
-    },
-    onTethered(e) {    
-      this.setArchiveContent("Tethered");
-    },
-    onFree(e) {
-      this.setArchiveContent("free");
-    },
-    onHuman(e) {
-      this.setArchiveContent("human");
-    },
-    onMuseo(e) {
-      this.setArchiveContent("museo");
-    },
-    onMember(e) {
-      // this.setArchiveContent();
-      console.log(e.target);
+    onItemClicked(item) {
 
+      // collapse all
+      // this.$root.$emit('bv::toggle::collapse', 'accordion-5');
+      // this.$root.$emit('bv::toggle::collapse', 'accordion-4');
+      // this.$root.$emit('bv::toggle::collapse', 'accordion-3');
+      // this.$root.$emit('bv::toggle::collapse', 'accordion-2');
+      // this.$root.$emit('bv::toggle::collapse', 'accordion-1');
 
-      elm = document.createElement("div");
-      elm.innerHTML = "test";
+      // TODO: instead browse to site
+      // router.push(`/globe-archive?p=${item.id}`);
 
-      this.$refs.commContent.appendChild(elm);
+      this.$store.commit('archive/setArchiveContent', Util.convertArchiveItem(item));
 
-      this.$refs.commContent.style.height = this.$refs.commContent.childElementCount*2 + "em";
-    }
+      // change location
+      this.$store.commit('archive/setLocation', {
+        lat: item.acf.map.lat, 
+        lng: item.acf.map.lng
+      });
+    },
   }
 };
 </script>
