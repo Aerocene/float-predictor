@@ -17,9 +17,20 @@
           <div class="archive-info">
             <div style="font-size: 18px;">{{ archiveTitle }}</div>
             <div style="">{{ archiveRole }}</div>
+
+            <div style="" v-if="archiveDate !== undefined">{{ archiveDate }}</div>
+
             <div style="font-size: 12px;">{{ archivePlace }}</div>
             <div style="margin-top: 1em;" v-if="archiveContent">{{ archiveContent }}</div>
             <div style="margin-top: 1em;" v-if="archiveLink"><a target="_blank" rel="noopener noreferrer" v-bind:href="archiveLink">{{archiveLink}}</a></div>
+
+            <br>
+            <div v-if="archivePilots.length > 0">
+              <span style="font-size: 11px;">PILOTS:</span>
+              <div v-for="(item, key) in archivePilots" v-bind:key="key">
+                {{item.post_title}}
+              </div>
+            </div>
           </div>
         </div>        
       </div>
@@ -48,10 +59,12 @@ export default {
     archiveImageUrl() { return this.$store.state.archive.content.url; },
     archiveTitle() { return this.$store.state.archive.content.title; },
     archiveRole() { return this.$store.state.archive.content.role; },
+    archiveDate() { return this.$store.state.archive.content.date; },
     archivePlace() { return this.$store.state.archive.content.place; },
     archiveContent() { return this.$store.state.archive.content.content; },
     archiveIsProfile() { return this.$store.state.archive.content.isProfile; },
     archiveLink() { return this.$store.state.archive.content.link; },
+    archivePilots() { return this.$store.state.archive.content.pilots || []; },
   },
   methods: {
     clearContent() {

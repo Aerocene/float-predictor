@@ -60,6 +60,9 @@ export default {
         content.url = obj.acf.pictures[0].url;
       }
 
+      content.pilots = obj.acf.pilots || [];
+      content.date = obj.acf.date;
+
       const type = obj._embedded['wp:term'][0]['0'].name;
       content.role = obj.acf.date + " - " + type ? type.trim() : "";
     }
