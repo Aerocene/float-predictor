@@ -6,20 +6,20 @@
       <article 
         class="form-container" 
         ref="content"        
-        v-show="!isArchiveContent"
+        v-show="show"
       >
 
         <!-- <div role="tablist"> -->
         <div class="legend-item">
-          <div class="item-header" v-b-toggle.accordion-1>
-            <span>Upcoming Flights</span>
-            <div class="iconbox">
-              <img src="/img/marker-upcoming.png"/>
+          <div class="item-header">
+            <span v-b-toggle.accordion-1>Upcoming Flights</span>
+            <div class="iconbox" @click="toggleUpcoming">
+              <img src="/img/marker-upcoming.png" :class="{'--disabled': !archiveUpcomingEnabled}"/>
             </div>
           </div>
 
-          <b-collapse id="accordion-1" class="item-content" accordion="archive-accordion" role="tabpanel">
-            <div class="archive-item" v-for="(item, key) in upcoming" v-bind:key="key" @click="onItemClicked(item)">
+          <b-collapse ref="acc1" id="accordion-1" class="item-content" accordion="archive-accordion" role="tabpanel">
+            <div class="archive-item" v-for="(item, key) in upcoming" v-bind:key="key" @click="onItemClicked(item)" :class="{'--isPacha': isPacha(item)}">
               <hr>
               {{getTitle(item)}}
             </div>
@@ -29,15 +29,15 @@
         <hr>
 
         <div class="legend-item">
-          <div class="item-header" v-b-toggle.accordion-2>
-            <span>Tethered Flights</span>
-            <div class="iconbox">
-              <img src="/img/marker-tethered.png"/>
+          <div class="item-header">
+            <span v-b-toggle.accordion-2>Tethered Flights</span>
+            <div class="iconbox" @click="toggleTethered">
+              <img src="/img/marker-tethered.png" :class="{'--disabled': !archiveTetheredEnabled}"/>
             </div>
           </div>
 
-          <b-collapse id="accordion-2" class="item-content" accordion="archive-accordion" role="tabpanel">
-            <div class="archive-item" v-for="(item, key) in tethered" v-bind:key="key" @click="onItemClicked(item)">
+          <b-collapse ref="acc2" id="accordion-2" class="item-content" accordion="archive-accordion" role="tabpanel">
+            <div class="archive-item" v-for="(item, key) in tethered" v-bind:key="key" @click="onItemClicked(item)" :class="{'--isPacha': isPacha(item)}">
               <hr>
               {{getTitle(item)}}
             </div>
@@ -45,15 +45,15 @@
         </div>
 
         <div class="legend-item">
-          <div class="item-header" v-b-toggle.accordion-3>
-            <span>Free Flights</span>
-            <div class="iconbox">
-              <img src="/img/marker-free.png"/>
+          <div class="item-header">
+            <span v-b-toggle.accordion-3>Free Flights</span>
+            <div class="iconbox" @click="toggleFree">
+              <img src="/img/marker-free.png" :class="{'--disabled': !archiveFreeEnabled}"/>
             </div>
           </div>
 
-          <b-collapse id="accordion-3" class="item-content" accordion="archive-accordion" role="tabpanel">
-            <div class="archive-item" v-for="(item, key) in free" v-bind:key="key" @click="onItemClicked(item)">
+          <b-collapse ref="acc3" id="accordion-3" class="item-content" accordion="archive-accordion" role="tabpanel">
+            <div class="archive-item" v-for="(item, key) in free" v-bind:key="key" @click="onItemClicked(item)" :class="{'--isPacha': isPacha(item)}">
               <hr>
               {{getTitle(item)}}
             </div>
@@ -61,15 +61,15 @@
         </div>
 
         <div class="legend-item">      
-          <div class="item-header" v-b-toggle.accordion-4>
-            <span>Human Flights</span>
-            <div class="iconbox">
-              <img src="/img/marker-human.png"/>
+          <div class="item-header">
+            <span v-b-toggle.accordion-4>Human Flights</span>
+            <div class="iconbox" @click="toggleHuman">
+              <img src="/img/marker-human.png" :class="{'--disabled': !archiveHumanEnabled}"/>
             </div>
           </div>
 
-          <b-collapse id="accordion-4" class="item-content" accordion="archive-accordion" role="tabpanel">
-            <div class="archive-item" v-for="(item, key) in human" v-bind:key="key" @click="onItemClicked(item)">
+          <b-collapse ref="acc4" id="accordion-4" class="item-content" accordion="archive-accordion" role="tabpanel">
+            <div class="archive-item" v-for="(item, key) in human" v-bind:key="key" @click="onItemClicked(item)" :class="{'--isPacha': isPacha(item)}">
               <hr>
               {{getTitle(item)}}
             </div>
@@ -77,15 +77,15 @@
         </div>
 
         <div class="legend-item">      
-          <div class="item-header" v-b-toggle.accordion-5>
-            <span>Museo Aero Solar</span>
-            <div class="iconbox2">
-              <img src="/img/marker-museo.png"/>
+          <div class="item-header">
+            <span v-b-toggle.accordion-5>Museo Aero Solar</span>
+            <div class="iconbox2" @click="toggleMuseo">
+              <img src="/img/marker-museo.png" :class="{'--disabled': !archiveMuseoEnabled}"/>
             </div>
           </div>
 
-          <b-collapse id="accordion-5" class="item-content" accordion="archive-accordion" role="tabpanel">
-            <div class="archive-item" v-for="(item, key) in museo" v-bind:key="key" @click="onItemClicked(item)">
+          <b-collapse ref="acc5" id="accordion-5" class="item-content" accordion="archive-accordion" role="tabpanel">
+            <div class="archive-item" v-for="(item, key) in museo" v-bind:key="key" @click="onItemClicked(item)" :class="{'--isPacha': isPacha(item)}">
               <hr>
               {{getTitle(item)}}
             </div>
@@ -95,14 +95,14 @@
         <hr>
 
         <div class="legend-item">      
-          <div class="item-header" v-b-toggle.accordion-6>
-            <span>Community Member</span>
-            <div class="iconbox2">
-              <img src="/img/marker-member.png"/>
+          <div class="item-header">
+            <span v-b-toggle.accordion-6>Community Member</span>
+            <div class="iconbox2" @click="toggleMember">
+              <img src="/img/marker-member.png" :class="{'--disabled': !archiveMemberEnabled}"/>
             </div>
           </div>
 
-          <b-collapse id="accordion-6" class="item-content" accordion="archive-accordion" role="tabpanel">
+          <b-collapse ref="acc6" id="accordion-6" class="item-content" accordion="archive-accordion" role="tabpanel">
               <div class="archive-item" v-for="(item, key) in member" v-bind:key="key" @click="onItemClicked(item)">
                 <hr>
                 {{getTitle(item)}}
@@ -229,6 +229,9 @@
           width: 80%;
           margin-left: 10px;
         }
+        img.--disabled {
+          opacity: 0.4;
+        }
       }
   
       .iconbox2 {
@@ -241,14 +244,17 @@
           margin-left: 10px;
           width: 80%;
         }
+        img.--disabled {
+          opacity: 0.4;
+        }
       }
     }
 
     .item-content {
       overflow-y: scroll;
       overflow-x: hidden;
-      padding-left: 1em;
-      padding-right: 1em;
+      padding-left: 2.3em;
+      padding-right: 3em;
       font-size: 12px;
       /* white-space: nowrap; */
 
@@ -263,11 +269,16 @@
     }
 
     .archive-item {
+      color: rgb(196, 196, 196);
       hr {
         margin: 0;
         width: 100%;
-        border-top:1px solid rgba(255, 255, 255, 0.3);
+        border-top:1px solid rgba(182, 182, 182, 0.3);
       }
+    }
+
+    .archive-item.--isPacha {
+      color: red;
     }
 
   }
@@ -303,11 +314,25 @@ export default {
     
   },
   computed: {
-    archiveContent() {
-      return this.$store.state.archive.content;
-    },
-    isArchiveContent() {
-      return this.$store.state.archive.content.title || false;
+    show() {
+      const s = this.$store.state.archive.content.title === undefined && this.$store.state.archive.showLegend;
+      if (s === true) {
+        // this.$root.$emit('bv::toggle::collapse', 'accordion-6');
+        // this.$root.$emit('bv::toggle::collapse', 'accordion-5');
+        // this.$root.$emit('bv::toggle::collapse', 'accordion-4');
+        // this.$root.$emit('bv::toggle::collapse', 'accordion-3');
+        // this.$root.$emit('bv::toggle::collapse', 'accordion-2');
+        // this.$root.$emit('bv::toggle::collapse', 'accordion-1');
+        // this.$refs.acc1.visible = false;
+        
+        // this.$refs.acc1.close();
+        // const e = document.getElementById("accordion-1");
+        // if (e) {
+        //   e.close();
+        // }
+      }
+
+      return s;
     },
     upcoming() {
       return this.$store.state.archive.archiveUpcoming || [];
@@ -327,6 +352,12 @@ export default {
     member() {
       return this.$store.state.archive.archiveMember || [];
     },
+    archiveUpcomingEnabled() { return this.$store.state.archive.archiveUpcomingEnabled; },
+    archiveTetheredEnabled() { return this.$store.state.archive.archiveTetheredEnabled; },
+    archiveFreeEnabled() { return this.$store.state.archive.archiveFreeEnabled; },
+    archiveHumanEnabled() { return this.$store.state.archive.archiveHumanEnabled; },
+    archiveMuseoEnabled() { return this.$store.state.archive.archiveMuseoEnabled; }, 
+    archiveMemberEnabled() { return this.$store.state.archive.archiveMemberEnabled; }, 
   },  
   watch: {
     page(v) {
@@ -337,9 +368,13 @@ export default {
     getTitle(item) {
       return he.decode(item.title.rendered).trim();
     },
+    isPacha(item) {
+      return this.getTitle(item).includes("Aerocene Pacha");      
+    },
     onItemClicked(item) {
 
       // collapse all
+      // this.$root.$emit('bv::toggle::collapse', 'accordion-6');
       // this.$root.$emit('bv::toggle::collapse', 'accordion-5');
       // this.$root.$emit('bv::toggle::collapse', 'accordion-4');
       // this.$root.$emit('bv::toggle::collapse', 'accordion-3');
@@ -349,13 +384,32 @@ export default {
       // TODO: instead browse to site
       // router.push(`/globe-archive?p=${item.id}`);
 
-      this.$store.commit('archive/setArchiveContent', Util.convertArchiveItem(item));
-
       // change location
       this.$store.commit('archive/setLocation', {
         lat: item.acf.map.lat, 
-        lng: item.acf.map.lng
+        lng: item.acf.map.lng,
+        archiveItem: Util.convertArchiveItem(item)
       });
+
+      this.$store.commit('archive/setShowLegend', false);
+    },
+    toggleUpcoming(e) {
+      this.$store.commit('archive/setArchiveUpcomingEnabled', !this.$store.state.archive.archiveUpcomingEnabled);
+    },
+    toggleTethered(e) {
+      this.$store.commit('archive/setArchiveTetheredEnabled', !this.$store.state.archive.archiveTetheredEnabled);
+    },
+    toggleFree(e) {
+      this.$store.commit('archive/setArchiveFreeEnabled', !this.$store.state.archive.archiveFreeEnabled);
+    },
+    toggleHuman(e) {
+      this.$store.commit('archive/setArchiveHumanEnabled', !this.$store.state.archive.archiveHumanEnabled);
+    },
+    toggleMuseo(e) {
+      this.$store.commit('archive/setArchiveMuseoEnabled', !this.$store.state.archive.archiveMuseoEnabled);
+    },
+    toggleMember(e) {
+      this.$store.commit('archive/setArchiveMemberEnabled', !this.$store.state.archive.archiveMemberEnabled);
     },
   }
 };

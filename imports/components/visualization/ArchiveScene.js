@@ -12,13 +12,20 @@ const COLOR_TETHERED = 0x950E9D;
 
 const MARKER_PATH = '/img/marker-1.png';
 
-const MARKER_UPCOMING = '/img/marker-upcoming';
+const MARKER_UPCOMING = '/img/marker-upcoming.png';
 const MARKER_FREE = '/img/marker-free.png';
 const MARKER_HUMAN = '/img/marker-human.png';
 const MARKER_TETHERED = '/img/marker-tethered.png';
 const MARKER_MEMBER = '/img/marker-member.png';
 const MARKER_MUSEO = '/img/marker-museo.png';
 
+const P_LOW = 0;
+const P_MED = 1;
+const P_HIGH = 2;
+
+const sort_func = (a, b) => {
+    return b.priority - a.priority;
+};
 
 class ArchiveScene
 {
@@ -190,9 +197,23 @@ class ArchiveScene
     {
         let sprite = new THREE.Sprite( material ); 
         sprite.originalColor = 0xffffff;
-        sprite.originalRenderOrder = 3;
-        sprite.renderOrder = 3;
-        sprite.scale.set(spriteScale, spriteScale, spriteScale);
+
+
+        sprite.originalRenderOrder = 4;
+        sprite.renderOrder = 4;
+        if (obj.priority === P_LOW) {
+            sprite.originalRenderOrder = 3;
+            sprite.renderOrder = 3;
+        } else if (obj.priority === P_HIGH) {
+            sprite.originalRenderOrder = 5;
+            sprite.renderOrder = 5;
+        }
+
+        // add it invisible
+        // state needs to be synchronized
+        sprite.visible = false;
+
+
         sprite.position.set( pos.x, pos.y, pos.z );
         
         sprite.user = obj;
@@ -224,7 +245,7 @@ class ArchiveScene
             obj._embedded['wp:term'][0]['0'])
         {
             switch (obj._embedded['wp:term'][0]['0'].name) {
-                case "Upcoming":
+                case "Upcoming Flight":
                     obj.archive_type = "upcoming";
                     break;
                 case "Museo Aero Solar":
@@ -294,9 +315,38 @@ class ArchiveScene
                 continue;
             }
 
+            // set priority
+            if (!obj.acf.additional_informations) {
+                obj.priority = P_MED;
+            } else {
+                // read additinoal information
+                for (let i = 0; i < obj.acf.additional_informations.length; i++) {
+                    const info = obj.acf.additional_informations[i];
+                    
+                    if (info.label.toString().toLowerCase() === "priority") {
+
+                        if (info.content.toString().toLowerCase() === "low") {
+                            obj.priority = P_LOW;
+                        } else if (info.content.toString().toLowerCase() === "medium") {
+                            obj.priority = P_MED;
+                        } else if (info.content.toString().toLowerCase() === "high") {
+                            obj.priority = P_HIGH;
+                        } else {
+                            obj.priority = P_MED;
+                        }
+                    }
+                }
+
+                if (obj.priority === undefined) {
+                    obj.priority = P_MED;
+                }
+            }
+            
+
             // this id should show up in map, so collect it
             this.collectedIds.push(obj.id);
 
+            //----
             // check if we got id already
             if (this.idSpriteMap[obj.id] !== undefined)
             {
@@ -388,6 +438,13 @@ class ArchiveScene
             }
         }
 
+        // sort arrays
+        this.archiveUpcoming.sort(sort_func);
+        this.archiveTethered.sort(sort_func);
+        this.archiveFree.sort(sort_func);
+        this.archiveHuman.sort(sort_func);
+        this.archiveMuseo.sort(sort_func);
+        this.archiveMember.sort(sort_func);
     }
 
     findSprites(point, margin)
@@ -398,7 +455,12 @@ class ArchiveScene
         // search object with shortest distance to intersection-point
         for ( var i = 0, l = this.labelGroup.children.length; i < l; i ++ )
         {
-            const sprite = this.labelGroup.children[i];            
+            const sprite = this.labelGroup.children[i];
+
+            if (sprite.visible !== true) {
+                continue;
+            }
+
             const d = point.distanceTo(sprite.position);
             
             // console.log("D: " + d + " pos: " + sprite.position.x + ", " + sprite.position.y + ", " + sprite.position.z);
@@ -473,6 +535,7 @@ class ArchiveScene
         this.idSpriteMap = {};
 
         // archives
+        this.archiveUpcoming = [];
         this.archiveTethered = [];
         this.archiveFree = [];
         this.archiveHuman = [];
@@ -482,14 +545,24 @@ class ArchiveScene
 
     render(renderer, camera)
     {    
-        let sc = spriteScale/camera.zoom;
+        let sc_m = spriteScale/camera.zoom;
+        let sc_l = (spriteScale*0.6)/camera.zoom;
+        let sc_h = (spriteScale*1.5)/camera.zoom;
 
-        if (sc > spriteScale*2) sc = spriteScale*2;
+        if (sc_m > spriteScale*2) sc_m = spriteScale*2;
+        if (sc_l > spriteScale*1.2) sc_l = spriteScale*1.2;
+        if (sc_h > spriteScale*3) sc_h = spriteScale*3;
         
         for (var i=0; i < this.labelGroup.children.length; i++ )
         {
             const sprite = this.labelGroup.children[i];            
-            sprite.scale.set(sc, sc, 1.0 );
+
+            sprite.scale.set(sc_m, sc_m, 1);
+            if (sprite.user.priority === P_LOW) {
+                sprite.scale.set(sc_l, sc_l, 1);
+            } else if (sprite.user.priority === P_HIGH) {
+                sprite.scale.set(sc_h, sc_h, 1);
+            }
         }
     
         this.earthCircle.lookAt( camera.position );
@@ -505,6 +578,55 @@ class ArchiveScene
     getScale()
     {
         return this.scene.scale.x;
+    }
+
+    setUpcomingEnabled(on)
+    {
+        const arr = this.archiveUpcoming;
+        for (let i = 0; i < arr.length; i++) {
+            const obj = arr[i];
+            this.idSpriteMap[obj.id].visible = on;
+        }
+    }
+    setTetheredEnabled(on)
+    {
+        const arr = this.archiveTethered;
+        for (let i = 0; i < arr.length; i++) {
+            const obj = arr[i];
+            this.idSpriteMap[obj.id].visible = on;
+        }
+    }
+    setFreeEnabled(on)
+    {
+        const arr = this.archiveFree;
+        for (let i = 0; i < arr.length; i++) {
+            const obj = arr[i];
+            this.idSpriteMap[obj.id].visible = on;
+        }
+    }
+    setHumanEnabled(on)
+    {
+        const arr = this.archiveHuman;
+        for (let i = 0; i < arr.length; i++) {
+            const obj = arr[i];
+            this.idSpriteMap[obj.id].visible = on;
+        }
+    }
+    setMuseoEnabled(on)
+    {
+        const arr = this.archiveMuseo;
+        for (let i = 0; i < arr.length; i++) {
+            const obj = arr[i];
+            this.idSpriteMap[obj.id].visible = on;
+        }
+    }
+    setMemberEnabled(on)
+    {
+        const arr = this.archiveMember;
+        for (let i = 0; i < arr.length; i++) {
+            const obj = arr[i];
+            this.idSpriteMap[obj.id].visible = on;
+        }
     }
 
 }

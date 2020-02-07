@@ -171,6 +171,12 @@ export default {
 
   /* Computed properties */
   computed: {
+    archiveUpcomingEnabled() { return this.$store.state.archive.archiveUpcomingEnabled; },
+    archiveTetheredEnabled() { return this.$store.state.archive.archiveTetheredEnabled; },
+    archiveFreeEnabled() { return this.$store.state.archive.archiveFreeEnabled; },
+    archiveHumanEnabled() { return this.$store.state.archive.archiveHumanEnabled; },
+    archiveMuseoEnabled() { return this.$store.state.archive.archiveMuseoEnabled; }, 
+    archiveMemberEnabled() { return this.$store.state.archive.archiveMemberEnabled; }, 
     archiveItemVisible() { return this.$store.state.archive.content.title !== undefined; },
     errorContent() { return this.$store.state.general.errorContent; },
     animating() {
@@ -280,6 +286,25 @@ export default {
 
   watch: {
 
+    archiveUpcomingEnabled(on) { 
+      archiveScene.setUpcomingEnabled(on); 
+    },
+    archiveTetheredEnabled(on) { 
+      archiveScene.setTetheredEnabled(on);
+    },
+    archiveFreeEnabled(on) { 
+      archiveScene.setFreeEnabled(on);
+     },
+    archiveHumanEnabled(on) { 
+      archiveScene.setHumanEnabled(on);
+     },
+    archiveMuseoEnabled(on) { 
+      archiveScene.setMuseoEnabled(on);
+     }, 
+    archiveMemberEnabled(on) { 
+      archiveScene.setMemberEnabled(on);
+    },
+
     archiveLocation(loc)
     {
       // whenever a list-archive item is clicked rotate globe#
@@ -305,6 +330,18 @@ export default {
         while (polar > controls.getPolarAngle() + Math.PI * 2) {
           polar -= Math.PI * 2;
         }
+
+        if (controls.getAzimuthalAngle() == azimuth &&
+            controls.getPolarAngle() == polar)
+        {
+          // dont start animation
+          if (loc.archiveItem) {
+            this.$store.commit('archive/setArchiveContent', loc.archiveItem);
+          }
+          return;
+        }
+
+
         const iv = [controls.getAzimuthalAngle(), controls.getPolarAngle()];
         const ev = [azimuth, polar];
 
@@ -316,15 +353,15 @@ export default {
           sine_interpolation: true,
           onAnimationEnd: () => {
             // end
+            if (loc.archiveItem) {
+              this.$store.commit('archive/setArchiveContent', loc.archiveItem);
+            }
           },
           onAnimationUpdate: (v) => {
             controls.setAzimuthalAngle(v[0]);
-            controls.setPolarAngle(v[1]);            
+            controls.setPolarAngle(v[1]);  
           },
         });
-      //   this.resetTo({lat: loc.lat, 
-      //                 lng: loc.lng, 
-      //                 time: 0.5});
       }
     },
 
@@ -540,12 +577,21 @@ export default {
       });
     },
     updateArchive() {
+      // push archive content, so legend can GlobeArchive.vue can pick it up
+      // list content for accordion
       this.$store.commit('archive/setArchiveUpcoming', archiveScene.archiveUpcoming);
       this.$store.commit('archive/setArchiveTethered', archiveScene.archiveTethered);
       this.$store.commit('archive/setArchiveFree', archiveScene.archiveFree);
       this.$store.commit('archive/setArchiveHuman', archiveScene.archiveHuman);
       this.$store.commit('archive/setArchiveMuseo', archiveScene.archiveMuseo);
       this.$store.commit('archive/setArchiveMember', archiveScene.archiveMember);
+
+      archiveScene.setUpcomingEnabled(this.archiveUpcomingEnabled); 
+      archiveScene.setTetheredEnabled(this.archiveTetheredEnabled);
+      archiveScene.setFreeEnabled(this.archiveFreeEnabled);
+      archiveScene.setHumanEnabled(this.archiveHumanEnabled);
+      archiveScene.setMuseoEnabled(this.archiveMuseoEnabled);
+      archiveScene.setMemberEnabled(this.archiveMemberEnabled);
     },
 
     showArchiveContent(obj) {      
