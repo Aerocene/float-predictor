@@ -7,6 +7,7 @@ export default {
   namespaced: true,
   state: {
     content: {},
+    archiveUpcoming: [],
     archiveTethered: [],
     archiveFree: [],
     archiveHuman: [],
@@ -21,6 +22,9 @@ export default {
     clearArchiveContent(state) {
       state.content = {};
     },  
+    setArchiveUpcoming(state, v) {
+      state.archiveUpcoming = v;
+    },
     setArchiveTethered(state, v) {
       state.archiveTethered = v;
     },

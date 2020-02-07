@@ -11,15 +11,32 @@
 
         <!-- <div role="tablist"> -->
         <div class="legend-item">
-
           <div class="item-header" v-b-toggle.accordion-1>
+            <span>Upcoming Flights</span>
+            <div class="iconbox">
+              <img src="/img/marker-upcoming.png"/>
+            </div>
+          </div>
+
+          <b-collapse id="accordion-1" class="item-content" accordion="archive-accordion" role="tabpanel">
+            <div class="archive-item" v-for="(item, key) in upcoming" v-bind:key="key" @click="onItemClicked(item)">
+              <hr>
+              {{getTitle(item)}}
+            </div>
+          </b-collapse>
+        </div>
+
+        <hr>
+
+        <div class="legend-item">
+          <div class="item-header" v-b-toggle.accordion-2>
             <span>Tethered Flights</span>
             <div class="iconbox">
               <img src="/img/marker-tethered.png"/>
             </div>
           </div>
 
-          <b-collapse id="accordion-1" class="item-content" accordion="archive-accordion" role="tabpanel">
+          <b-collapse id="accordion-2" class="item-content" accordion="archive-accordion" role="tabpanel">
             <div class="archive-item" v-for="(item, key) in tethered" v-bind:key="key" @click="onItemClicked(item)">
               <hr>
               {{getTitle(item)}}
@@ -28,14 +45,14 @@
         </div>
 
         <div class="legend-item">
-          <div class="item-header" v-b-toggle.accordion-2>
+          <div class="item-header" v-b-toggle.accordion-3>
             <span>Free Flights</span>
             <div class="iconbox">
               <img src="/img/marker-free.png"/>
             </div>
           </div>
 
-          <b-collapse id="accordion-2" class="item-content" accordion="archive-accordion" role="tabpanel">
+          <b-collapse id="accordion-3" class="item-content" accordion="archive-accordion" role="tabpanel">
             <div class="archive-item" v-for="(item, key) in free" v-bind:key="key" @click="onItemClicked(item)">
               <hr>
               {{getTitle(item)}}
@@ -44,15 +61,31 @@
         </div>
 
         <div class="legend-item">      
-          <div class="item-header" v-b-toggle.accordion-3>
+          <div class="item-header" v-b-toggle.accordion-4>
             <span>Human Flights</span>
             <div class="iconbox">
               <img src="/img/marker-human.png"/>
             </div>
           </div>
 
-          <b-collapse id="accordion-3" class="item-content" accordion="archive-accordion" role="tabpanel">
+          <b-collapse id="accordion-4" class="item-content" accordion="archive-accordion" role="tabpanel">
             <div class="archive-item" v-for="(item, key) in human" v-bind:key="key" @click="onItemClicked(item)">
+              <hr>
+              {{getTitle(item)}}
+            </div>
+          </b-collapse>
+        </div>
+
+        <div class="legend-item">      
+          <div class="item-header" v-b-toggle.accordion-5>
+            <span>Museo Aero Solar</span>
+            <div class="iconbox2">
+              <img src="/img/marker-museo.png"/>
+            </div>
+          </div>
+
+          <b-collapse id="accordion-5" class="item-content" accordion="archive-accordion" role="tabpanel">
+            <div class="archive-item" v-for="(item, key) in museo" v-bind:key="key" @click="onItemClicked(item)">
               <hr>
               {{getTitle(item)}}
             </div>
@@ -62,30 +95,14 @@
         <hr>
 
         <div class="legend-item">      
-          <div class="item-header" v-b-toggle.accordion-4>
-            <span>Museo Aerosolar</span>
-            <div class="iconbox2">
-              <img src="/img/marker-museo.png"/>
-            </div>
-          </div>
-
-          <b-collapse id="accordion-4" class="item-content" accordion="archive-accordion" role="tabpanel">
-            <div class="archive-item" v-for="(item, key) in museo" v-bind:key="key" @click="onItemClicked(item)">
-              <hr>
-              {{getTitle(item)}}
-            </div>
-          </b-collapse>
-        </div>
-
-        <div class="legend-item">      
-          <div class="item-header" v-b-toggle.accordion-5>
+          <div class="item-header" v-b-toggle.accordion-6>
             <span>Community Member</span>
             <div class="iconbox2">
               <img src="/img/marker-member.png"/>
             </div>
           </div>
 
-          <b-collapse id="accordion-5" class="item-content" accordion="archive-accordion" role="tabpanel">
+          <b-collapse id="accordion-6" class="item-content" accordion="archive-accordion" role="tabpanel">
               <div class="archive-item" v-for="(item, key) in member" v-bind:key="key" @click="onItemClicked(item)">
                 <hr>
                 {{getTitle(item)}}
@@ -179,8 +196,8 @@
 
   hr {
     width: 85%; 
-    border-top:1px solid white;
-    margin: 0.8em;
+    border-top:1px solid rgba(130, 130, 130, 0.6);
+    margin: 0.3em;
   }
 
   .legend-item {
@@ -220,7 +237,7 @@
         overflow: hidden;
   
         img {
-          margin-top: -15px;
+          margin-top: -10px;
           margin-left: 10px;
           width: 80%;
         }
@@ -291,6 +308,9 @@ export default {
     },
     isArchiveContent() {
       return this.$store.state.archive.content.title || false;
+    },
+    upcoming() {
+      return this.$store.state.archive.archiveUpcoming || [];
     },
     tethered() {
       return this.$store.state.archive.archiveTethered || [];

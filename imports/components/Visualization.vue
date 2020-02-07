@@ -540,6 +540,7 @@ export default {
       });
     },
     updateArchive() {
+      this.$store.commit('archive/setArchiveUpcoming', archiveScene.archiveUpcoming);
       this.$store.commit('archive/setArchiveTethered', archiveScene.archiveTethered);
       this.$store.commit('archive/setArchiveFree', archiveScene.archiveFree);
       this.$store.commit('archive/setArchiveHuman', archiveScene.archiveHuman);

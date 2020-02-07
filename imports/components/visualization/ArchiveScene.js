@@ -12,11 +12,13 @@ const COLOR_TETHERED = 0x950E9D;
 
 const MARKER_PATH = '/img/marker-1.png';
 
+const MARKER_UPCOMING = '/img/marker-upcoming';
 const MARKER_FREE = '/img/marker-free.png';
 const MARKER_HUMAN = '/img/marker-human.png';
 const MARKER_TETHERED = '/img/marker-tethered.png';
 const MARKER_MEMBER = '/img/marker-member.png';
 const MARKER_MUSEO = '/img/marker-museo.png';
+
 
 class ArchiveScene
 {
@@ -30,6 +32,7 @@ class ArchiveScene
         this.scene = new THREE.Scene();
 
         // archives
+        this.archiveUpcoming = [];
         this.archiveTethered = [];
         this.archiveFree = [];
         this.archiveHuman = [];
@@ -87,6 +90,12 @@ class ArchiveScene
         this.materialMuseo = new THREE.SpriteMaterial( { 
             material: '#fff', 
             map: new THREE.TextureLoader().load(MARKER_MUSEO),
+            depthTest: true,
+            depthWrite: dw,
+        });
+        this.materialUpcoming = new THREE.SpriteMaterial( { 
+            material: '#fff', 
+            map: new THREE.TextureLoader().load(MARKER_UPCOMING),
             depthTest: true,
             depthWrite: dw,
         });
@@ -163,7 +172,7 @@ class ArchiveScene
     }
     downloadArchive2(successCb, errorCb)
     {
-      const url = "https://aerocene.org/wp-json/wp/v2/flight?per_page=100&_embed=1";    
+      const url = "https://aerocene.org/wp-json/wp/v2/flight?per_page=100&_embed=1";
 
       fetch(url)
       .then(response => response.json())
@@ -215,6 +224,9 @@ class ArchiveScene
             obj._embedded['wp:term'][0]['0'])
         {
             switch (obj._embedded['wp:term'][0]['0'].name) {
+                case "Upcoming":
+                    obj.archive_type = "upcoming";
+                    break;
                 case "Museo Aero Solar":
                     obj.archive_type = "museo";
                     break;
@@ -298,28 +310,33 @@ class ArchiveScene
             let material;
 
             switch(obj.archive_type) {
-                case "member":
+                case "upcoming":
                     order = 9;
+                    material = this.materialUpcoming.clone();
+                    break;
+
+                case "member":
+                    order = 8;
                     material = this.materialMember.clone();
                     break;
 
                 case "museo":
-                    order = 8;
+                    order = 7;
                     material = this.materialMuseo.clone();
                     break;
 
                 case "tethered":
-                    order = 5;
+                    order = 4;
                     material = this.materialTethered.clone();
                     break;
 
                 case "human":
-                    order = 6;
+                    order = 5;
                     material = this.materialHuman.clone();
                     break;
 
                 case "free":
-                    order = 7;
+                    order = 6;
                     material = this.materialFree.clone();
                     break;
 
@@ -336,6 +353,7 @@ class ArchiveScene
 
         // compile our archives
 
+        this.archiveUpcoming = [];
         this.archiveTethered = [];
         this.archiveFree = [];
         this.archiveHuman = [];
@@ -348,6 +366,9 @@ class ArchiveScene
                 const obj = this.idSpriteMap[prop].user;
 
                 switch(obj.archive_type) {
+                    case "upcoming":
+                        this.archiveUpcoming.push(obj);
+                        break;
                     case "member":
                         this.archiveMember.push(obj);
                         break;
