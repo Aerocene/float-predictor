@@ -44,7 +44,8 @@ export default {
 
       if (obj.acf && obj.acf.profile_picture)
       {
-        content.url = obj.acf.profile_picture.url;
+        content.pictures = [];
+        content.pictures.push(obj.acf.profile_picture);
       }
 
       content.role = obj.acf.role ? obj.acf.role.trim() : "";
@@ -57,7 +58,7 @@ export default {
     { 
       if (obj.acf && obj.acf.pictures && obj.acf.pictures.length > 0) 
       {
-        content.url = obj.acf.pictures[0].url;
+        content.pictures = obj.acf.pictures;
       }
 
       content.pilots = obj.acf.pilots || [];

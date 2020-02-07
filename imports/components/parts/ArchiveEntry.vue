@@ -6,13 +6,25 @@
       <div>
         <div class="loader-content">
 
-          <img
-            class="aaa"
+          <b-carousel
+            v-if="archivePictures.length > 1"
+            id="carousel-1"
+            :interval="2000"
+            controls
             :class="{'--isProfile': archiveIsProfile}"
-            v-if="archiveImageUrl"             
-            v-bind:src="archiveImageUrl" 
+          >
+            <b-carousel-slide v-for="(item, index) in archivePictures" v-bind:key="index" v-bind:img-src="item.url">              
+            </b-carousel-slide>
+          </b-carousel>
+
+          <img
+            :class="{'--isProfile': archiveIsProfile}"
+            v-if="archivePictures.length == 1"             
+            v-bind:src="archivePictures[0].url" 
             alt=""
           />
+
+          <div style="margin-top: 1em;" v-if="archivePictures.length === 0"/>
 
           <div class="archive-info">
             <div style="font-size: 18px;">{{ archiveTitle }}</div>
@@ -56,7 +68,6 @@ export default {
   },
   // props: ['title', 'subtitle', 'place', 'content', 'imageurl', 'isProfile', 'link'],
   computed: {
-    archiveImageUrl() { return this.$store.state.archive.content.url; },
     archiveTitle() { return this.$store.state.archive.content.title; },
     archiveRole() { return this.$store.state.archive.content.role; },
     archiveDate() { return this.$store.state.archive.content.date; },
@@ -65,6 +76,7 @@ export default {
     archiveIsProfile() { return this.$store.state.archive.content.isProfile; },
     archiveLink() { return this.$store.state.archive.content.link; },
     archivePilots() { return this.$store.state.archive.content.pilots || []; },
+    archivePictures() { return this.$store.state.archive.content.pictures || []; },
   },
   methods: {
     clearContent() {
@@ -112,17 +124,32 @@ export default {
   flex-direction: column;
   justify-content: center;
 
-  img {
-    width: 100%;
-    border-radius: 21px;
+  
+  .carousel {
     &.--isProfile {
       width: 50%;
       border-radius: 0px;
+      margin: 1em;
+    }
+    .carousel-inner {
+      width: 100%;
+      border-radius: 21px;    
+    }
+  }
+
+  img {
+    width: 100%;
+    border-radius: 21px;
+
+    &.--isProfile {
+      width: 50%;
+      border-radius: 0px;
+      margin: 1em;
     }
   }
 
   .archive-info {
-    padding: 2em;
+    padding: 1em 2em 1em 2em;
   }
 }
 
