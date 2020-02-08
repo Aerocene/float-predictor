@@ -91,6 +91,10 @@ export default {
 <style lang="scss" scoped>
 @import "../css/_variables_and_mixins.scss";
 
+::-webkit-scrollbar {
+    display: none;
+}
+
 #archiveContent{
   overflow: hidden;
   position: absolute;
@@ -109,6 +113,9 @@ export default {
   max-height: 80vh;
   overflow-y: scroll;
   overflow-x: hidden;
+
+  scrollbar-width: none;  
+
   /* margin: 10 10; */
   display: flex;
   flex-direction: row;
@@ -149,6 +156,8 @@ export default {
     border-radius: 21px;
 
     &.--isProfile {
+      margin-top: 10px;
+      margin-left: 10px;
       width: 50%;
       border-radius: 0px;
       margin: 1em;
