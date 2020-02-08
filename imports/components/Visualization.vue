@@ -1587,8 +1587,8 @@ export default {
           pars.auto_rotate = true;
           this.active = false;
           this.clear();
-          const iv = [controls.target.y, this.getScale(), controls.getPolarAngle()];
-          const ev = [130, 0.5, Math.PI * 0.5];
+          const iv = [controls.target.x, controls.target.y, controls.target.z, this.getScale(), controls.getPolarAngle()];
+          const ev = [0, 130, 0, 0.5, Math.PI * 0.5];
           animator.start({
             init_values: iv,
             end_values: ev,
@@ -1598,9 +1598,9 @@ export default {
             onAnimationEnd: () => {
             },
             onAnimationUpdate: (v) => {
-              controls.target.set(controls.target.x, v[0], controls.target.z);
-              this.setScale(v[1]);
-              controls.setPolarAngle(v[2]);
+              controls.target.set(v[0], v[1], v[2]);
+              this.setScale(v[3]);
+              controls.setPolarAngle(v[4]);
             },
           });
           break;
