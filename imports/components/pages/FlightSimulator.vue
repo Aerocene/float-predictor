@@ -440,9 +440,15 @@ export default {
     padding: $marginBase $marginBase*4/5;
     color: $gray;
     text-align: center;
+    @include large_up {
+      position: absolute;
+      top: 150px;
+      left: 50%;
+      transform: translateX(-50%);
+    }
     @include between($medium, $large) {
         position: absolute;
-        top: 300px;
+        top: 150px;
         left: 50%;
         transform: translateX(-50%);
     }
@@ -460,7 +466,7 @@ export default {
         }
     }
     @include small_down {
-        margin: 40px $marginMobile 0;
+        margin: 80px $marginMobile 0;
     }
     p {
         font-size: .85em;

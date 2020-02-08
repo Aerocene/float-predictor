@@ -63,6 +63,7 @@ export default {
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style lang="scss" scoped>
+@import "../css/_variables_and_mixins.scss";
 
 #archiveContent{
   overflow: hidden;
@@ -91,6 +92,11 @@ export default {
   margin-top: 15vh;
   margin-left: 10%;
   margin-right: 10%;
+  @include medium_up {
+    max-width: 400px;
+    margin-left: auto;
+    margin-right: auto;
+  }
   border-radius: 21px;
   padding: 0%;
 }
