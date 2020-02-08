@@ -111,7 +111,7 @@ let cameraOrtho, cameraPersp;
 const WEBGL_VERSION = Util.getWebGlVersion();
 
 // messages
-const MSG_NOT_RISING = "Sun does not rise at this location.\nPlease choose a different departure to lift off.";
+const MSG_NOT_RISING = "The weather is not aligned, please try again when the sun rises in this region or choose a different departure.";
 
 export default {
   name: 'visualization',
