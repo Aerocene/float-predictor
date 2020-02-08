@@ -164,9 +164,11 @@ export default {
 }
 
 .site-header {
-    position: relative;
-    display: flex;
+    position: fixed;
+    top: 0;
+    width: 100%;
     height: 65px;
+    display: flex;
 
     z-index: 50; /* lower than login background! */
     background-color: rgba(0, 0, 0, 0.8) !important;
