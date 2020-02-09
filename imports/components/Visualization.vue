@@ -594,8 +594,39 @@ export default {
       archiveScene.setMemberEnabled(this.archiveMemberEnabled);
     },
 
-    showArchiveContent(obj) {      
-      this.$store.commit('archive/setArchiveContent', Util.convertArchiveItem(obj));
+    showArchiveContent(obj) {
+
+
+      let i = -1;
+      if (obj) {
+        // index of object      
+        switch(obj.archive_type) {
+            case "upcoming":
+                i = this.$store.state.archive.archiveUpcoming.indexOf(obj);
+                break;
+            case "member":
+                i = this.$store.state.archive.archiveMember.indexOf(obj);
+                break;
+            case "museo":
+                i = this.$store.state.archive.archiveMuseo.indexOf(obj);
+                break;
+            case "tethered":
+                i = this.$store.state.archive.archiveTethered.indexOf(obj);
+                break;
+            case "human":
+                i = this.$store.state.archive.archiveHuman.indexOf(obj);
+                break;
+            case "free":
+                i = this.$store.state.archive.archiveFree.indexOf(obj);
+                break;
+        }
+      }
+
+
+      console.log("index: " + i);
+    
+
+      this.$store.commit('archive/setArchiveContent', Util.convertArchiveItem(obj, i));
     },
 
     cancelTimeout() {

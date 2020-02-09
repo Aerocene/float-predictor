@@ -25,7 +25,7 @@ const IS_ANDROID = /(android)/i.test(navigator.userAgent);
 
 export default {
 
-  convertArchiveItem(obj) {
+  convertArchiveItem(obj, index) {
 
     if (obj === undefined)
     {
@@ -35,8 +35,10 @@ export default {
     // setup content
     const content = {};
 
+    content.index = index;
     content.title = he.decode(obj.title.rendered).trim();
     content.place = he.decode(obj.acf.location.location_text).trim();
+    content.archive_type = obj.archive_type;
 
     if (obj.type === "community_member")
     {

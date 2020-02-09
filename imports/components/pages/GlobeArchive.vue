@@ -19,7 +19,7 @@
           </div>
 
           <b-collapse ref="acc1" id="accordion-1" class="item-content" accordion="archive-accordion" role="tabpanel">
-            <div class="archive-item" v-for="(item, key) in upcoming" v-bind:key="key" @click="onItemClicked(item)" :class="{'--isPacha': isPacha(item)}">
+            <div class="archive-item" v-for="(item, key) in upcoming" v-bind:key="key" @click="onItemClicked(item, key)" :class="{'--isPacha': isPacha(item)}">
               <hr>
               {{getTitle(item)}}
             </div>
@@ -37,7 +37,7 @@
           </div>
 
           <b-collapse ref="acc2" id="accordion-2" class="item-content" accordion="archive-accordion" role="tabpanel">
-            <div class="archive-item" v-for="(item, key) in tethered" v-bind:key="key" @click="onItemClicked(item)" :class="{'--isPacha': isPacha(item)}">
+            <div class="archive-item" v-for="(item, key) in tethered" v-bind:key="key" @click="onItemClicked(item, key)" :class="{'--isPacha': isPacha(item)}">
               <hr>
               {{getTitle(item)}}
             </div>
@@ -53,7 +53,7 @@
           </div>
 
           <b-collapse ref="acc3" id="accordion-3" class="item-content" accordion="archive-accordion" role="tabpanel">
-            <div class="archive-item" v-for="(item, key) in free" v-bind:key="key" @click="onItemClicked(item)" :class="{'--isPacha': isPacha(item)}">
+            <div class="archive-item" v-for="(item, key) in free" v-bind:key="key" @click="onItemClicked(item, key)" :class="{'--isPacha': isPacha(item)}">
               <hr>
               {{getTitle(item)}}
             </div>
@@ -69,7 +69,7 @@
           </div>
 
           <b-collapse ref="acc4" id="accordion-4" class="item-content" accordion="archive-accordion" role="tabpanel">
-            <div class="archive-item" v-for="(item, key) in human" v-bind:key="key" @click="onItemClicked(item)" :class="{'--isPacha': isPacha(item)}">
+            <div class="archive-item" v-for="(item, key) in human" v-bind:key="key" @click="onItemClicked(item, key)" :class="{'--isPacha': isPacha(item)}">
               <hr>
               {{getTitle(item)}}
             </div>
@@ -85,7 +85,7 @@
           </div>
 
           <b-collapse ref="acc5" id="accordion-5" class="item-content" accordion="archive-accordion" role="tabpanel">
-            <div class="archive-item" v-for="(item, key) in museo" v-bind:key="key" @click="onItemClicked(item)" :class="{'--isPacha': isPacha(item)}">
+            <div class="archive-item" v-for="(item, key) in museo" v-bind:key="key" @click="onItemClicked(item, key)" :class="{'--isPacha': isPacha(item)}">
               <hr>
               {{getTitle(item)}}
             </div>
@@ -103,7 +103,7 @@
           </div>
 
           <b-collapse ref="acc6" id="accordion-6" class="item-content" accordion="archive-accordion" role="tabpanel">
-              <div class="archive-item" v-for="(item, key) in member" v-bind:key="key" @click="onItemClicked(item)">
+              <div class="archive-item" v-for="(item, key) in member" v-bind:key="key" @click="onItemClicked(item, key)">
                 <hr>
                 {{getTitle(item)}}
               </div>
@@ -371,7 +371,7 @@ export default {
     isPacha(item) {
       return this.getTitle(item).includes("Aerocene Pacha");      
     },
-    onItemClicked(item) {
+    onItemClicked(item, index) {
 
       // collapse all
       // this.$root.$emit('bv::toggle::collapse', 'accordion-6');
@@ -388,7 +388,7 @@ export default {
       this.$store.commit('archive/setLocation', {
         lat: item.acf.map.lat, 
         lng: item.acf.map.lng,
-        archiveItem: Util.convertArchiveItem(item)
+        archiveItem: Util.convertArchiveItem(item, index)
       });
 
       this.$store.commit('archive/setShowLegend', false);
