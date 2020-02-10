@@ -203,11 +203,14 @@
   .legend-item {
     width: 100%;
     
-    .item-header::before {
-      content: url('/assets/icons/arrow_acc-open.svg');
-    }
-    .item-header.collapsed::before {
-      content: url('/assets/icons/arrow_acc-close.svg');
+    .item-header {
+      span::before {
+        margin-right: 6px;
+        content: url('/assets/icons/arrow_acc-open.svg');
+      }
+      span.collapsed::before {
+        content: url('/assets/icons/arrow_acc-close.svg');
+      }
     }
     .item-header {
       width: 100%;
