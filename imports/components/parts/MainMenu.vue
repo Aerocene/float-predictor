@@ -55,6 +55,10 @@
 
 <style lang="scss" scoped>
 
+.main-menu {
+  padding-top: 46px !important;
+}
+
 .nav-link {
   display: flex;
   flex-direction: column;

@@ -143,11 +143,12 @@ hr {
     margin: 40px 0 40px 0;
 }
 
+
 .main-nav {
     /* overflow: hidden !important; */
     
     /* padding: 0px 1.5em 0 0 !important; */
-    height: calc(100% - 65px) !important;
+    height: calc(100% - 98px) !important;
     /* box-sizing: border-box; */
     width: 100% !important;
 }

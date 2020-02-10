@@ -1,6 +1,18 @@
 <template>
-    <div class="site-header">
 
+<div class="site-header-wrapper">
+
+    <div style="text-align: center; color: white;">
+        <span style="font-size: 11px;">
+        Fly with
+        </span>
+        <br>
+        <span style="font-size: 17px; font-weight: bold;">
+        AEROCENE
+        </span>
+    </div>
+
+    <div class="site-header">
         <div class="spacer"></div>
 
         <div class="container">
@@ -11,7 +23,7 @@
                 :class="{'--is-predict': isPredictor}" 
                 @click="clickFP"
             >
-                Float Predictor
+                Virtual Flight
             </b-button>
 
             <b-button 
@@ -21,7 +33,7 @@
                 @click="clickA"
                 v-show="archiveAllowed"
             >
-                Archive
+                Real Flights
             </b-button>
 
             <div style="min-width: 32px; min-heigth:32px;">
@@ -36,6 +48,7 @@
 
 
     </div>
+</div>
 </template>
 
 
@@ -163,19 +176,29 @@ export default {
     }
 }
 
-.site-header {
+.site-header-wrapper {
     position: fixed;
     top: 0;
     width: 100%;
-    height: 65px;
+    height: 98px;
+
     display: flex;
+    flex-direction: column;
 
     z-index: 50; /* lower than login background! */
     background-color: rgba(0, 0, 0, 0.8) !important;
+}
+
+.site-header {
+    width: 100%;
+    display: flex;
+
+    margin-top: 6px;
+
     transition: top .3s ease-in-out;
     @include large_down {
-        position: fixed;
-        top: 0;
+        /* position: fixed;
+        top: 0; */
         width: 100%;
         &.is-onboard {
             display: none;
