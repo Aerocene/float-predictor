@@ -11,7 +11,7 @@
             <b-carousel
               v-if="archivePictures.length > 1"
               id="carousel-1"
-              :interval="2000"
+              :interval="10000"
               controls
               :class="{'--isProfile': archiveIsProfile}"
             >
