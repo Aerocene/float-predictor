@@ -25,7 +25,7 @@ export default {
     autoMode: false,
     departure: {},
     destination: {},
-    balloonColor: "Silver",
+    balloonColor: "Silver/Transparent - Fly day&night",
     altitudeLevel: 3, // General altitude
     initialAltitudeLevel: 3, // General altitude
     trajectoryId: -1,

@@ -5,7 +5,7 @@
 
       <div v-if="isChoosing" class="flight-form wrapper shadowed" ref="content">
           <b-form @submit="onSubmit">
-              <div class="type-selector-group">
+              <!-- <div class="type-selector-group">
 
                   <b-form-checkbox id="FlightTypeSelector"
                                    v-model="flightType"
@@ -32,6 +32,12 @@
                       </p>
                   </transition>
 
+              </div> -->
+
+              <div>
+                <div style="font-size: 13px; color: white;">Fly around the world free from fossil fuels</div>
+                <div style="font-size: 9px; color: white; margin-top: 0.5em; margin-bottom: 1.5em;">FILLED ONLY WITH THE AIR, LIFTED ONLY BY THE SUN, CARRIED ONLY BY THE WINDS</div>
+                
               </div>
 
               <!-- From / To -->
@@ -84,17 +90,17 @@
               <!-- ballooon color -->
 
               <div class="input-group altitude-select">
-                <label class="small left">Balloon Color</label>
+                <label class="small left">Envelop Color</label>
               </div>
               <b-dropdown class="balloon-color" v-bind:text="selectedColor" block>                  
-                <b-dropdown-text>The color defines how a balloon floats</b-dropdown-text>
+                <b-dropdown-text>The envelp color defines when a balloon can fly: day&amp;night or at daytime only.</b-dropdown-text>
                 <b-dropdown-divider></b-dropdown-divider>
                 
                 <b-dropdown-item-button 
                   v-for="(item, index) in form.colorValues" 
                   v-bind:key="index" 
                   @click="onColorSelect"
-                  :class="[item === selectedColor ? 'selected' : 'not-selected']"
+                  :class="[item === selectedColor ? 'selected' : 'selected']"
                 >
                   {{item}}
                 </b-dropdown-item-button>
@@ -116,7 +122,7 @@
                   v-for="(item, index) in form.altValues" 
                   v-bind:key="index" 
                   @click="onAltSelect"
-                  :class="[item === selectedAlt ? 'selected' : 'not-selected']"
+                  :class="[item === selectedAlt ? 'selected' : 'selected']"
                 >
                   {{item}}
                 </b-dropdown-item-button>
@@ -166,8 +172,8 @@ export default {
           '26,500 m',
         ],
         colorValues: [
-          'Silver',
-          'Black', 
+          'Silver/Transparent - Fly day&night',
+          'Black - Fly during daytime only', 
         ],
       },
     };
@@ -508,14 +514,14 @@ export default {
   }
 
   .dropdown-menu {
-    color: rgb(100, 100, 100);
+    color: rgb(255, 255, 255);
     background-color: #2b2b2b;
     /* width: 100%; */
     font-size: 15px;
     /* border-radius: 8px; */
 
     .b-dropdown-text {
-      color: rgb(85, 85, 85);
+      color: rgb(131, 131, 131);
     }
 
     .dropdown-divider {
