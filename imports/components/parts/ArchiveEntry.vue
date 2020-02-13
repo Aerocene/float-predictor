@@ -234,7 +234,8 @@ export default {
 
 .content-container-wrapper {
 
-  margin-top: 15vh;
+  margin-top: 120px;
+  margin-bottom: 40px;
   margin-left: 10%;
   margin-right: 10%;
   @include medium_up {
@@ -246,7 +247,7 @@ export default {
 
 .content-container {
   position: relative;
-  max-height: 80vh;
+  max-height: calc(100vh - 160px);
   overflow-y: scroll;
   overflow-x: hidden;
 
