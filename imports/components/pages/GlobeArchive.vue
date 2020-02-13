@@ -2,13 +2,48 @@
     
     <div class="main-content">
 
+      <div class="newsletter-signup-item" v-if="doShowSignup">
+
+          <div class="sup-wr">
+
+            <div class="signup-close">
+              <div @click="closeSignup">
+
+              <!-- <img src="/assets/icons/ico-close.svg" alt="" width="30" height="30"> -->
+              </div>
+            </div>
+
+          Stay connected with Aerocene.<br>Get an email when the next Real Flight happens.
+
+          <form @submit.prevent="doSubmitForm">
+          
+              <b-form-input 
+                class="form-input"
+                id="sign-in-field-email"
+                type="email" 
+                required 
+                v-model="submitForm.email"
+                placeholder="E-mail*"/>            
+            
+            <b-form-checkbox style="margin-top: 2em;" v-model="dontShowAgain">
+              Don't show again
+            </b-form-checkbox>
+
+            <button type="submit" class="signup-button">Sign up</button>
+
+          </form>
+
+          </div>
+
+          
+      </div>
+
 <transition name="fadeout">
       <article 
         class="form-container" 
         ref="content"        
         v-show="show"
       >
-
         <!-- <div role="tablist"> -->
         <div class="legend-item">
           <div class="item-header">
@@ -168,6 +203,73 @@
   width: 100%;
 } */
 
+.newsletter-signup-item {
+  position: fixed;
+  top: 120px;
+  left: 0;
+  margin: 0;
+  width: 100%;
+  background: transparent;
+
+  padding-left: 2em;
+  padding-right: 2em;
+
+  z-index: 10;
+
+  
+    .sup-wr {
+      /* width: 80%; */
+      max-width: 350px;
+      /* width: 350px; */
+      /* margin: 0 2em 0 2em; */
+      margin: auto;
+      background: rgb(22, 22, 22);
+      border-radius: 14px;
+      padding: 0em 1em 1em 1em;
+  
+      text-align: center;
+  
+      .signup-close {
+        position: relative;
+        display: flex;
+        justify-content: flex-end;
+        top: -6.7px;
+        left: 2em;
+        width: 100%;        
+  
+        div {
+          background: rgba(255, 255, 255, 1.0);
+          cursor: pointer;
+          border-radius: 100%;
+          width: 30px;
+          height: 30px;
+          padding: 8px;
+          content: url('/assets/icons/ico-close.svg');
+        }
+  
+  
+      }
+  
+      .form-input {
+        margin-top: 1.5em;
+      }
+  
+      .signup-button {
+        margin-top: 1em;
+        text-transform: none;
+        background: rgba(74, 144, 226, 0.3928);
+        border-radius: 9px;
+        border: none;
+        min-height: 37px;
+        color: white;
+      }
+    }
+
+  
+
+}
+
+
 .form-container {
   width: 90%;
   max-width: 400px;
@@ -253,7 +355,7 @@
       }
     }
 
-    .item-content {
+    .item-content {   
       overflow-y: scroll;
       overflow-x: hidden;
       padding-left: 2.3em;
@@ -294,12 +396,21 @@
 import Util from '../visualization/Util';
 import router from '../../router';
 
+import emailSignup from '../../api/signup/client/emailSignup';
+
 var he = require('he');
+
+const COOKIE_NAME = "shownewslettersignup";
 
 export default {
   name: 'GlobeArchive',
   data() {
     return {
+      submitForm: {
+        email: ""
+      },
+      showSignup: true,
+      dontShowAgain: false,
     };
   },
   props: ['page'],
@@ -314,9 +425,16 @@ export default {
       console.log("page: " + this.page);
       // get
     }
+
+    if (Util.getCookie(COOKIE_NAME) === "false") {
+      this.$store.commit('archive/setShowSignup', false);
+    }
     
   },
   computed: {
+    doShowSignup() {
+      return this.$store.state.archive.showSignup && this.showSignup;
+    },
     show() {
       const s = this.$store.state.archive.content.title === undefined && this.$store.state.archive.showLegend;
       if (s === true) {
@@ -414,6 +532,24 @@ export default {
     toggleMember(e) {
       this.$store.commit('archive/setArchiveMemberEnabled', !this.$store.state.archive.archiveMemberEnabled);
     },
+    setDontShowSignupCookie() {
+      Util.setCookie(COOKIE_NAME, "false");
+    },
+    doSubmitForm() {      
+      this.closeSignup();
+
+      emailSignup(this.submitForm.email).then(() => {
+        this.setDontShowSignupCookie();
+      });
+    },
+    closeSignup() {      
+      this.showSignup = false;
+      if (this.dontShowAgain)
+      {
+        this.setDontShowSignupCookie();
+        this.$store.commit('archive/setShowSignup', false);
+      }
+    }
   }
 };
 </script>

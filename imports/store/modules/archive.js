@@ -21,8 +21,12 @@ export default {
     archiveMember: [],
     archiveMemberEnabled: true,
     location: {},
+    showSignup: true,
   },
   mutations: {
+    setShowSignup(state, v) {
+      state.showSignup = v;
+    },
     setShowLegend(state, v) {
       state.showLegend = v;
     },
