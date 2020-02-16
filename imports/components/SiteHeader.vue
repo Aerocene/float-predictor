@@ -158,21 +158,28 @@ export default {
     border: none;
     margin-top: 0px !important;
 
+    overflow: hidden;
+    text-overflow: ellipsis;
+
     padding: 8px 14px 8px 14px !important;
     white-space: nowrap;
 
     &.--is-predict{
         background-color: rgba(74, 144, 226, 0.3928);
     }
+
+    @media screen and (max-width: 299px) {
+        width: calc((100% - 62px)*0.5);
+    }
 }
 #archive {
-    @media screen and (max-width: 320px) {
-        visibility: hidden;
+    @media screen and (max-width: 299px) {
+        /* visibility: hidden; */
     }
 }
 #float {
-     @media screen and (max-width: 200px) {
-        visibility: hidden;
+     @media screen and (max-width: 199px) {
+        /* visibility: hidden; */
     }
 }
 
