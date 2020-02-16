@@ -159,7 +159,6 @@
   bottom: 0px;
 
   z-index: 20;
-  overflow: hidden;
 
   padding-bottom: 2em;
   padding-left: 0.8em;
@@ -168,13 +167,6 @@
   background: transparent;
 
   text-align: left;
-
-  /* pointer-events: none; */
-
-  visibility: hidden;
-  @media screen and (min-height: 400px) and (min-width: 320px) {
-    visibility: visible;
-  }
 }
 
 .fade-enter, .fadeout-enter {
@@ -264,9 +256,6 @@
         color: white;
       }
     }
-
-  
-
 }
 
 
@@ -426,7 +415,10 @@ export default {
       // get
     }
 
-    if (Util.getCookie(COOKIE_NAME) === "false") {
+    const c = Util.getCookie(COOKIE_NAME);
+    console.log(COOKIE_NAME + ": " + c);
+    
+    if (c === "false") {
       this.$store.commit('archive/setShowSignup', false);
     }
     
