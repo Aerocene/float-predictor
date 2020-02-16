@@ -24,6 +24,9 @@ const P_MED = 1;
 const P_HIGH = 2;
 
 const sort_func = (a, b) => {
+    if (a.title.rendered.trim().toLowerCase().includes("aerocene pacha")) return -1;
+    if (b.title.rendered.trim().toLowerCase().includes("aerocene pacha")) return 1;
+
     return b.priority - a.priority;
 };
 
