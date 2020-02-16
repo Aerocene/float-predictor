@@ -61,14 +61,14 @@ class ArchiveScene
         this.labelGroup = new THREE.Group();
         this.scene.add(this.labelGroup);
 
-        const dw = true;
+        const dw = false;
 
         // create base material so we can use it later
         this.baseMaterial = new THREE.SpriteMaterial( { 
             material: '#fff', 
             map: new THREE.TextureLoader().load(MARKER_PATH),
             depthTest: true,
-            depthWrite: dw,
+            depthWrite: dw,            
         });
         this.materialFree = new THREE.SpriteMaterial( { 
             material: '#fff', 
@@ -566,6 +566,13 @@ class ArchiveScene
         }
     
         this.earthCircle.lookAt( camera.position );
+
+
+
+        // sort objects
+        this.labelGroup.children.sort((a, b) => {
+            return a.user.priority - b.user.priority;
+        });
 
         renderer.clearDepth();
         renderer.render(this.scene, camera);
