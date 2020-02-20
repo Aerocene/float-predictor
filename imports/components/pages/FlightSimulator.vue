@@ -35,7 +35,8 @@
               </div> -->
 
               <div>
-                <div style="font-size: 13px; color: white;">Fly around the world free from fossil fuels</div>
+                <div style="font-size: 13px; color: white;">FLY AROUND THE WORLD</div>
+                <div style="font-size: 13px; color: white;">FREE FROM FOSSIL FUELS</div>
                 <div style="font-size: 9px; color: white; margin-top: 0.5em; margin-bottom: 1.5em;">FILLED ONLY WITH THE AIR, LIFTED ONLY BY THE SUN, CARRIED ONLY BY THE WINDS</div>
                 
               </div>
@@ -93,7 +94,7 @@
                 <label class="small left">Envelop Color</label>
               </div>
               <b-dropdown class="balloon-color" v-bind:text="selectedColor" block>                  
-                <b-dropdown-text>The envelp color defines when a balloon can fly: day&amp;night or at daytime only.</b-dropdown-text>
+                <b-dropdown-text>The envelop colour defines when a balloon can fly:</b-dropdown-text>
                 <b-dropdown-divider></b-dropdown-divider>
                 
                 <b-dropdown-item-button 
@@ -116,7 +117,7 @@
                 block
                 v-bind:disabled="altSelectDisabled"
               >                  
-                <b-dropdown-text>Float Altitude:<br>How high do you want to float?</b-dropdown-text>
+                <b-dropdown-text>Float Altitude:<br>How high do you want to fly?</b-dropdown-text>
                 <b-dropdown-divider></b-dropdown-divider>
                 <b-dropdown-item-button 
                   v-for="(item, index) in form.altValues" 
@@ -134,7 +135,7 @@
                 type="submit"
                 v-bind:disabled="!hasLocations"
               >
-                Launch
+                LAUNCH
               </button>
           </b-form>
       </div>
@@ -172,8 +173,8 @@ export default {
           '26,500 m',
         ],
         colorValues: [
-          'Silver/Transparent - Fly day&night',
-          'Black - Fly during daytime only', 
+          'Silver/Transparent - Fly day-night',
+          'Black - Fly during daytime', 
         ],
       },
     };
@@ -682,6 +683,9 @@ export default {
         margin-bottom: 1.0em;
         color: white;
         border-bottom-color: #979797;
+    }
+    .form-control::placeholder {
+      color: rgba(255, 255, 255, 0.4) !important;
     }
     .form-control:focus {
       color: white;

@@ -2,18 +2,17 @@
 
 <div class="site-header-wrapper">
 
-    <div style="text-align: center; color: white;">
-        <span style="font-size: 11px;">
+    <div style="text-align: center; color: white; margin-top: 0.1em;">
+        <div style="font-size: 10px;">
         Fly with
-        </span>
-        <br>
-        <span style="font-size: 17px; font-weight: bold;">
-        AEROCENE
-        </span>
+        </div>
+        <div style="font-size: 15px; font-weight: normal; margin-top: -0.1em;">
+        Aerocene
+        </div>
     </div>
 
     <div class="site-header">
-        <div class="spacer"></div>
+        <!-- <div class="spacer"></div> -->
 
         <div class="container">
 
@@ -36,7 +35,7 @@
                 Real Flights
             </b-button>
 
-            <div style="min-width: 32px; min-heigth:32px;">
+            <div>
                 <main-menu 
                     v-show="isMenuVisible" 
                     :is-choosing="isChoosing"
@@ -44,7 +43,7 @@
             </div>
         </div>
 
-        <div class="spacer"></div>
+        <!-- <div class="spacer"></div> -->
 
 
     </div>
@@ -134,13 +133,13 @@ export default {
 
 .spacer {
     min-width: 8px;
-    max-width: 20%;
-    width: 20%;
+    max-width: 10%;
+    width: 10%;
     /* width: initial; */
 
     @include small_down {
-        width: 50px;        
-        max-width: 50px;
+        width: 30px;        
+        max-width: 30px;
   }
 }
 .container {
@@ -151,8 +150,8 @@ export default {
     padding: 0px;
 }
 .a-button {    
-    text-transform: none !important;
-    font-size: 16px !important;
+    text-transform: uppercase !important;
+    font-size: 13px !important;
     background-color: transparent;
     transition: background-color .5s;
     border: none;
@@ -168,26 +167,18 @@ export default {
         background-color: rgba(74, 144, 226, 0.3928);
     }
 
-    @media screen and (max-width: 299px) {
-        width: calc((100% - 62px)*0.5);
+    @media screen and (max-width: 316px) {
+        width: calc((100% - 0px)*0.5);
+        /* font-size: 12px !important; */
     }
 }
-#archive {
-    @media screen and (max-width: 299px) {
-        /* visibility: hidden; */
-    }
-}
-#float {
-     @media screen and (max-width: 199px) {
-        /* visibility: hidden; */
-    }
-}
+
 
 .site-header-wrapper {
     position: fixed;
     top: 0;
     width: 100%;
-    height: 98px;
+    height: 84px;
 
     display: flex;
     flex-direction: column;
@@ -197,16 +188,18 @@ export default {
 }
 
 .site-header {
-    width: 100%;
+    width: calc(100% - 60px);
     display: flex;
 
     margin-top: 6px;
+    
+    padding-left: 20%;
+    padding-right: 10px;
 
     transition: top .3s ease-in-out;
-    @include large_down {
-        /* position: fixed;
-        top: 0; */
-        width: 100%;
+    @include small_down {
+        padding-left: 10px;
+
         &.is-onboard {
             display: none;
         }

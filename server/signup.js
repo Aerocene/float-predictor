@@ -21,7 +21,7 @@ export function confirmEmail(id)
                 to: "appsignup@aerocene.org", 
                 from: Meteor.settings.emails.support, 
                 subject: "Aerocene Newsletter Signup", 
-                text: `New Signup: ${e.email}`
+                text: `New Signup:\nName: ${e.name}\nEmail: ${e.email}`
             });
         }
 
@@ -43,28 +43,29 @@ function validateEmail(email)
     return re.test(email);
 }
 
-function sendSignupEmail(email, id)
+function sendSignupEmail(name, email, id)
 {
     // send email
     Email.send({
         to: email, 
         from: Meteor.settings.emails.support, 
         subject: "Aerocene Newsletter", 
-        text: `Thanks for signing up to the Aerocene-Newsletter. Please confirm your signup clicking this link: ${HOST}/signupconfirm/${id}`
+        text: `Hi ${name}.\n\nThank you for signing up to the Aerocene-Newsletter.\nPlease confirm your signup clicking this link: ${HOST}/signupconfirm/${id}`
     });
 }
 
 Meteor.methods({
 
-    signup(useremail) {
+    signup(name, email) {
 
-        check(useremail, String);
+        check(email, String);
+        check(name, String);
 
-        if (validateEmail(useremail)) {
+        if (validateEmail(email)) {
 
             // search for user
             const found = SignupRequests.find({
-                "email": useremail
+                "email": email
             }, {}).fetch();
 
             if (found.length > 0)
@@ -76,8 +77,13 @@ Meteor.methods({
                         // already confirmed...
                     } else {
                         // send email again
-                        sendSignupEmail(useremail, element._id);
+                        sendSignupEmail(name, email, element._id);
                     }
+
+                    // in case, update name
+                    SignupRequests.update(element._id, {
+                        $set: {name: name}
+                    });
                 });
    
             }
@@ -85,11 +91,12 @@ Meteor.methods({
             {
                 // insert new signup request
                 const mongo_id = SignupRequests.insert({
-                    email: useremail,
+                    email: email,
+                    name: name,
                     confirmed: false
                 });
 
-                sendSignupEmail(useremail, mongo_id);                
+                sendSignupEmail(name, email, mongo_id);                
             }
 
         }

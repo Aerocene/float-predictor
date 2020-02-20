@@ -10,7 +10,7 @@
   position: absolute;
   height: 100%;
   width: 100%;
-  padding-top: 65px;
+  padding-top: 84px;
   z-index: 20;
 
   padding-left: 2em;

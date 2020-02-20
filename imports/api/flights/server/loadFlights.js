@@ -26,9 +26,16 @@ Meteor.methods({
         );
 
         let obj = {};
-        obj.flights = db_fligths.fetch();
-        obj.count = db_fligths.count();
-        obj.total_distance = agg[0].count;
+
+        if (db_fligths)
+        {
+            obj.flights = db_fligths.fetch();
+            obj.count = db_fligths.count();
+            
+            if (agg[0]) {
+                obj.total_distance = agg[0].count;
+            }
+        }
 
         return obj;
     },

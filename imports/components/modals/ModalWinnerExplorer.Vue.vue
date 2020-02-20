@@ -4,22 +4,33 @@
     <transition name="fade">
     <div id="winnerContent" v-if="modalVisible" @click="closeModal">
 
-        <div class="content-container">
-            
+        <div class="content-container">            
         <div>
 
         <div class="loader-content">
             
+            <div style="text-align: center; font-size:12px;">Your Aerosolar Journey</div>
+
             <!-- aeroglyph -->
-            <div class="aeroglyph" style="text-align: center;" v-html="winningExplorerData.svg"></div>
+            <div class="aeroglyph" style="text-align: center; margin-top: 0.5em;" v-html="winningExplorerData.svg"></div>
             
             <p><br></p>
             <div v-if="isPlannedFlight" class="message">
-                The Aerocene Sculpture that left from <b>{{departure.city}}</b>
-                on <strong>{{depDate}}</strong>
-                arrived within <strong>{{minDistFloat}}km</strong>
-                from <strong>{{destination.city}}</strong> in
+
+                The aerosolar sculpture that departed from <b>{{departure.city}}</b> 
+                on <strong>{{depDate}}</strong> 
+                arrived within <strong>{{minDistFloat}}km</strong> 
+                from <strong>{{destination.city}}</strong> in 
                 <strong>{{minTime}} days.</strong>
+
+                <!-- Travelling the same distance with a plane would have released 
+                [amount] ppm from burning [amount] litres of oil.
+                This means you’ve helped to save <strong>{{savedCo2 / 1000.}}</strong> tonnes of CO2 from being 
+                emitted into the air we all breathe! -->
+                <br><br>
+                Travelling the same distance with a plane would have released 
+                <strong>{{savedCo2.toFixed(2)}}</strong> kg of CO2.
+
             </div>
             <div v-else class="message">
                 The Aerocene Sculpture that floated the farthest
@@ -29,7 +40,7 @@
                 in <strong>{{winningExplorerData.min_time}} days.</strong>
             </div>
 
-            <div style="margin-top: 2em;"></div>
+            <!-- <div style="margin-top: 1em;"></div> -->
 
             <!-- Begin MailChimp Signup Form -->
             <!-- <div id="mc_embed_signup">
@@ -298,6 +309,9 @@ export default {
     },
     minTime() {
         return this.winningExplorerData.min_time ? this.winningExplorerData.min_time.toFixed(2) : -1;
+    },
+    savedCo2() {
+        return this.$store.state.flightSimulator.winningExplorerData ? this.$store.state.flightSimulator.winningExplorerData.savedCO2InKilograms : -1;
     },
     modalVisible: {
       set(val) {

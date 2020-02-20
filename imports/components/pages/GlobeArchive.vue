@@ -13,23 +13,30 @@
               </div>
             </div>
 
-          Stay connected with Aerocene.<br>Get an email when the next Real Flight happens.
+          Join the Aerocene Community!
+          <br><br>
+          Be part of the upcoming flights and Aerocene activities.
 
           <form @submit.prevent="doSubmitForm">
           
-              <b-form-input 
+            <b-form-input 
                 class="form-input"
-                id="sign-in-field-email"
-                type="email" 
-                required 
-                v-model="submitForm.email"
-                placeholder="E-mail*"/>            
+                type=""
+                v-model="submitForm.name"
+                placeholder="Name"/>   
+
+            <b-form-input 
+              class="form-input"
+              type="email" 
+              required 
+              v-model="submitForm.email"
+              placeholder="E-mail*"/>            
             
-            <b-form-checkbox style="margin-top: 2em;" v-model="dontShowAgain">
-              Don't show again
+            <b-form-checkbox style="margin-top: 1.5em;" v-model="dontShowAgain">
+              don't show again
             </b-form-checkbox>
 
-            <button type="submit" class="signup-button">Sign up</button>
+            <button type="submit" class="signup-button">Send</button>
 
           </form>
 
@@ -243,7 +250,8 @@
       }
   
       .form-input {
-        margin-top: 1.5em;
+        margin-top: 1em;
+        margin-bottom: 0.5em;
       }
   
       .signup-button {
@@ -396,7 +404,8 @@ export default {
   data() {
     return {
       submitForm: {
-        email: ""
+        email: "",
+        name: "",
       },
       showSignup: true,
       dontShowAgain: false,
@@ -530,7 +539,7 @@ export default {
     doSubmitForm() {      
       this.closeSignup();
 
-      emailSignup(this.submitForm.email).then(() => {
+      emailSignup(this.submitForm.name, this.submitForm.email).then(() => {
         this.setDontShowSignupCookie();
       });
     },

@@ -56,7 +56,7 @@
 <style lang="scss" scoped>
 
 .main-menu {
-  padding-top: 46px !important;
+  padding-top: 34px !important;
 }
 
 .nav-link {

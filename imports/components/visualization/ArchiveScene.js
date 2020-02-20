@@ -501,7 +501,7 @@ class ArchiveScene
         {
             this.selected = obj;
             this.selected.renderOrder = 10;
-            this.selected.material.color.set( '#999999' );
+            // this.selected.material.color.set( '#999999' );
             this.hovered = undefined;
 
             if (this.selectCb) {
