@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg
+   xmlns:dc="http://purl.org/dc/elements/1.1/"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   width="12"
+   height="12"
+   viewBox="0 0 12 12"
+   version="1.1"
+   id="svg881"
+   sodipodi:docname="arrow_acc-close.svg"
+   inkscape:version="0.92.2 5c3e80d, 2017-08-06">
+  <metadata
+     id="metadata885">
+    <rdf:RDF>
+      <cc:Work
+         rdf:about="">
+        <dc:format>image/svg+xml</dc:format>
+        <dc:type
+           rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+        <dc:title>Buttons / Arrow down</dc:title>
+      </cc:Work>
+    </rdf:RDF>
+  </metadata>
+  <sodipodi:namedview
+     pagecolor="#b5b5b5"
+     bordercolor="#666666"
+     borderopacity="1"
+     objecttolerance="10"
+     gridtolerance="10"
+     guidetolerance="10"
+     inkscape:pageopacity="0"
+     inkscape:pageshadow="2"
+     inkscape:window-width="1868"
+     inkscape:window-height="1130"
+     id="namedview883"
+     showgrid="false"
+     inkscape:zoom="19.055556"
+     inkscape:cx="19.282821"
+     inkscape:cy="17.699002"
+     inkscape:window-x="1440"
+     inkscape:window-y="0"
+     inkscape:window-maximized="0"
+     inkscape:current-layer="Instructions-2.6-Copy-3" />
+  <!-- Generator: Sketch 48.2 (47327) - http://www.bohemiancoding.com/sketch -->
+  <title
+     id="title870">Buttons / Arrow down</title>
+  <desc
+     id="desc872">Created with Sketch.</desc>
+  <defs
+     id="defs874" />
+  <g
+     id="Instructions-2.6-Copy-3"
+     transform="translate(-702,-998.74621)"
+     style="fill:none;fill-rule:evenodd;stroke:none;stroke-width:1;stroke-linecap:round">
+    <g
+       id="Buttons-/-Arrow-down"
+       transform="matrix(0,-0.31257454,0.26672481,0,702.46647,1010.9977)"
+       style="stroke:#ffffff;stroke-width:2.15979719;stroke-miterlimit:4;stroke-dasharray:none">
+      <g
+         id="Group-2"
+         transform="translate(3,12)"
+         style="stroke-width:2.15979719;stroke-miterlimit:4;stroke-dasharray:none">
+        <path
+           d="M 0.5,0.5 16.992422,16.992422"
+           id="Line"
+           inkscape:connector-curvature="0"
+           style="stroke-width:2.15979719;stroke-miterlimit:4;stroke-dasharray:none" />
+        <path
+           d="M 17.5,0.5 33.992423,16.992422"
+           id="Line-Copy"
+           transform="matrix(-1,0,0,1,51,0)"
+           inkscape:connector-curvature="0"
+           style="stroke-width:2.15979719;stroke-miterlimit:4;stroke-dasharray:none" />
+      </g>
+    </g>
+  </g>
+</svg>

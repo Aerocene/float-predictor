@@ -13,7 +13,7 @@ class Trajectory {
         this.version = 4;
     }
 
-    load(viz, departure, destination, explorer, altitude, svg) {
+    load(viz, departure, destination, explorer, altitude, svg, type) {
 
         // viz: Visualisation object
         // departure: departure object
@@ -41,6 +41,8 @@ class Trajectory {
         this.path = explorer.originalData; // data from server
         this.svg = svg;
         this.svgB64 = "data:image/svg+xml;base64," + btoa(svg);
+
+        this.balloon_type = type;
 
         this.totalKilometers = explorer.getTotalDistance();
         this.totalNauticalMiles = convertKilometersToNauticalMiles(explorer.getTotalDistance());

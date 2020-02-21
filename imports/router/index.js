@@ -161,6 +161,7 @@ const router = new Router({
       path: '/globe-archive',
       name: 'globe-archive',
       component: GlobeArchive,
+      props: (route) => ({ page: route.query.p }),
       meta: {
         bodyClass: 'globe-archive no-scroll',
         position: 'middle',

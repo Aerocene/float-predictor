@@ -82,7 +82,14 @@ export default {
 @import "../css/_variables_and_mixins.scss";
 
 .modal-dialog-centered {
-    height: calc(100% - 75px);
-    padding-top:75px;
+    height: calc(100% - 90px);
+    padding-top:90px;
 }
+
+#disclaimer-modal {
+    @include small_down {
+        padding-top: 40px;
+    }
+}
+
 </style>

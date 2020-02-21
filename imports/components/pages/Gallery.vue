@@ -3,8 +3,7 @@
        infinite-scroll-disabled="busy" infinite-scroll-distance="10">
       <h1 class="entry-title">Aeroglyphs Archive</h1>
       <h3 class="entry-subtitle">
-          Each imaginary Aerocene journey is an air signature we can use to
-          advocate independence from fossil fuels.
+          The trajectories of aerosolar journeys create signatures for the air, or Aeroglyphs, which petition for the planetary independence from fossil fuels.
       </h3>
       <div class="stats">
         <div class="saved">
@@ -12,14 +11,18 @@
           <p>Aeroglyphs saved</p>
         </div>
         <div class="travelled">
-          <div class="h2">{{parseInt(totalDistance * 1000).toLocaleString('en')}}</div>
-          <p>Kilometers travelled</p>
+          <div class="h2">{{kmTravelled.toLocaleString('en')}}</div>
+          <p>Kilometers travelled free from carbon emissions (TOTAL)</p>
+          <div class="h2">{{co2SavedInTons.toLocaleString('en')}}</div>
+          <p>tons CO2 Saved (TOTAL)</p>
         </div>
       </div>
       <div class="path-wrapper">
         <div class="gallery-item" v-for="item in flights" :key="item._id">
           <div class="gallery-item-inside">
+
             <img :src="item.svgB64 != undefined ? item.svgB64 : getSVGPath(item)"/>
+
             <div class="info">
               <div class="aer-code">
                 AER {{(count - flights.indexOf(item)).toLocaleString('en')}}
@@ -27,15 +30,25 @@
               <div class="date-created">
                 {{getDate(item.created)}}
               </div>
+
+              <!--  -->
               <div v-if="item.destination_city" class="additional-info">
-                <p>Departed from <strong>{{item.departure_city}}</strong>.</p>
-                <p>Arrived within <strong>{{item.min_dist.toLocaleString('en')}}</strong> km
-                of <strong>{{item.destination_city}}</strong>
-                    in <strong>{{item.min_time}} days</strong>.</p>
-                <p>Travelled a total of
-                    <strong>{{parseInt(item.distance * 1000).toLocaleString('en')}} km</strong>.
+                <p>
+                  Departed from <strong>{{item.departure_city}}</strong>.
+                </p>
+                <p>
+                  Arrived within <strong>{{item.min_dist.toLocaleString('en')}}</strong> km
+                  of <strong>{{item.destination_city}}</strong>
+                  in <strong>{{item.min_time.toFixed(2)}} days</strong>.</p>
+                <p>
+                  Travelled a total of
+                  <strong>{{parseInt(item.distance * 1000).toLocaleString('en')}} km</strong>.
+                </p>
+                <p v-if="item.savedCO2InKilograms !== undefined">
+                  <strong>{{parseInt(item.savedCO2InKilograms).toLocaleString('en')}} kg </strong> CO2 Saved for this journey
                 </p>
               </div>
+              <!-- free flights -->
               <div v-else class="additional-info">
                   <p>Departed from <strong>{{item.departure_city}}</strong>.</p>
                   <p>Travelled a total of
@@ -50,7 +63,7 @@
       <div v-if="busy" class='small-loader'>
         <Loading></Loading>
       </div>
-      <back-to-viz />
+      <!-- <back-to-viz /> -->
   </div>
 </template>
 
@@ -65,6 +78,7 @@ import Loading from '../parts/Loading.vue';
 import BackToViz from '../parts/BackToViz.vue';
 import loadFlights from '../../api/flights/client/loadFlights';
 import Trajectory from '../visualization/Trajectory';
+import calculateCO2PerKilometers from '../../api/flights/calculateCO2PerKilometers'
 
 export default {
   name: 'Gallery',
@@ -84,6 +98,14 @@ export default {
   components: {
     BackToViz,
     Loading,
+  },
+  computed: {
+    kmTravelled() {
+      return parseInt(this.totalDistance * 1000);
+    },
+    co2SavedInTons() {
+      return (calculateCO2PerKilometers(this.kmTravelled)/1000.0).toFixed(2);
+    },
   },
   methods: {
     loadMore() {

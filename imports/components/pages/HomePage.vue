@@ -1,7 +1,7 @@
 <template>
     <div class="main-content over">
         <div class="call-to-action" @click="startAction">
-          <router-link to="/flight-simulator" class="shadowed">
+          <router-link to="/flight-simulator" class="shadowed" style="text-transform: uppercase;">
               Start a new<br>aerosolar journey
           </router-link>
         </div>

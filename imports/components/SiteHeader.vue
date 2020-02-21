@@ -1,7 +1,18 @@
 <template>
-    <div class="site-header">
 
-        <div class="spacer"></div>
+<div class="site-header-wrapper">
+
+    <div style="text-align: center; color: white; margin-top: 0.1em;">
+        <div style="font-size: 10px;">
+        Fly with
+        </div>
+        <div style="font-size: 15px; font-weight: normal; margin-top: -0.1em;">
+        Aerocene
+        </div>
+    </div>
+
+    <div class="site-header">
+        <!-- <div class="spacer"></div> -->
 
         <div class="container">
 
@@ -11,7 +22,7 @@
                 :class="{'--is-predict': isPredictor}" 
                 @click="clickFP"
             >
-                Float Predictor
+                Virtual Flight
             </b-button>
 
             <b-button 
@@ -21,10 +32,10 @@
                 @click="clickA"
                 v-show="archiveAllowed"
             >
-                Archive
+                Real Flights
             </b-button>
 
-            <div style="min-width: 32px; min-heigth:32px;">
+            <div>
                 <main-menu 
                     v-show="isMenuVisible" 
                     :is-choosing="isChoosing"
@@ -32,10 +43,11 @@
             </div>
         </div>
 
-        <div class="spacer"></div>
+        <!-- <div class="spacer"></div> -->
 
 
     </div>
+</div>
 </template>
 
 
@@ -121,13 +133,13 @@ export default {
 
 .spacer {
     min-width: 8px;
-    max-width: 20%;
-    width: 20%;
+    max-width: 10%;
+    width: 10%;
     /* width: initial; */
 
     @include small_down {
-        width: 50px;        
-        max-width: 50px;
+        width: 30px;        
+        max-width: 30px;
   }
 }
 .container {
@@ -145,38 +157,49 @@ export default {
     border: none;
     margin-top: 0px !important;
 
+    overflow: hidden;
+    text-overflow: ellipsis;
+
     padding: 8px 14px 8px 14px !important;
     white-space: nowrap;
 
     &.--is-predict{
         background-color: rgba(74, 144, 226, 0.3928);
     }
-}
-#archive {
-    @media screen and (max-width: 320px) {
-        visibility: hidden;
-    }
-}
-#float {
-     @media screen and (max-width: 200px) {
-        visibility: hidden;
+
+    @media screen and (max-width: 316px) {
+        width: calc((100% - 0px)*0.5);
+        /* font-size: 12px !important; */
     }
 }
 
-.site-header {
+
+.site-header-wrapper {
     position: fixed;
     top: 0;
     width: 100%;
-    height: 65px;
+    height: 84px;
+
     display: flex;
+    flex-direction: column;
 
     z-index: 50; /* lower than login background! */
     background-color: rgba(0, 0, 0, 0.8) !important;
+}
+
+.site-header {
+    width: calc(100% - 60px);
+    display: flex;
+
+    margin-top: 6px;
+    
+    padding-left: 20%;
+    padding-right: 10px;
+
     transition: top .3s ease-in-out;
-    @include large_down {
-        position: fixed;
-        top: 0;
-        width: 100%;
+    @include small_down {
+        padding-left: 10%;
+
         &.is-onboard {
             display: none;
         }

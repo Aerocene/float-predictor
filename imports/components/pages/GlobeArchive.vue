@@ -1,53 +1,160 @@
 <template>
-<transition appear name="fade">
-    <div 
-      id="main-archive"
-      class="main-content" 
-      v-if="!isArchiveContent"
-    >
-      <article class="form-container" ref="content">
+    
+    <div class="main-content">
 
-        <!-- section 1 -->
-        <div class="legend-item" @click="onTethered">
-          Tethered Flights
-          <div class="iconbox">
-            <img src="/img/marker-tethered.png"/>
-          </div>
-        </div>
+      <div class="newsletter-signup-item" v-if="doShowSignup">
 
-        <div class="legend-item" @click="onFree">
-          Free Flights
-          <div class="iconbox">
-            <img src="/img/marker-free.png"/>
-          </div>
-        </div>
+          <div class="sup-wr">
 
-        <div class="legend-item" @click="onHuman">
-          Human Flights
-          <div class="iconbox">
-            <img src="/img/marker-human.png"/>
+            <div class="signup-close">
+              <div @click="closeSignup">
+
+              <!-- <img src="/assets/icons/ico-close.svg" alt="" width="30" height="30"> -->
+              </div>
+            </div>
+
+          Join the Aerocene Community!
+          <br><br>
+          Be part of the upcoming flights and Aerocene activities.
+
+          <form @submit.prevent="doSubmitForm">
+          
+            <b-form-input 
+                class="form-input"
+                type=""
+                v-model="submitForm.name"
+                placeholder="Name"/>   
+
+            <b-form-input 
+              class="form-input"
+              type="email" 
+              required 
+              v-model="submitForm.email"
+              placeholder="E-mail*"/>            
+            
+            <b-form-checkbox style="margin-top: 1.5em;" v-model="dontShowAgain">
+              don't show again
+            </b-form-checkbox>
+
+            <button type="submit" class="signup-button">Send</button>
+
+          </form>
+
           </div>
+
+          
+      </div>
+
+<transition name="fadeout">
+      <article 
+        class="form-container" 
+        ref="content"        
+        v-show="show"
+      >
+        <!-- <div role="tablist"> -->
+        <div class="legend-item">
+          <div class="item-header">
+            <span v-b-toggle.accordion-1>Upcoming Flights</span>
+            <div class="iconbox" @click="toggleUpcoming">
+              <img src="/img/marker-upcoming.png" :class="{'--disabled': !archiveUpcomingEnabled}"/>
+            </div>
+          </div>
+
+          <b-collapse ref="acc1" id="accordion-1" class="item-content" accordion="archive-accordion" role="tabpanel">
+            <div class="archive-item" v-for="(item, key) in upcoming" v-bind:key="key" @click="onItemClicked(item, key)" :class="{'--isPacha': isPacha(item)}">
+              <hr>
+              {{getTitle(item)}}
+            </div>
+          </b-collapse>
         </div>
 
         <hr>
 
-        <div class="legend-item" @click="onMuseo">
-          Museo Aerosolar
-          <div class="iconbox2">
-            <img src="/img/marker-museo.png"/>
+        <div class="legend-item">
+          <div class="item-header">
+            <span v-b-toggle.accordion-2>Tethered Flights</span>
+            <div class="iconbox" @click="toggleTethered">
+              <img src="/img/marker-tethered.png" :class="{'--disabled': !archiveTetheredEnabled}"/>
+            </div>
           </div>
-        </div>
-        
-        <div class="legend-item" @click="onMember">
-          Community Member
-          <div class="iconbox2">
-            <img src="/img/marker-member.png"/>
-          </div>
+
+          <b-collapse ref="acc2" id="accordion-2" class="item-content" accordion="archive-accordion" role="tabpanel">
+            <div class="archive-item" v-for="(item, key) in tethered" v-bind:key="key" @click="onItemClicked(item, key)" :class="{'--isPacha': isPacha(item)}">
+              <hr>
+              {{getTitle(item)}}
+            </div>
+          </b-collapse>
         </div>
 
+        <div class="legend-item">
+          <div class="item-header">
+            <span v-b-toggle.accordion-3>Free Flights</span>
+            <div class="iconbox" @click="toggleFree">
+              <img src="/img/marker-free.png" :class="{'--disabled': !archiveFreeEnabled}"/>
+            </div>
+          </div>
+
+          <b-collapse ref="acc3" id="accordion-3" class="item-content" accordion="archive-accordion" role="tabpanel">
+            <div class="archive-item" v-for="(item, key) in free" v-bind:key="key" @click="onItemClicked(item, key)" :class="{'--isPacha': isPacha(item)}">
+              <hr>
+              {{getTitle(item)}}
+            </div>
+          </b-collapse>
+        </div>
+
+        <div class="legend-item">      
+          <div class="item-header">
+            <span v-b-toggle.accordion-4>Human Flights</span>
+            <div class="iconbox" @click="toggleHuman">
+              <img src="/img/marker-human.png" :class="{'--disabled': !archiveHumanEnabled}"/>
+            </div>
+          </div>
+
+          <b-collapse ref="acc4" id="accordion-4" class="item-content" accordion="archive-accordion" role="tabpanel">
+            <div class="archive-item" v-for="(item, key) in human" v-bind:key="key" @click="onItemClicked(item, key)" :class="{'--isPacha': isPacha(item)}">
+              <hr>
+              {{getTitle(item)}}
+            </div>
+          </b-collapse>
+        </div>
+
+        <div class="legend-item">      
+          <div class="item-header">
+            <span v-b-toggle.accordion-5>Museo Aero Solar</span>
+            <div class="iconbox2" @click="toggleMuseo">
+              <img src="/img/marker-museo.png" :class="{'--disabled': !archiveMuseoEnabled}"/>
+            </div>
+          </div>
+
+          <b-collapse ref="acc5" id="accordion-5" class="item-content" accordion="archive-accordion" role="tabpanel">
+            <div class="archive-item" v-for="(item, key) in museo" v-bind:key="key" @click="onItemClicked(item, key)" :class="{'--isPacha': isPacha(item)}">
+              <hr>
+              {{getTitle(item)}}
+            </div>
+          </b-collapse>
+        </div>
+
+        <hr>
+
+        <div class="legend-item">      
+          <div class="item-header">
+            <span v-b-toggle.accordion-6>Community Member</span>
+            <div class="iconbox2" @click="toggleMember">
+              <img src="/img/marker-member.png" :class="{'--disabled': !archiveMemberEnabled}"/>
+            </div>
+          </div>
+
+          <b-collapse ref="acc6" id="accordion-6" class="item-content" accordion="archive-accordion" role="tabpanel">
+              <div class="archive-item" v-for="(item, key) in member" v-bind:key="key" @click="onItemClicked(item, key)">
+                <hr>
+                {{getTitle(item)}}
+              </div>
+          </b-collapse>
+        </div>
+  
       </article>
-    </div>
 </transition>
+    </div>
 </template>
 
 <style lang="scss" scoped>
@@ -59,25 +166,105 @@
   bottom: 0px;
 
   z-index: 20;
-  overflow: hidden;
 
   padding-bottom: 2em;
   padding-left: 0.8em;
   padding-right: 0.8em;
 
-  transition: opacity 0.4s ease;
   background: transparent;
 
   text-align: left;
-
-  /* pointer-events: none; */
-
-  visibility: hidden;
-  @media screen and (min-height: 400px) and (min-width: 320px) {
-    visibility: visible;
-  }
 }
 
+.fade-enter, .fadeout-enter {
+  bottom: -300px;
+  opacity: 0;
+}
+.fade-enter-to, .fadeout-enter-to {
+  bottom: 0px;
+  opacity: 100;
+}
+.fade-enter-active, .fadeout-enter-active, .fadeout-leave-active {
+  transition: all 0.4s ease;
+  /* transition-property: opacity, bottom; */
+}
+.fade-leave, .fadeout-leave {
+  opacity: 100;
+  bottom: 0px;
+}
+.fade-leave-to, .fadeout-leave-to {
+  bottom: -300px;
+  opacity: 0;
+}
+
+
+/* .form-container * {
+  width: 100%;
+} */
+
+.newsletter-signup-item {
+  position: fixed;
+  top: 120px;
+  left: 0;
+  margin: 0;
+  width: 100%;
+  background: transparent;
+
+  padding-left: 2em;
+  padding-right: 2em;
+
+  z-index: 10;
+
+  
+    .sup-wr {
+      /* width: 80%; */
+      max-width: 350px;
+      /* width: 350px; */
+      /* margin: 0 2em 0 2em; */
+      margin: auto;
+      background: rgb(22, 22, 22);
+      border-radius: 14px;
+      padding: 0em 1em 1em 1em;
+  
+      text-align: center;
+  
+      .signup-close {
+        position: relative;
+        display: flex;
+        justify-content: flex-end;
+        top: -6.7px;
+        left: 2em;
+        width: 100%;        
+  
+        div {
+          background: rgba(255, 255, 255, 1.0);
+          cursor: pointer;
+          border-radius: 100%;
+          width: 30px;
+          height: 30px;
+          padding: 8px;
+          content: url('/assets/icons/ico-close.svg');
+        }
+  
+  
+      }
+  
+      .form-input {
+        margin-top: 1em;
+        margin-bottom: 0.5em;
+      }
+  
+      .signup-button {
+        margin-top: 1em;
+        text-transform: none;
+        background: rgba(74, 144, 226, 0.3928);
+        border-radius: 9px;
+        border: none;
+        min-height: 37px;
+        color: white;
+      }
+    }
+}
 
 
 .form-container {
@@ -86,12 +273,12 @@
   min-width: 250px;
   background: rgba(59, 59, 59, 0.925);
   border-radius: 14px;
-  padding: 0.8em;
+  padding: 0.8em 0.8em 0.8em 0.2em;
   font-size: 14px;
   line-height: 26px;
-  white-space: nowrap;
 
-
+  /* max-height: 80vh; */
+  
   /* or 20px */
   letter-spacing: 2.1px;
   text-indent: 7px;
@@ -107,73 +294,262 @@
   }
 
   hr {
-    width: 100%; 
-    border-top:1px solid white;
-    margin: 0.8em;
+    width: 85%; 
+    border-top:1px solid rgba(130, 130, 130, 0.6);
+    margin: 0.3em;
   }
 
   .legend-item {
     width: 100%;
-    display: flex;    
-    justify-content: space-between;
+    
+    .item-header {
+      span::before {
+        margin-right: 6px;
+        content: url('/assets/icons/arrow_acc-open.svg');
+      }
+      span.collapsed::before {
+        content: url('/assets/icons/arrow_acc-close.svg');
+      }
+    }
+    .item-header {
+      width: 100%;
+      display: flex;    
+      justify-content: space-between;
+      white-space: nowrap;
 
-    .iconbox {
-      max-height: 30px;
-      max-width: 60px;
-      overflow: hidden;
-      img {
-        width: 80%;
-        margin-left: 10px;
+      cursor: pointer;
+
+      span {
+        flex-grow: 1;
+      }
+
+      .iconbox {
+        max-height: 30px;
+        max-width: 60px;
+        overflow: hidden;
+        img {
+          width: 80%;
+          margin-left: 10px;
+        }
+        img.--disabled {
+          opacity: 0.4;
+        }
+      }
+  
+      .iconbox2 {
+        max-height: 30px;
+        max-width: 60px;
+        overflow: hidden;
+  
+        img {
+          margin-top: -10px;
+          margin-left: 10px;
+          width: 80%;
+        }
+        img.--disabled {
+          opacity: 0.4;
+        }
       }
     }
 
-    .iconbox2 {
-      max-height: 30px;
-      max-width: 60px;
-      overflow: hidden;
+    .item-content {   
+      overflow-y: scroll;
+      overflow-x: hidden;
+      padding-left: 2.3em;
+      padding-right: 3em;
+      font-size: 12px;
+      /* white-space: nowrap; */
 
-      img {
-        margin-top: -15px;
-        margin-left: 10px;
-        width: 80%;
+      max-height: 40vh;
+      cursor: pointer;
+
+      /* transition: height 0.3s ease; */
+      /* div::before {
+        content: "";
+        margin-left: -0.6em;
+      } */
+    }
+
+    .archive-item {
+      color: rgb(196, 196, 196);
+      hr {
+        margin: 0;
+        width: 100%;
+        border-top:1px solid rgba(182, 182, 182, 0.3);
       }
     }
+
+    .archive-item.--isPacha {
+      color: red;
+    }
+
   }
 }
 
 </style>
 
 <script>
+
+import Util from '../visualization/Util';
+import router from '../../router';
+
+import emailSignup from '../../api/signup/client/emailSignup';
+
+var he = require('he');
+
+const COOKIE_NAME = "shownewslettersignup";
+
 export default {
   name: 'GlobeArchive',
   data() {
     return {
+      submitForm: {
+        email: "",
+        name: "",
+      },
+      showSignup: true,
+      dontShowAgain: false,
     };
   },
+  props: ['page'],
   mounted() {
     // disable all events on the legend
     $('main-archive').bind('blur change click dblclick error focus focusin focusout hover keydown keypress keyup load mousedown mouseenter mouseleave mousemove mouseout mouseover mouseup resize scroll select submit', function(event){
       event.stopPropagation();
     });
+
+    // if "page"
+    if (this.page) {
+      console.log("page: " + this.page);
+      // get
+    }
+
+    const c = Util.getCookie(COOKIE_NAME);
+    console.log(COOKIE_NAME + ": " + c);
+    
+    if (c === "false") {
+      this.$store.commit('archive/setShowSignup', false);
+    }
+    
   },
   computed: {
-    archiveContent() {
-      return this.$store.state.archive.content;
+    doShowSignup() {
+      return this.$store.state.archive.showSignup && this.showSignup;
     },
-    isArchiveContent() {
-      return this.$store.state.archive.content.title || false;
-    },    
+    show() {
+      const s = this.$store.state.archive.content.title === undefined && this.$store.state.archive.showLegend;
+      if (s === true) {
+        // this.$root.$emit('bv::toggle::collapse', 'accordion-6');
+        // this.$root.$emit('bv::toggle::collapse', 'accordion-5');
+        // this.$root.$emit('bv::toggle::collapse', 'accordion-4');
+        // this.$root.$emit('bv::toggle::collapse', 'accordion-3');
+        // this.$root.$emit('bv::toggle::collapse', 'accordion-2');
+        // this.$root.$emit('bv::toggle::collapse', 'accordion-1');
+        // this.$refs.acc1.visible = false;
+        
+        // this.$refs.acc1.close();
+        // const e = document.getElementById("accordion-1");
+        // if (e) {
+        //   e.close();
+        // }
+      }
+
+      return s;
+    },
+    upcoming() {
+      return this.$store.state.archive.archiveUpcoming || [];
+    },
+    tethered() {
+      return this.$store.state.archive.archiveTethered || [];
+    },
+    free() {
+      return this.$store.state.archive.archiveFree || [];
+    },
+    human() {
+      return this.$store.state.archive.archiveHuman || [];
+    },
+    museo() {
+      return this.$store.state.archive.archiveMuseo || [];
+    },
+    member() {
+      return this.$store.state.archive.archiveMember || [];
+    },
+    archiveUpcomingEnabled() { return this.$store.state.archive.archiveUpcomingEnabled; },
+    archiveTetheredEnabled() { return this.$store.state.archive.archiveTetheredEnabled; },
+    archiveFreeEnabled() { return this.$store.state.archive.archiveFreeEnabled; },
+    archiveHumanEnabled() { return this.$store.state.archive.archiveHumanEnabled; },
+    archiveMuseoEnabled() { return this.$store.state.archive.archiveMuseoEnabled; }, 
+    archiveMemberEnabled() { return this.$store.state.archive.archiveMemberEnabled; }, 
+  },  
+  watch: {
+    page(v) {
+      console.log("page changed: "+ v);
+    }
   },
   methods: {    
-    onTethered(e) {    
+    getTitle(item) {
+      return he.decode(item.title.rendered).trim();
     },
-    onFree(e) {
+    isPacha(item) {
+      return this.getTitle(item).includes("Aerocene Pacha");      
     },
-    onHuman(e) {
+    onItemClicked(item, index) {
+
+      // collapse all
+      // this.$root.$emit('bv::toggle::collapse', 'accordion-6');
+      // this.$root.$emit('bv::toggle::collapse', 'accordion-5');
+      // this.$root.$emit('bv::toggle::collapse', 'accordion-4');
+      // this.$root.$emit('bv::toggle::collapse', 'accordion-3');
+      // this.$root.$emit('bv::toggle::collapse', 'accordion-2');
+      // this.$root.$emit('bv::toggle::collapse', 'accordion-1');
+
+      // TODO: instead browse to site
+      // router.push(`/globe-archive?p=${item.id}`);
+
+      // change location
+      this.$store.commit('archive/setLocation', {
+        lat: item.acf.map.lat, 
+        lng: item.acf.map.lng,
+        archiveItem: Util.convertArchiveItem(item, index)
+      });
+
+      this.$store.commit('archive/setShowLegend', false);
     },
-    onMuseo(e) {
+    toggleUpcoming(e) {
+      this.$store.commit('archive/setArchiveUpcomingEnabled', !this.$store.state.archive.archiveUpcomingEnabled);
     },
-    onMember(e) {
+    toggleTethered(e) {
+      this.$store.commit('archive/setArchiveTetheredEnabled', !this.$store.state.archive.archiveTetheredEnabled);
+    },
+    toggleFree(e) {
+      this.$store.commit('archive/setArchiveFreeEnabled', !this.$store.state.archive.archiveFreeEnabled);
+    },
+    toggleHuman(e) {
+      this.$store.commit('archive/setArchiveHumanEnabled', !this.$store.state.archive.archiveHumanEnabled);
+    },
+    toggleMuseo(e) {
+      this.$store.commit('archive/setArchiveMuseoEnabled', !this.$store.state.archive.archiveMuseoEnabled);
+    },
+    toggleMember(e) {
+      this.$store.commit('archive/setArchiveMemberEnabled', !this.$store.state.archive.archiveMemberEnabled);
+    },
+    setDontShowSignupCookie() {
+      Util.setCookie(COOKIE_NAME, "false");
+    },
+    doSubmitForm() {      
+      this.closeSignup();
+
+      emailSignup(this.submitForm.name, this.submitForm.email).then(() => {
+        this.setDontShowSignupCookie();
+      });
+    },
+    closeSignup() {      
+      this.showSignup = false;
+      if (this.dontShowAgain)
+      {
+        this.setDontShowSignupCookie();
+        this.$store.commit('archive/setShowSignup', false);
+      }
     }
   }
 };

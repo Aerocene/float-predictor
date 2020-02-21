@@ -5,7 +5,7 @@
     <div>
         <b-modal 
             id="impressum-modal" 
-            class="page-modal"
+            class="page-modal test"
             hide-footer 
             hide-header 
             no-fade
@@ -16,17 +16,16 @@
             <div class="entry-body" @click="$bvModal.hide('impressum-modal')">
                 <h3 style="margin-top: 0px;">Impressum</h3>
                 <p>
-                    The Aerocene Float Predictor is being developed by 
-                    the Aerocene Foundation and the members of its diverse community.
+                    The Aerocene App is being developed by the Aerocene Community:
                 </p>
                 <h4>TRAJECTORY COMPUTATION</h4>
                 <p>
-                    <a href="https://eapsweb.mit.edu/" target="_blank">MIT Department of Earth, Atmospheric and Planetary Sciences</a> (Glenn Flierl, Lodovica Illari, Bill McKenna) and
+                    <a href="https://eapsweb.mit.edu/" target="_blank">MIT Department of Earth, Atmospheric and Planetary Sciences</a> (Glenn Flierl, Lodovica Illari, Bill McKenna),
                     <a href="https://www.cuspaceflight.com/" target="_blank">Cambridge University Space Flight (CUSF)</a>.
                 </p>
                 <h4>VISUALISATION, DESIGN AND DEVELOPMENT</h4>
                 <p>
-                    Ingo Randolf, Roham Fayazi, Studio Folder, Angelo Semeraro.                    
+                    Studio Tomás Saraceno with Ingo Randolf, Roham Fayazy, Studio Folder, Angelo Semeraro.                    
                 </p>
                 <h4>PROJECT DEVELOPMENT AND COORDINATION</h4>
                 <p>
@@ -69,7 +68,14 @@ export default {
     }
 }
 .modal-dialog-centered {
-    height: calc(100% - 75px);
-    padding-top:75px;
+    height: calc(100% - 90px);
+    padding-top:90px;
+}
+
+#impressum-modal {
+    @include small_down {
+        padding-top: 40px;
+    }
+
 }
 </style>

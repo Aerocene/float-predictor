@@ -85,7 +85,7 @@ p + p {
 }
 a, a:visited {
   color: $gray;
-  text-transform: uppercase;
+  // text-transform: uppercase;
   transition: color .3s ease;
   .lowercase {
     text-transform: capitalize;

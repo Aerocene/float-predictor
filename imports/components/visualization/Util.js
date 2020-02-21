@@ -9,6 +9,7 @@
 
 /* eslint-disable no-mixed-operators, no-console, no-param-reassign */
 const THREE = require('three');
+const he = require('he');
 
 const EARTH_RADIUS_KM = 6371;
 const EARTH_RADIUS = 6371000;
@@ -23,6 +24,54 @@ const IS_MOBILE = window.mobilecheck();
 const IS_ANDROID = /(android)/i.test(navigator.userAgent);
 
 export default {
+
+  convertArchiveItem(obj, index) {
+
+    if (obj === undefined)
+    {
+      return {};
+    }     
+
+    // setup content
+    const content = {};
+
+    content.index = index;
+    content.title = he.decode(obj.title.rendered).trim();
+    content.place = he.decode(obj.acf.location.location_text).trim();
+    content.archive_type = obj.archive_type;
+
+    if (obj.type === "community_member")
+    {
+      content.isProfile = true;
+
+      if (obj.acf && obj.acf.profile_picture)
+      {
+        content.pictures = [];
+        content.pictures.push(obj.acf.profile_picture);
+      }
+
+      content.role = obj.acf.role ? obj.acf.role.trim() : "";
+      content.content = obj.acf.biographie ? obj.acf.biographie.trim() : "";
+    }
+    else if (obj._embedded && 
+            obj._embedded['wp:term'] &&
+            obj._embedded['wp:term'].length > 0 &&
+            obj._embedded['wp:term'][0]['0'])
+    { 
+      if (obj.acf && obj.acf.pictures && obj.acf.pictures.length > 0) 
+      {
+        content.pictures = obj.acf.pictures;
+      }
+
+      content.pilots = obj.acf.pilots || [];
+      content.date = obj.acf.date;
+
+      const type = obj._embedded['wp:term'][0]['0'].name;
+      content.role = obj.acf.date + " - " + type ? type.trim() : "";
+    }
+
+    return content;
+  },
 
   getWebGlVersion() {
     const testCanvas = document.createElement('canvas');
@@ -139,5 +188,33 @@ export default {
     var R = 6371; //  Earth distance in km so it will return the distance in km
     var dist = 2 * R * Math.asin(Math.sqrt(a));
     return dist;
+  },
+
+
+  setCookie(name,value,days) {
+    console.log("set cookie: " + name + " : " + value);
+    
+      var expires = "";
+      if (days) {
+          var date = new Date();
+          date.setTime(date.getTime() + (days*24*60*60*1000));
+          expires = "; expires=" + date.toUTCString();
+      }
+      document.cookie = name + "=" + (value || "")  + expires + "; path=/";
+  },
+  
+  getCookie(name) {
+    var nameEQ = name + "=";
+    var ca = document.cookie.split(';');
+    for(var i=0;i < ca.length;i++) {
+        var c = ca[i];
+        while (c.charAt(0)==' ') c = c.substring(1,c.length);
+        if (c.indexOf(nameEQ) == 0) return c.substring(nameEQ.length,c.length);
+    }
+    return null;
+  },
+
+  eraseCookie(name) {   
+    document.cookie = name+'=; Max-Age=-99999999;';  
   },
 };

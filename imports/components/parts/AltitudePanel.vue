@@ -123,7 +123,7 @@ $elemHeight: 30px;
         padding-left: 4px;
         .input-wrapper {
             transform: rotate(-90deg);
-            transform-origin: 98px 105px;
+            transform-origin: 84px 105px;
             width: 195px;
         }
         input[type=range] {

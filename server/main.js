@@ -3,9 +3,31 @@ import { Accounts } from 'meteor/accounts-base'
 import { Email } from 'meteor/email';
 import { Exec } from 'meteor/jchristman:exec';
 import { Picker } from 'meteor/meteorhacks:picker'; // meteor add meteorhacks:picker
-import { Cron } from 'meteor/chfritz:easycron'; // meteor add chfritz:easycron
+
+import { confirmEmail } from './signup';
+
+//--------------------------------
+// routes
+//--------------------------------
+Picker.route( '/signupconfirm/:id', function( params, request, response, next )
+{
+  if (params.id)
+  {  
+    if (confirmEmail(params.id))
+    {
+      response.statusCode = 200;
+      response.end( "Thank you for signing up to the Newsletter." );
+      return;
+    }
+  }
+
+  response.statusCode = 200;
+  response.end( "Invalid" );
+});
 
 
+//--------------------------------
+//--------------------------------
 runCommandAsnc = function(cmd, args, msgFn, errFn) {
 
   Exec.run(cmd, args, (result) => {

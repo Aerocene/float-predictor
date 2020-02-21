@@ -40,7 +40,7 @@
                             to="/how-to-float"
                             style="white-space:nowrap"
                         >
-                            How to Float
+                            How to Fly
                         </router-link>
                     </li>
                     <li class="menu-item --nav" @click="closeAction">
@@ -48,7 +48,7 @@
                             to="/aerocene-explorer"
                             style="white-space:nowrap"
                         >
-                            Aerocene Sculptures
+                            Aerosolar Sculptures
                         </router-link>
                     </li>
 
@@ -61,7 +61,7 @@
                             to="/aeroglyphs-archive"
                             style="white-space:nowrap"
                         >
-                            Aeroglyphs archive
+                            Aeroglyphs Archive
                         </router-link>
                     </li>
 
@@ -78,7 +78,7 @@
 
                     <li class="menu-item --nav">
                         <a target="_blank" href="http://aerocene.org/">
-                            Aerocene Project
+                            Aerocene.org
                         </a>
                     </li>
 
@@ -143,11 +143,15 @@ hr {
     margin: 40px 0 40px 0;
 }
 
+
+.menu-item {
+    text-transform: unset;
+}
 .main-nav {
     /* overflow: hidden !important; */
     
     /* padding: 0px 1.5em 0 0 !important; */
-    height: calc(100% - 65px) !important;
+    height: calc(100% - 84px) !important;
     /* box-sizing: border-box; */
     width: 100% !important;
 }
