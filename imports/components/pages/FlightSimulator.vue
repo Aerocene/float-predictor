@@ -151,6 +151,9 @@
 import VueGoogleAutocomplete from 'vue-google-autocomplete';
 import _ from 'lodash';
 
+export const COLOR_OPTION_1 = "Silver/Transparent - Fly day-night";
+export const COLOR_OPTION_2 = "Black - Fly during daytime";
+
 export default {
   name: 'FlightSimulator',
   components: { 
@@ -172,10 +175,7 @@ export default {
           '21,500 m', 
           '26,500 m',
         ],
-        colorValues: [
-          'Silver/Transparent - Fly day-night',
-          'Black - Fly during daytime', 
-        ],
+        colorValues: [COLOR_OPTION_1, COLOR_OPTION_2],
       },
     };
   },

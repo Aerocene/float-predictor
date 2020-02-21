@@ -8,6 +8,7 @@
 
 import moment from 'moment';
 import FloatProfile from './FloatProfile';
+import {COLOR_OPTION_1, COLOR_OPTION_2} from '../pages/FlightSimulator.vue'
 
 const MAX_ERRORS = 20;
 
@@ -65,6 +66,7 @@ class TrajectoryDataDownloader {
     }
   }
 
+
   downloadMultiS(config)
   {
     if (this.active !== true) {
@@ -75,11 +77,11 @@ class TrajectoryDataDownloader {
     const start_datetime = `${moment(config.date).format(escape('YYYY-MM-DDTHH'))}%3A00%3A00%2B01%3A00`;
 
     let float = generic_float;
-    if (config.color === "Black")
+    if (config.color === COLOR_OPTION_2)
     {
       float = explorer;
     } 
-    else if (config.color === "Silver")
+    else if (config.color === COLOR_OPTION_1)
     {
       float = mir;
     }

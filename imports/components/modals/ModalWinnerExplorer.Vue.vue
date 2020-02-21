@@ -28,8 +28,7 @@
                 This means you’ve helped to save <strong>{{savedCo2 / 1000.}}</strong> tonnes of CO2 from being 
                 emitted into the air we all breathe! -->
                 <br><br>
-                Travelling the same distance with a plane would have released 
-                <strong>{{savedCo2.toFixed(2)}}</strong> kg of CO2.
+                Travelling the same distance with a plane would have burned <strong>{{litersGasUsed}}</strong> litres of kerosene. By moving only with the sun and the winds, you’ve helped to save <strong>{{(savedCo2/1000.).toFixed(2)}}</strong> tonnes of CO2 from being emitted into the air we all breathe!
 
             </div>
             <div v-else class="message">
@@ -261,6 +260,7 @@
 */
 import moment from 'moment';
 import calculateAerochange, { formatAerochange } from '../../api/flights/calculateAerochange';
+import Util from '../visualization/Util';
 
 export default {
   name: 'modal-winner-explorer',
@@ -312,6 +312,16 @@ export default {
     },
     savedCo2() {
         return this.$store.state.flightSimulator.winningExplorerData ? this.$store.state.flightSimulator.winningExplorerData.savedCO2InKilograms : -1;
+    },
+    litersGasUsed() {
+        //12 liters per kilometer (Boeing 747)
+
+        // distance
+        const dep = this.$store.state.flightSimulator.departure;
+        const dest = this.$store.state.flightSimulator.destination;
+        const km = Util.getDistanceFromLatLonInKm(dep.lat, dep.lng, dest.lat, dest.lng);
+
+        return (km * 12).toFixed(2);
     },
     modalVisible: {
       set(val) {

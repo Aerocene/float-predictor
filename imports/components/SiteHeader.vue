@@ -150,8 +150,8 @@ export default {
     padding: 0px;
 }
 .a-button {    
-    text-transform: uppercase !important;
-    font-size: 13px !important;
+    text-transform: none !important;
+    font-size: 16px !important;
     background-color: transparent;
     transition: background-color .5s;
     border: none;
