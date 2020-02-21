@@ -198,7 +198,7 @@ export default {
 
     transition: top .3s ease-in-out;
     @include small_down {
-        padding-left: 10px;
+        padding-left: 10%;
 
         &.is-onboard {
             display: none;
