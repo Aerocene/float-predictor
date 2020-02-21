@@ -595,7 +595,9 @@ class ArchiveScene
         const arr = this.archiveUpcoming;
         for (let i = 0; i < arr.length; i++) {
             const obj = arr[i];
-            this.idSpriteMap[obj.id].visible = on;
+            if (this.idSpriteMap[obj.id]) {
+                this.idSpriteMap[obj.id].visible = on;
+            }
         }
     }
     setTetheredEnabled(on)
@@ -603,7 +605,9 @@ class ArchiveScene
         const arr = this.archiveTethered;
         for (let i = 0; i < arr.length; i++) {
             const obj = arr[i];
-            this.idSpriteMap[obj.id].visible = on;
+            if (this.idSpriteMap[obj.id]) {
+                this.idSpriteMap[obj.id].visible = on;
+            }
         }
     }
     setFreeEnabled(on)
@@ -611,7 +615,9 @@ class ArchiveScene
         const arr = this.archiveFree;
         for (let i = 0; i < arr.length; i++) {
             const obj = arr[i];
-            this.idSpriteMap[obj.id].visible = on;
+            if (this.idSpriteMap[obj.id]) {
+                this.idSpriteMap[obj.id].visible = on;
+            }
         }
     }
     setHumanEnabled(on)
@@ -619,7 +625,9 @@ class ArchiveScene
         const arr = this.archiveHuman;
         for (let i = 0; i < arr.length; i++) {
             const obj = arr[i];
-            this.idSpriteMap[obj.id].visible = on;
+            if (this.idSpriteMap[obj.id]) {
+                this.idSpriteMap[obj.id].visible = on;
+            }
         }
     }
     setMuseoEnabled(on)
@@ -627,7 +635,9 @@ class ArchiveScene
         const arr = this.archiveMuseo;
         for (let i = 0; i < arr.length; i++) {
             const obj = arr[i];
-            this.idSpriteMap[obj.id].visible = on;
+            if (this.idSpriteMap[obj.id]) {
+                this.idSpriteMap[obj.id].visible = on;
+            }
         }
     }
     setMemberEnabled(on)
@@ -635,7 +645,9 @@ class ArchiveScene
         const arr = this.archiveMember;
         for (let i = 0; i < arr.length; i++) {
             const obj = arr[i];
-            this.idSpriteMap[obj.id].visible = on;
+            if (this.idSpriteMap[obj.id]) {
+                this.idSpriteMap[obj.id].visible = on;
+            }
         }
     }
 

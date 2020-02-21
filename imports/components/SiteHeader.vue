@@ -160,7 +160,7 @@ export default {
     overflow: hidden;
     text-overflow: ellipsis;
 
-    padding: 8px 14px 8px 14px !important;
+    padding: 6px 14px 6px 14px !important;
     white-space: nowrap;
 
     &.--is-predict{

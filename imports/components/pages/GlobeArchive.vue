@@ -21,7 +21,6 @@
           
             <b-form-input 
                 class="form-input"
-                type=""
                 v-model="submitForm.name"
                 placeholder="Name"/>   
 
