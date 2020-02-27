@@ -13,31 +13,47 @@
               </div>
             </div>
 
-          Join the Aerocene Community!
-          <br><br>
-          Be part of the upcoming flights and Aerocene activities.
+          <div class="scroll-wrapper">
+            <span style="font-size: 16px; font-weight: bold;">
+            Join the Aerocene Community!         
+            </span>
+            <div style="margin-top: 1em; margin-bottom: 1em;">
+            Be part of the upcoming flights and Aerocene activities.
+            </div>
 
-          <form @submit.prevent="doSubmitForm">
-          
-            <b-form-input 
-                class="form-input"
-                v-model="submitForm.name"
-                placeholder="Name"/>   
+            <div style="font-size: 12px; margin-top: 1.5em; margin-bottom: 1em;">
+            Newsletter Subscription
+            </div>
 
-            <b-form-input 
-              class="form-input"
-              type="email" 
-              required 
-              v-model="submitForm.email"
-              placeholder="E-mail*"/>            
+            <form @submit.prevent="doSubmitForm">
             
-            <b-form-checkbox style="margin-top: 1.5em;" v-model="dontShowAgain">
-              don't show again
-            </b-form-checkbox>
+              <b-form-input 
+                  class="form-input"
+                  v-model="submitForm.name"
+                  placeholder="Name"/>   
 
-            <button type="submit" class="signup-button">Send</button>
+              <b-form-input 
+                class="form-input"
+                type="email" 
+                required 
+                v-model="submitForm.email"
+                placeholder="E-mail*"/>            
+              
+              <div style="font-size: 10px; margin-top: 2em; margin-bottom: 1em;">
+                By indicating my e-mail-address and name and clicking the button „subscribe“, I agree that Studio Tomás Saraceno GmbH and Aerocene Foundation gGmbH will contact me by e-mail with news and promotion of upcoming Aerocene flights and other news regarding the Aerocene community. I can withdraw my consent at any time with effect for the future by clicking the “unsubscribe” linkor by e-mailing to <a href="mailto:dataprotection@aerocene.org">dataprotection@aerocene.org</a>
+              </div>
 
-          </form>
+              <b-form-checkbox style="margin-top: 1.5em;" v-model="dontShowAgain">
+                don't show again
+              </b-form-checkbox>
+
+              <button type="submit" class="signup-button">Subscribe</button>
+              
+
+            </form>
+
+          </div>
+
 
           </div>
 
@@ -206,8 +222,13 @@
   top: 120px;
   left: 0;
   margin: 0;
-  width: 100%;
+  width: 100%;  
+  
   background: transparent;
+
+  @media screen and (max-height: 640px) {
+    height: calc(100vh - 180px);
+  }
 
   padding-left: 2em;
   padding-right: 2em;
@@ -217,22 +238,35 @@
   
     .sup-wr {
       /* width: 80%; */
-      max-width: 350px;
+      max-width: 350px;         
+      height: 100%;
       /* width: 350px; */
       /* margin: 0 2em 0 2em; */
       margin: auto;
-      background: rgb(22, 22, 22);
-      border-radius: 14px;
-      padding: 0em 1em 1em 1em;
-  
+      
       text-align: center;
-  
+
+      .scroll-wrapper {
+
+        background: rgb(30, 30, 30);
+        border-radius: 14px;
+      
+        height: 100%; 
+        width: 100%;
+        overflow-y: scroll;
+        /* max-height: calc(100%-120px); */
+
+        margin-top: -26px !important;
+        padding: 1em 1em 1em 1em;
+        margin-bottom: 1em;
+      }
+
       .signup-close {
         position: relative;
         display: flex;
         justify-content: flex-end;
-        top: -6.7px;
-        left: 2em;
+        top: -10px;
+        left: 1em;
         width: 100%;        
   
         div {
@@ -255,6 +289,7 @@
   
       .signup-button {
         margin-top: 1em;
+        margin-bottom: 1em;
         text-transform: none;
         background: rgba(74, 144, 226, 0.3928);
         border-radius: 9px;
