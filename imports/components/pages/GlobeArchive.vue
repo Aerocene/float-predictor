@@ -40,7 +40,7 @@
                 placeholder="E-mail*"/>            
               
               <div style="font-size: 10px; margin-top: 2em; margin-bottom: 1em;">
-                By indicating my e-mail-address and name and clicking the button „subscribe“, I agree that Studio Tomás Saraceno GmbH and Aerocene Foundation gGmbH will contact me by e-mail with news and promotion of upcoming Aerocene flights and other news regarding the Aerocene community. I can withdraw my consent at any time with effect for the future by clicking the “unsubscribe” linkor by e-mailing to <a href="mailto:dataprotection@aerocene.org">dataprotection@aerocene.org</a>
+                By indicating my e-mail-address and name and clicking the button „subscribe“, I agree that Studio Tomás Saraceno GmbH and Aerocene Foundation gGmbH will contact me by e-mail with news and promotion of upcoming Aerocene flights and other news regarding the Aerocene community. I can withdraw my consent at any time with effect for the future by clicking the “unsubscribe” link or by e-mailing to <a href="mailto:dataprotection@aerocene.org">dataprotection@aerocene.org</a>
               </div>
 
               <b-form-checkbox style="margin-top: 1.5em;" v-model="dontShowAgain">
