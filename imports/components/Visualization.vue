@@ -622,10 +622,6 @@ export default {
         }
       }
 
-
-      console.log("index: " + i);
-    
-
       this.$store.commit('archive/setArchiveContent', Util.convertArchiveItem(obj, i));
     },
 
@@ -2357,6 +2353,8 @@ export default {
                                             new Date(last_prediction.trajectory[last_prediction.trajectory.length-1].datetime));
 
 
+          const ground_r = radius/1.009;          
+
           for (let i=0; i<data.prediction.length; i++)
           {
             for (let j = 0; j < data.prediction[i].trajectory.length; j++) 
@@ -2364,11 +2362,44 @@ export default {
               const data_point = data.prediction[i].trajectory[j];
 
               // normalize height
-              explorerH = (data_point.altitude / altitudeLevels[this.initialAltitudeLevel]) * 6;
+              if (color === "Silver/Transparent - Fly day-night")
+              {
+                switch (altitudeLevels[this.initialAltitudeLevel])
+                {
+                  case 100:
+                  case 1500:
+                  case 5500:
+                    explorerH = (data_point.altitude / 7200) * 6;
+                    break;
+
+                  case 10000:
+                    explorerH = (data_point.altitude / 12000) * 6;
+                    break;
+
+                  case 16000:
+                    explorerH = (data_point.altitude / 21600) * 6;
+                    break;
+
+                  case 21500:
+                    explorerH = (data_point.altitude / 25200) * 6;
+                    break;
+
+                  case 26500:
+                  default:
+                    explorerH = (data_point.altitude / 30000) * 6;
+                    break;
+                }
+              }
+              else
+              {
+                explorerH = (data_point.altitude / altitudeLevels[this.initialAltitudeLevel]) * 6;
+              }
+
+
+              // console.log(data_point.altitude + " / " + altitudeLevels[this.initialAltitudeLevel] + " .... " + explorerH);
               // console.log(data_point.altitude + " :  explorerH: " + explorerH);
               
-              // get point in the ground
-              const ground_r = radius/1.009;
+              // get point in the ground              
               const point = Util.latLon2XYZPosition(data_point.latitude, 
                                                     data_point.longitude, 
                                                     ground_r);                         
