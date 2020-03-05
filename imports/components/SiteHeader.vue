@@ -167,6 +167,9 @@ export default {
         background-color: rgba(74, 144, 226, 0.3928);
     }
 
+    @media screen and (max-width: 321px) {
+        font-size: 14px !important;
+    }
     @media screen and (max-width: 316px) {
         width: calc((100% - 0px)*0.5);
         /* font-size: 12px !important; */
