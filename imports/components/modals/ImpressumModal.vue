@@ -25,7 +25,7 @@
                 </p>
                 <h4>VISUALISATION, DESIGN AND DEVELOPMENT</h4>
                 <p>
-                    Studio Tomás Saraceno with Ingo Randolf, Roham Fayazy, Studio Folder, Angelo Semeraro.                    
+                    Studio Tomás Saraceno with Ingo Randolf, Roham Fayazi, Studio Folder, Angelo Semeraro.                    
                 </p>
                 <h4>PROJECT DEVELOPMENT AND COORDINATION</h4>
                 <p>
