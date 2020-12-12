@@ -43,6 +43,7 @@
     "vue-google-autocomplete": "^1.1.0",
     "vue-head": "^2.0.12",
     "vue-infinite-scroll": "^2.0.2",
+    "vue-matomo": "^3.14.0-0",
     "vue-meteor-tracker": "^1.0.4",
     "vue-router": "^3.0.1",
     "vue-social-sharing": "^2.3.3",

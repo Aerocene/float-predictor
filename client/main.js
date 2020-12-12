@@ -6,6 +6,7 @@
 
 import { Meteor } from 'meteor/meteor';
 import { Vue } from 'meteor/akryum:vue';
+import VueMatomo from 'vue-matomo';
 
 // import Vue from 'vue';
 // import VueNativeSock from 'vue-native-websocket';
@@ -32,6 +33,24 @@ Vue.use(InfiniteScroll);
 Vue.use(VuejsDialog);
 Vue.use(vbclass, router);
 Vue.use(SocialSharing);
+
+Vue.use(VueMatomo, {
+  host: Meteor.settings.matomo.host,
+  siteId: Meteor.settings.matomo.siteId,
+  trackerFileName: 'matomo',
+  router: router,
+  enableLinkTracking: true,
+  requireConsent: false,
+  trackInitialView: true,
+  disableCookies: true,
+  enableHeartBeatTimer: true,
+  heartBeatTimerInterval: 15,
+  debug: false,
+  userId: undefined,
+  cookieDomain: undefined,
+  domains: undefined,
+  preInitActions: []
+});
 
 Meteor.startup(() => {
   /* eslint-disable no-new */
