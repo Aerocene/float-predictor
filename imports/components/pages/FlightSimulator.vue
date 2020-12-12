@@ -212,11 +212,11 @@ export default {
       return (this.form.errors.departure || this.form.errors.destination);
     },
     hasLocations() {
-      return !_.isEmpty(this.departure) && (this.isFree || (!_.isEmpty(this.destination)));
+      return !_.isEmpty(this.departure);
     },
     placeholder() {
       let departureStr = 'From';
-      let destinationStr = 'To';
+      let destinationStr = 'To  (where the wind can take you)';
       if (this.form.errors.departure) {
         departureStr = this.form.errors.departure;
       } else if (!_.isEmpty(this.departure)) {
@@ -413,10 +413,15 @@ export default {
           errors.departure = 'Invalid location';
           hasErrors = true;
         }
-        if (_.isEmpty(this.destination) && this.flightType === 'planned') {
-          errors.destination = 'Invalid destination';
-          hasErrors = true;
+
+        console.log("destination: " + this.destination);
+
+        if (_.isEmpty(this.destination)) {
+          this.flightType = "free";
+        } else {
+          this.flightType = "planned";
         }
+        
         if (hasErrors) {
           reject(errors);
         } else {
@@ -868,4 +873,8 @@ export default {
   padding-left: 14px;
   padding-right: 14px;
 }
+.launch-button:disabled {
+    background-color: rgba(45, 87, 134, 0.393);  
+}
+
 </style>

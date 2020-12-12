@@ -424,6 +424,7 @@ export default {
         strong {
             color: #FFF;
         }
+        overflow: auto;
     }
     .input-label {
         margin-top: 20px;

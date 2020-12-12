@@ -2288,6 +2288,7 @@ export default {
       }
       this.realLaunchTime = undefined;
       this.setGlobeToCurrentTimezone();
+      this.$store.commit('flightSimulator/changeFlightType', 'planned');
     },
 
     /**
