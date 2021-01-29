@@ -34,6 +34,21 @@
                 in the website user process or during your use of the service will be
                 recorded and only be used in accordance with <a href="https://ec.europa.eu/info/law/law-topic/data-protection_en" target="_blank">
                     https://ec.europa.eu/info/law/law-topic/data-protection_en</a>.
+                <br><br>
+                We send you push
+                messages to inform you about projects, events and exhibitions by and with
+                Studio Tomás Saraceno GmbH. Push messages are messages that are displayed 
+                on your device even when you are not using the app. We will only send you
+                push messages if you have consented to receive them by activating the push
+                messages (Art. 6 para. 1 sentence 1 lit. a GDPR). Upon activation,
+                the device ID of your mobile device is communicated to the service that
+                provides the push functionality at your operating system provider.
+                You can deactivate the sending of push messages at any time and thus
+                withdraw your consent by changing the settings of your device
+                (iOS: Settings > App Name > Notifications; Android: Settings > Apps or
+                Application Manager > App Name > Notifications).
+                Please note that the revocation only takes effect for the future.
+                Processing that took place before the revocation is not affected.
 
             </p>
             <h4>Terms and Conditions</h4>
