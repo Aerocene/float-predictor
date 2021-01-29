@@ -35,8 +35,8 @@ Vue.use(vbclass, router);
 Vue.use(SocialSharing);
 
 Vue.use(VueMatomo, {
-  host: Meteor.settings.matomo.host,
-  siteId: Meteor.settings.matomo.siteId,
+  host: Meteor.settings.public.matomo.host,
+  siteId: Meteor.settings.public.matomo.siteId,
   trackerFileName: 'matomo',
   router: router,
   enableLinkTracking: true,
