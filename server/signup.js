@@ -5,8 +5,9 @@ import { Email } from 'meteor/email';
 
 const SignupRequests = new Mongo.Collection('SignupRequests');
 
-const HOST = "https://staging.aerocene.org";
-// const HOST = "https://app.aerocene.org";
+// TODO: fix this! do it automatically
+// const HOST = "https://staging.aerocene.org";
+const HOST = "https://app.aerocene.org";
 // const HOST = "https://localhost:3000";
 
 export function confirmEmail(id)
