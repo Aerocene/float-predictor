@@ -15,7 +15,7 @@
     "deploy-app": "DEPLOY_HOSTNAME=eu-west-1.galaxy-deploy.meteor.com meteor deploy https://app.aerocene.org --settings settings/app.json --deploy-polling-timeout 2400000"
   },
   "dependencies": {
-    "@babel/runtime": "^7.4.3",
+    "@babel/runtime": "^7.21.0",
     "babel-runtime": "6.18.0",
     "bcrypt": "^1.0.1",
     "croppie": "^2.6.4",
