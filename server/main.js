@@ -2,33 +2,12 @@ import { Meteor } from 'meteor/meteor';
 import { Accounts } from 'meteor/accounts-base'
 import { Email } from 'meteor/email';
 import { Exec } from 'meteor/jchristman:exec';
-import { Picker } from 'meteor/meteorhacks:picker'; // meteor add meteorhacks:picker
 
-import { confirmEmail } from './signup';
-
-//--------------------------------
-// routes
-//--------------------------------
-Picker.route( '/signupconfirm/:id', function( params, request, response, next )
-{
-  if (params.id)
-  {  
-    if (confirmEmail(params.id))
-    {
-      response.statusCode = 200;
-      response.end( "Thank you for signing up to the Newsletter." );
-      return;
-    }
-  }
-
-  response.statusCode = 200;
-  response.end( "Invalid" );
-});
-
+// import fs from 'fs';
 
 //--------------------------------
 //--------------------------------
-runCommandAsnc = function(cmd, args, msgFn, errFn) {
+runCommandAsync = function(cmd, args, msgFn, errFn) {
 
   Exec.run(cmd, args, (result) => {
     if (result) {
@@ -103,23 +82,58 @@ runCommand = function(cmd, args, msgFn, errFn) {
 }
 
 
-doListDir = function(path) {
+// doListDir = function(path) {
 
-  if (path === undefined || path === null) {
-    path = "";
-  } else {
-    path = " " + path.toString();
-  }
+//   if (path === undefined || path === null) {
+//     path = "";
+//   } else {
+//     path = " " + path.toString();
+//   }
 
-  return runCommand("ls", ["-l", path]);
-}
+//   return runCommand("ls", ["-l", path]);
+// }
 
 
-Meteor.methods({
-  listDir() {
-    return doListDir();
-  },
-});
+// Meteor.methods({
+//   listDir() {
+//     return doListDir();
+//   },
+// });
+
+
+// exportVirtualFlights = function ()
+// {
+//   const db_fligths = trajectories.find({'version': 3, 'version': 4},
+//     {
+//       "fields": { "_id": 1, "path": 1, "departure_date": 1 }
+//     });
+//   if (db_fligths)
+//   {
+//     var flights = db_fligths.fetch();
+//     var count = db_fligths.count();
+//     console.log("flight count: " + count);
+
+//     var path = "/Users/inx/Documents/_studio_saraceno/_float-predictor/__2021-dev/virtual_archive/";
+//     var encoding = "utf8";
+
+//     // var data = JSON.stringify(flights);
+
+//     flights.forEach((f) => {
+//       // console.log("" + f._id);
+
+//       var p = path + f.departure_date + "_" + f._id + ".js";
+
+//       fs.writeFile(p, JSON.stringify(f), encoding, function (err) {
+//         if (err) {
+//           throw (new Meteor.Error(500, 'Failed to save file.', err));
+//         } else {
+//           console.log('The file (' + encoding + ') was saved to ' + path);
+//         }
+//       });
+//     });
+//   }
+// }
+
 
 
 Meteor.startup(() => {
@@ -131,6 +145,11 @@ Meteor.startup(() => {
   console.log("------------------------------------");
   console.log("starting up: " + Meteor.settings.public.mode);
   console.log(runCommand("date"));
+
+
+  //------------------------------------
+  // export virtual flights to js files
+  // exportVirtualFlights();  
 });
 
 
