@@ -18,7 +18,7 @@
 import instructions from './modals/InstructionsModal';
 import impressum from './modals/ImpressumModal';
 import disclaimer from './modals/DisclaimerModal';
-import modalWinnerExplorer from './modals/ModalWinnerExplorer.Vue';
+import modalWinnerExplorer from './modals/ModalWinnerExplorer';
 
 export default {
   components: { instructions, impressum, modalWinnerExplorer, disclaimer },
