@@ -3,7 +3,7 @@
 
         <b-nav vertical>
 
-            <b-nav-item @click="openMenu" class="--rounded --black">
+            <b-nav-item @click="openMenu" class="--rounded --black burger">
                 <i class="fp fp-menu" style="background-size: unset !important;"></i>
             </b-nav-item>
 
@@ -55,8 +55,9 @@
 
 <style lang="scss" scoped>
 
-.main-menu {
-  padding-top: 34px !important;
+
+.burger {
+  margin: 0;
 }
 
 .nav-link {

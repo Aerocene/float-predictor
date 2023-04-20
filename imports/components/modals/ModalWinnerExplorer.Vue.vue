@@ -15,22 +15,45 @@
             <div class="aeroglyph" style="text-align: center; margin-top: 0.5em;" v-html="winningExplorerData.svg"></div>
             
             <p><br></p>
-            <div v-if="isPlannedFlight" class="message">
+            <div v-if="isPlannedFlight">
+                <div v-if="minTime < 0">
 
-                The aerosolar sculpture that departed from <b>{{departure.city}}</b> 
-                on <strong>{{depDate}}</strong> 
-                arrived within <strong>{{minDistFloat}}km</strong> 
-                from <strong>{{destination.city}}</strong> in 
-                <strong>{{minTime}} days.</strong>
+                    <div v-if="isMobile" class="message">
 
-                <!-- Travelling the same distance with a plane would have released 
-                [amount] ppm from burning [amount] litres of oil.
-                This means you’ve helped to save <strong>{{savedCo2 / 1000.}}</strong> tonnes of CO2 from being 
-                emitted into the air we all breathe! -->
-                <br><br>
-                Travelling the same distance with a plane would have burned <strong>{{litersGasUsed}}</strong> litres of kerosene. By moving only with the sun and the winds, you’ve helped to save <strong>{{(savedCo2/1000.).toFixed(2)}}</strong> tonnes of CO2 from being emitted into the air we all breathe!
+                        After evaluating the present weather conditions, the Aerocene App calculated flight trajectories for the next 16 days and could not find any wind currents that will take you closer to your chosen destination.
+                        <br><br>
+                        You can now choose a different trip destination, or come back later and see if the winds are more favourable to your chosen flight plan.
+                    
+                    </div>
+                    <div v-else class="message">
 
+                        After evaluating the present weather conditions, the Aerocene App calculated flight trajectories for the next 16 days and could not find any wind currents that will take you closer to your chosen destination.
+                        <br><br>
+                        To be deprived of the possibility to schedule or plan something in this fast-paced contemporaneity, because of the unpredictability of a natural phenomenon, is a way to exit from our epistemic isolation and re/entangle ourselves with our surroundings.
+                        <br><br>
+                        In this case, the weather is re-acknowledged as a co-determining force, deciding who we are and what we can do, instead of being seen merely as an envelope, a wallpaper or a scenography of our lives.
+                        <br><br>
+                        You can now choose a different trip destination, or come back later and see if the winds are more favourable to your chosen flight plan!
+                    
+                    </div>
+                </div>
+                <div v-else class="message">
+
+                    The aerosolar sculpture that departed from <b>{{departure.city}}</b> 
+                    on <strong>{{depDate}}</strong> 
+                    arrived within <strong>{{minDistFloat}}km</strong> 
+                    from <strong>{{destination.city}}</strong> in 
+                    <strong>{{minTime}} days.</strong>
+
+                    <!-- Travelling the same distance with a plane would have released 
+                    [amount] ppm from burning [amount] litres of oil.
+                    This means you’ve helped to save <strong>{{savedCo2 / 1000.}}</strong> tonnes of CO2 from being 
+                    emitted into the air we all breathe! -->
+                    <br><br>
+                    Travelling the same distance with a plane would have burned <strong>{{litersGasUsed}}</strong> litres of kerosene. By moving only with the sun and the winds, you’ve helped to save <strong>{{(savedCo2/1000.).toFixed(2)}}</strong> tonnes of CO2 from being emitted into the air we all breathe!
+                </div>
             </div>
+            
             <div v-else class="message">
                 The Aerocene Sculpture that floated the farthest
                 is the one that left from <strong>{{departure.city}}</strong>
@@ -285,6 +308,9 @@ export default {
     },
     isPlannedFlight() {
       return this.$store.state.flightSimulator.flightType === 'planned';
+    },
+    isMobile() {
+        return Util.isMobile();
     },
     winningExplorerData() {
       return this.$store.state.flightSimulator.winningExplorerData;
