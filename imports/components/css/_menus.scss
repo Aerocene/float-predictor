@@ -1,11 +1,11 @@
 .main-menu {
-  position: fixed;
+  position: absolute;
   top: 0;
   right: 0;
-  padding: 0.55rem $marginBase 0 0;
+  padding: 0.875rem 0.875rem 0 0;
   z-index: 20;
   @include medium_down {
-    padding: 0.55rem $marginMobile 0 0;
+    padding: 0.875rem 1.075rem 0 0;
     position: absolute;
   }
 }

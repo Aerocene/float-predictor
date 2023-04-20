@@ -2,6 +2,13 @@
 
 <div class="site-header-wrapper">
 
+    <div>
+        <main-menu 
+            v-show="isMenuVisible" 
+            :is-choosing="isChoosing"
+        />
+    </div>
+
     <div style="text-align: center; color: white; margin-top: 0.1em;">
         <div style="font-size: 10px;">
         Fly with
@@ -11,9 +18,7 @@
         </div>
     </div>
 
-    <div class="site-header">
-        <!-- <div class="spacer"></div> -->
-
+    <!-- <div class="site-header">
         <div class="container">
 
             <b-button 
@@ -23,7 +28,7 @@
                 @click="clickFP"
             >
                 Virtual Flight
-            </b-button>
+            </b-button>            
 
             <b-button 
                 class="a-button" 
@@ -34,102 +39,112 @@
             >
                 Real Flights
             </b-button>
+        </div>
+    </div> -->
 
-            <div>
-                <main-menu 
-                    v-show="isMenuVisible" 
-                    :is-choosing="isChoosing"
-                />
-            </div>
+    <div class="modeslider-container">
+        <div class="modeslider-line">
         </div>
 
-        <!-- <div class="spacer"></div> -->
-
-
+        <div class="modeslider">
+            <div class="modeslider-item" @click="clickFP">
+                <div class="modeslider-btn">
+                    <img src="/img/modesliderkite.svg" alt="" v-if="isVirtual">
+                </div>
+                <div class="modeslider-txt">
+                    Virtual
+                </div>
+            </div>
+            <div class="modeslider-item" @click="clickAR" id="openARBtn">
+                <div class="modeslider-btn">
+                    <img src="/img/modesliderkite.svg" alt="" v-if="isAugmented">
+                </div>
+                <div class="modeslider-txt">
+                    Augmented
+                </div>
+            </div>
+            <div class="modeslider-item" @click="clickA">
+                <div class="modeslider-btn">
+                    <img src="/img/modesliderkite.svg" alt="" v-if="isReal">
+                </div>
+                <div class="modeslider-txt">
+                    Real
+                </div>
+            </div> 
+        </div>
     </div>
+
 </div>
 </template>
 
 
-<script>
-import mainMenu from './parts/MainMenu';
-import router from '../router'
-
-export default {
-  components: {
-    mainMenu,
-  },
-  data() {
-      return {
-      }
-  },
-  computed: {        
-    archiveAllowed() {
-        // archive not allowed when:
-        // STATE_MOVING_TO_DEPARTURE (1)
-        // STATE_ANIMATION_ACTIVE (2)
-        // STATE_MOVING_TO_DESTINATION (3)
-        // STATE_WAIT_FOR_FLIGHTS(9)
-        return this.$store.state.flightSimulator.visualizationState !== 1 &&
-                this.$store.state.flightSimulator.visualizationState !== 2 &&
-                this.$store.state.flightSimulator.visualizationState !== 3 &&
-                this.$store.state.flightSimulator.visualizationState !== 9;
-    },
-    isPredictor() {
-        return this.$store.state.general.isPredictor || false;
-    },
-    isOnboard() { return this.$store.state.flightSimulator.focusedExplorer > 0; },
-    isChoosing() { 
-        return this.$store.state.general.isChoosingDestination || this.$store.state.general.errorContent !== '';
-    },
-    isHome() { return this.$route.name === 'home-page'; },
-    isMobile() {
-        return (window.matchMedia('(max-width: 768px)').matches);
-    },
-    isMenuVisible() {
-        return this.archiveAllowed && ((!this.isOnboard && this.isMobile) || !this.isMobile);
-    },    
-  },
-  methods: {
-    clickFP() {
-        this.$store.commit('archive/clearArchiveContent');
-        this.$store.commit('general/setIsPredictor', true); 
-        this.$store.commit('general/closeMenu'); 
-
-        if (this.$store.state.flightSimulator.isActive &&
-            this.$store.state.flightSimulator.visualizationState !== 4)
-        {
-            this.$dialog.confirm('This Action will reset the current simulation and start a new one. Please confirm to continue')
-            .then(() => {
-                this.initNew();
-            });
-        } else {
-            this.initNew();
-        }
-
-        router.push('/flight-simulator');
-      },
-    clickA() {
-        this.$store.commit('general/setIsPredictor', false);
-        this.$store.commit('general/closeMenu'); 
-        this.$store.commit('flightSimulator/setVisualizationState', 10);
-        router.push('/globe-archive');
-    },
-    initNew() {
-        this.$store.dispatch('flightSimulator/resetVisualization');
-        this.$store.commit('general/closeMenu');
-        //   this.$store.commit('flightSimulator/setVisualizationState', 8);
-        this.$store.commit('general/setFormStatus', true);
-        this.$store.commit('general/setModalShow', true);
-    },
-  }
-};
-</script>
 
 
 <style lang="scss">
 @import "./css/_variables_and_mixins.scss";
 @import "./css/_typography.scss";
+
+.modeslider-container {
+    margin-top: 26px;
+    margin-left: 25%;
+    margin-right: 25%;
+
+    @include medium_down {
+        margin-left: 20px;
+        margin-right: 20px;
+    }
+
+    .modeslider-line {
+        position: relative;
+        height: 0px;
+        top: 9px;
+        margin-left: 20px;
+        margin-right: 14px;
+        z-index: -1;
+
+        border: 1px solid #706D6D;
+    }
+
+    .modeslider {    
+        display: flex;
+        flex-direction: row;
+        justify-content: space-between;
+
+        .modeslider-item {
+
+            display: flex;
+            flex-direction: column;
+
+            .modeslider-btn {
+                align-self: center;
+                height: 16px;
+                width: 16px;
+                border-radius: 100%;
+                background: black;
+                border: 1px solid #706D6D;
+
+                img {
+                    margin-left: -50%;
+                    margin-top: -120%;
+                }
+            }
+            .modeslider-txt {
+                font-family: "Raleway-Regular";
+                font-style: normal;
+                font-weight: 500;
+                font-size: 16px;
+                line-height: 19px;
+                margin-top: 4px;
+
+                text-align: center;
+
+                color: #969595;
+            }
+        }
+    }
+}
+
+
 
 .spacer {
     min-width: 8px;
@@ -176,12 +191,11 @@ export default {
     }
 }
 
-
 .site-header-wrapper {
     position: fixed;
     top: 0;
     width: 100%;
-    height: 84px;
+    height: 110px;
 
     display: flex;
     flex-direction: column;
@@ -340,3 +354,116 @@ export default {
     }
 }
 </style>
+
+<script>
+import mainMenu from './parts/MainMenu';
+import router from '../router'
+
+export default {
+  components: {
+    mainMenu,
+  },
+  data() {
+      return {
+      }
+  },
+  mounted() {
+    var arbutton = document.getElementById("openARBtn");
+    if (arbutton !== undefined)
+    {
+    try 
+    {
+        arbutton.hidden = isARAvailable === true ? false : true;
+    } 
+    catch (error) 
+    {
+        arbutton.hidden = true;
+    }
+    }
+  },
+  computed: {        
+    archiveAllowed() {
+        // archive not allowed when:
+        // STATE_MOVING_TO_#DEPARTURE (1)
+        // STATE_ANIMATION_ACTIVE (2)
+        // STATE_MOVING_TO_DESTINATION (3)
+        // STATE_WAIT_FOR_FLIGHTS(9)
+        return this.$store.state.flightSimulator.visualizationState !== 1 &&
+                this.$store.state.flightSimulator.visualizationState !== 2 &&
+                this.$store.state.flightSimulator.visualizationState !== 3 &&
+                this.$store.state.flightSimulator.visualizationState !== 9;
+    },
+    isVirtual() {
+        return this.$store.state.general.mode === 'virtual';
+    },
+    isAugmented() {
+        return this.$store.state.general.mode === 'ar';
+    },
+    isReal() {
+        return this.$store.state.general.mode === 'real';
+    },
+    isOnboard() { return this.$store.state.flightSimulator.focusedExplorer > 0; },
+    isChoosing() { 
+        return this.$store.state.general.isChoosingDestination || this.$store.state.general.errorContent !== '';
+    },
+    isHome() { return this.$route.name === 'home-page'; },
+    isMobile() {
+        return (window.matchMedia('(max-width: 768px)').matches);
+    },
+    isMenuVisible() {
+        return this.archiveAllowed && ((!this.isOnboard && this.isMobile) || !this.isMobile);
+    },    
+  },
+  methods: {
+    clickFP() {
+        this.$store.commit('general/setVirtual');
+
+        this.$store.commit('archive/clearArchiveContent');
+        this.$store.commit('general/closeMenu'); 
+
+        if (this.$store.state.flightSimulator.isActive &&
+            this.$store.state.flightSimulator.visualizationState !== 4)
+        {
+            this.$dialog.confirm('This Action will reset the current simulation and start a new one. Please confirm to continue')
+            .then(() => {
+                this.initNew();
+            });
+        } else {
+            this.initNew();
+        }
+
+        router.push('/flight-simulator');
+    },
+    clickAR() {
+        this.$store.commit('general/setAR');
+        this.$store.commit('general/closeMenu');
+
+        if (window.webkit && window.webkit.messageHandlers && window.webkit.messageHandlers.arcontroller) {
+            window.webkit.messageHandlers.arcontroller.postMessage("openar");
+        }
+        else if (window.ARCONTROLLER && window.ARCONTROLLER.openAR)
+        {
+            window.ARCONTROLLER.openAR()
+        }
+        else
+        {
+            console.log("__AEROCENE_COMMAND::OPENAR");
+        }
+    },
+    clickA() {
+        this.$store.commit('general/setReal');
+        this.$store.commit('general/closeMenu');
+        this.$store.commit('flightSimulator/setVisualizationState', 10);
+        router.push('/globe-archive');
+    },
+    initNew() {
+        this.$store.dispatch('flightSimulator/resetVisualization');
+        this.$store.commit('general/closeMenu');
+        //   this.$store.commit('flightSimulator/setVisualizationState', 8);
+        this.$store.commit('general/setFormStatus', true);
+        this.$store.commit('general/setModalShow', true);
+    },
+  }
+};
+</script>
+
