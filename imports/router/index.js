@@ -350,19 +350,20 @@ router.beforeEach((to, from, next) => {
   if (to.path === '/')
   {
     store.commit('general/setIsPredictor', true);
+    store.commit('general/setVirtual');
   }
   else if (to.path === '/flight-simulator')
   {
     // STATE_INITIAL = 8;
     store.commit('flightSimulator/setVisualizationState', 8);
-    store.commit('general/setIsPredictor', true);
+    store.commit('general/setVirtual');
   }
   else if (to.path === '/globe-archive')
   {
     // to globe archive
     store.commit('general/setAnimationHeight', 'normal');
     store.commit('flightSimulator/setVisualizationState', 10);
-    store.commit('general/setIsPredictor', false);
+    store.commit('general/setReal');
   }
   else if (to.path === '/profile')
   {

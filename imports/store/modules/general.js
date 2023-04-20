@@ -28,6 +28,7 @@ export default {
     deviceName: '', // (small, medium, big) or (phone, tablet, desktop) ???
     modalShow: true,
     isPredictor: true,
+    mode: "virtual",
     errorContent: '',
   },
   mutations: {
@@ -82,8 +83,17 @@ export default {
     setAnimationHeight(state, value) {
       state.animationHeight = value;
     },
-    setIsPredictor(state, value) {
-      state.isPredictor = value;
+    setMode(state, value) {
+      state.mode = value;
+    },
+    setVirtual(state) {
+      state.mode = 'virtual';
+    },
+    setAR(state) {
+      state.mode = 'ar';
+    },
+    setReal(state) {
+      state.mode = 'real';
     },
     setErrorContent(state, value) {
       state.errorContent = value;
@@ -91,5 +101,8 @@ export default {
   },
   getters: {
     isSmall: state => state.deviceName === 'small',
-  },
+    isVirtual: state => state.mode === 'virtual',
+    isAugmented: state => state.mode === 'ar',
+    isReal: state => state.mode === 'real',
+  }
 };

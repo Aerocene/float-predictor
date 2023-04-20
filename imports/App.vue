@@ -3,6 +3,10 @@
       id="app"
       class="main-application" :class="classObject"
     >
+      <button id="hiddenbuttonforvirtual" @click="gotoVirtual" hidden="true"></button>
+      <button id="hiddenbuttonforreal" @click="gotoReal" hidden="true"></button>
+      <button id="hiddenbuttonforhome" @click="gotoHome" hidden="true"></button>
+
       <site-header ref="siteHeader" />
 
       <dashboard id="dashboard" v-show="flightToolsActive"/>
@@ -77,6 +81,7 @@ import dashboard from './components/Dashboard';
 import siteFooter from './components/SiteFooter';
 import ArchiveEntry from './components/parts/ArchiveEntry'
 import Error from './components/parts/Error.vue';
+import router from './router';
 
 // keep this even if it seems it is not needed !!!
 // eslint-disable-next-line
@@ -149,7 +154,16 @@ export default {
       this.bodyOverflow(v);
     },
   },
-  methods: {    
+  methods: {
+    gotoVirtual() {
+      router.push('/flight-simulator');
+    },
+    gotoReal() {
+      router.push('/globe-archive');
+    },    
+    gotoHome() {
+      router.push('/flight-simulator');
+    },
     bodyOverflow(v) {
       if (v) {
         document.body.classList.add('box-open');
