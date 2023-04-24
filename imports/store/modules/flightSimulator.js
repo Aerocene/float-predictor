@@ -12,7 +12,7 @@ export default {
     isPlaying: true, // play/pause
     isSaving: false, // saving true sve image then sets to false
     loading: 0, // percentage of loading assets. Value in range [0-1].
-    winds: 0, // 0 = none, 1 = B/W, 2 = Color
+    winds: 2, // 0 = none, 1 = B/W, 2 = Color
     guiVisible: false,
     selectedExplorer: 0,
     focusedExplorer: 0, // this is for onBoardExperience, if 0 none is focused
