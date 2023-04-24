@@ -3,6 +3,7 @@
         <instructions />
         <impressum />
         <disclaimer />
+        <privacy />
         <modal-winner-explorer />
     </div>
 </template>
@@ -18,9 +19,10 @@
 import instructions from './modals/InstructionsModal';
 import impressum from './modals/ImpressumModal';
 import disclaimer from './modals/DisclaimerModal';
+import privacy from './modals/PrivacyModal';
 import modalWinnerExplorer from './modals/ModalWinnerExplorer';
 
 export default {
-  components: { instructions, impressum, modalWinnerExplorer, disclaimer },
+  components: { instructions, impressum, modalWinnerExplorer, disclaimer, privacy },
 };
 </script>

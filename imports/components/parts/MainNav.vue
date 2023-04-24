@@ -102,6 +102,12 @@
                         </a>
                     </li>
 
+                    <li class="menu-item --link">
+                        <a href="#" @click.prevent v-b-modal.privacy-modal>
+                            Privacy Policy
+                        </a>
+                    </li>
+
                 </ul>
             </div>
             <!-- <div class="menu-section">
