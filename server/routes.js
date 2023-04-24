@@ -1,4 +1,5 @@
 import { Picker } from 'meteor/meteorhacks:picker'; // meteor add meteorhacks:picker
+import { confirmEmail } from './signup';
 
 // import trajectories from '../imports/api/flights/explorerTrajectories';
 
