@@ -17,6 +17,7 @@
 }
 
 .onboard-tools {
+  margin-top: 2em;
   display: flex;
   flex-flow: column wrap;
 }
@@ -261,8 +262,7 @@ body.upper-content {
   .inside-wrapper {
     position: absolute;
     right: 0px;
-    overflow: scroll;
-    margin-right: $marginBase;
+    overflow: auto;
     @include medium_down {
       margin: auto;
       position: unset;

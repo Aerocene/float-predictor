@@ -213,8 +213,8 @@ export default {
             }
             .close {
                 position: fixed;
-                top: 2.35rem;
-                right: 1.5rem;
+                top: 2.2rem;
+                right: 3.3rem;
             }
             .body {
                 background-color: black;
