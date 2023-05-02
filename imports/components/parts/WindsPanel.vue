@@ -115,9 +115,14 @@ export default {
   components: { altitudePanel },
   data() {
     return {
-      altValues: ['100 m', '1,500 m',
-        '5,500 m', '10,000 m', '16,000 m',
-        '21,500 m', '26,500 m',
+      altValues: [
+        '100 m',
+        '1,500 m',
+        '5,500 m',
+        '10,000 m',
+        '16,000 m',
+        '21,500 m',
+        '26,500 m',
       ],
     };
   },

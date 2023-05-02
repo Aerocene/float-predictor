@@ -151,6 +151,13 @@ export default {
         explorers = [];
         explorerHS = [0, 0, 0, 0, 0, 0, 0, 0];
 
+        // assign wind style
+        if (pars.winds !== undefined &&
+            pars.wind_settings !== undefined)
+        {
+          Object.assign(pars.layers.wind, pars.wind_settings[pars.winds]);
+        }
+
         this.initVis();
 
         if (this.guiVisible) {
