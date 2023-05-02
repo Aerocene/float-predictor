@@ -2,7 +2,7 @@
     <transition name="fade">
     <div class="onboard-nav shadowed" v-show="id > 0">
         <a class="close" href="#">
-            <div class="label">Back to global view</div>
+            <div class="label" v-if="!isMobile">Back to global view</div>
             <i class="fp fp-close-w" @click.prevent="onClick"></i>
         </a>
         <div class="header">
@@ -60,6 +60,9 @@ export default {
     },
     isFlightOver() {
       return (this.$store.state.flightSimulator.visualizationState === 4);
+    },
+    isMobile() {
+        return (window.matchMedia('(max-width: 768px)').matches);
     },
   },
   methods: {
