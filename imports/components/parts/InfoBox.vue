@@ -96,7 +96,7 @@ export default {
     .info-box {
         background-color: $lightBlack;
         position: fixed;
-        top: calc(#{$marginBase} + #{$itemWidth});
+        top: calc(#{$marginBase} + #{$infoBoxTop});
         right: calc(#{$marginBase} + #{$itemWidth} + #{$marginItem});
         width: 13.5rem;
         font-size: .9em;
