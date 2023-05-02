@@ -28,7 +28,7 @@
                     >
                         <!-- <div class="hover-text">Info and legend</div> -->
                         <a href="#" target="_self" class="nav-link">
-                            <i :class="[isInfoBoxOpen ? 'fp-close' : 'fp-info', 'fp']"></i>
+                            <i :class="[isInfoBoxOpen ? 'fp-close-w' : 'fp-info', 'fp']"></i>
                         </a>
                     </li>
 
