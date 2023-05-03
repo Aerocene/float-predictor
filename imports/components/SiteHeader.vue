@@ -200,7 +200,7 @@
     display: flex;
     flex-direction: column;
 
-    z-index: 50; /* lower than login background! */
+    z-index: 200; /* lower than login background! */
     background-color: rgba(0, 0, 0, 0.8) !important;
 }
 
