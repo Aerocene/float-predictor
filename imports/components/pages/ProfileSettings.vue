@@ -158,7 +158,7 @@
     width: 100%;
     height: 100%;
     min-width: 100%;
-    overflow-y: scroll;
+    overflow-y: auto;
     padding-left: 5%;
     padding-right: 5%;
     padding-top: 0%;

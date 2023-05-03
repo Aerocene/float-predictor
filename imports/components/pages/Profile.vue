@@ -92,7 +92,7 @@
     width: 100%;
     height: 100%;
     min-width: 100%;
-    overflow-y: scroll;
+    overflow-y: auto;
     padding-left: 10%;
     padding-right: 10%;
     padding-top: 0%;

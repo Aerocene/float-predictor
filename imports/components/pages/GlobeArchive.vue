@@ -253,7 +253,7 @@
       
         height: 100%; 
         width: 100%;
-        overflow-y: scroll;
+        overflow-y: auto;
         /* max-height: calc(100%-120px); */
 
         margin-top: -26px !important;
@@ -387,7 +387,7 @@
     }
 
     .item-content {   
-      overflow-y: scroll;
+      overflow-y: auto;
       overflow-x: hidden;
       padding-left: 2.3em;
       padding-right: 3em;

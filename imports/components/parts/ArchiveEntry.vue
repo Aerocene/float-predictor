@@ -248,7 +248,7 @@ export default {
 .content-container {
   position: relative;
   max-height: calc(100vh - 160px);
-  overflow-y: scroll;
+  overflow-y: auto;
   overflow-x: hidden;
 
   scrollbar-width: none;  

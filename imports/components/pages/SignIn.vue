@@ -37,7 +37,7 @@
   z-index: 20;
   padding-left: 3em;
   padding-right: 3em;
-  overflow-y: scroll;
+  overflow-y: auto;
 
   /* background: #000000bb; */
   text-align: left;

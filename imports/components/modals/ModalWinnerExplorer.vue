@@ -377,7 +377,7 @@ export default {
 @import "../css/_icons.scss";
 
 #winnerContent{
-  overflow-y: scroll;
+  overflow-y: auto;
   overflow-x: hidden;
   position: absolute;
   z-index: 999;
@@ -393,7 +393,7 @@ export default {
 .content-container {
   position: relative;
   max-height: 80vh;
-  overflow-y: scroll;
+  overflow-y: auto;
   /* margin: 10 10; */
   display: flex;
   flex-direction: row;

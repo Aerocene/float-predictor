@@ -22,7 +22,7 @@
   text-align: center;
   padding-left: 3em;
   padding-right: 3em;
-  overflow-y: scroll;
+  overflow-y: auto;
 
   .article {
     padding-top: 0px;

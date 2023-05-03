@@ -53,7 +53,7 @@ export default {
 #error{
   background-color: rgba(0,0,0,0.6);
 
-  overflow-y: scroll;
+  overflow-y: auto;
   overflow-x: hidden;
   position: absolute;
   z-index: 999;
@@ -72,7 +72,7 @@ export default {
 .content-container {
   position: relative;
   max-height: 80vh;
-  overflow-y: scroll;
+  overflow-y: auto;
   /* margin: 10 10; */
   display: flex;
   flex-direction: row;
