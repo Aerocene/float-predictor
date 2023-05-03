@@ -414,7 +414,7 @@ export default {
           hasErrors = true;
         }
 
-        console.log("destination: " + this.destination);
+        console.log("destination: " + JSON.stringify(this.destination));
 
         if (_.isEmpty(this.destination)) {
           this.flightType = "free";
