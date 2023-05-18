@@ -17,8 +17,8 @@ const explorer = new FloatProfile("explorer", "up_down_profile", 1.5, 10000, 1.2
 const generic_float = new FloatProfile("generic", "float_profile", 3.6, 10000, 1.3, 0, -1, 2.5);
 
 /* eslint-disable no-console */
-class TrajectoryDataDownloader {
-
+class TrajectoryDataDownloader
+{
   downloadMulti(
     departure, 
     destination, 
@@ -33,6 +33,8 @@ class TrajectoryDataDownloader {
     this.onUpdateCallback = onUpdateCallback;
     this.onEndCallback = onEndCallback;
     this.onErrorCallback = onErrorCallback;
+
+    this.controller = new AbortController();
 
     const config = {
       date: new Date(),
@@ -70,9 +72,11 @@ class TrajectoryDataDownloader {
   downloadMultiS(config)
   {
     if (this.active !== true) {
-      console.log("cancelling trajectory download");
+      console.log("TrajectoryDataDownloader: cancelling trajectory download");
       return;
     }
+
+    console.log("TrajectoryDataDownloader: download multi with config: " + JSON.stringify(config));
 
     const start_datetime = `${moment(config.date).format(escape('YYYY-MM-DDTHH'))}%3A00%3A00%2B01%3A00`;
 
@@ -107,9 +111,11 @@ class TrajectoryDataDownloader {
       url += `&descent_rate=${float.descent_rate}&descent_before_sunset=${float.descent_before_sunset}&descent_duration=${float.descent_duration}`;
     }
 
-    fetch(url).then(
-      response => response.json()
-    ).then((jsonData) => {
+    //
+    // fetch data
+    //
+    fetch(url, { signal: this.controller?.signal }).then(response => response.json()).then((jsonData) =>
+    {
       // console.log('***********************');
       // console.log(jsonData);
 
@@ -119,13 +125,12 @@ class TrajectoryDataDownloader {
       }
 
       // check if this is an error object
-      if (jsonData.error !== undefined)
-      {
+      if (jsonData.error !== undefined) {
         this.retryWithError(jsonData.error, config);
         return;
       }
 
-      if (this.onUpdateCallback) {        
+      if (this.onUpdateCallback) {
         this.onUpdateCallback(jsonData, config.day);
       }
 
@@ -139,6 +144,7 @@ class TrajectoryDataDownloader {
       else
       {
         console.log('Trajectory data download complete: ' + jsonData.metadata.complete_datetime);
+
         if (this.onEndCallback)
         {
           this.onEndCallback();
@@ -154,11 +160,13 @@ class TrajectoryDataDownloader {
 
   }
 
-  destroy() {
+  destroy()
+  {
     this.active = false;
     this.onErrorCallback = undefined;
     this.onEndCallback = undefined;
     this.onUpdateCallback = undefined;
+    this.controller?.abort();
   }
 }
 

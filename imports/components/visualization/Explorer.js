@@ -245,6 +245,7 @@ class Explorer
     this.originalData = [];
     this.lineMaterial.opacity = 1 * this.lineOpacity;
     this.animatingSphereMaterial.opacity = 1;
+    
     if (departure) {
       this.animatingSphere.position.set(departure.x, departure.y, departure.z);
     }

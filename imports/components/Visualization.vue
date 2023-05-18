@@ -1,6 +1,6 @@
 
 <template>
-  <div id ="visualization" class="main-visualization">
+  <div id="visualization" class="main-visualization">
 
     <!-- these image are used as icons in a THREELabel -->
     <img id="down" src="/assets/icons/destination_arrow_down.svg"/>
@@ -8,7 +8,7 @@
 
     <div id="labels"></div>
 
-    <Loading 
+    <Loading
       v-if="(errorContent === '' && (loading < 1.0 || saving))" 
       v-bind:content="loadingContent"
     />
@@ -113,6 +113,8 @@ const WEBGL_VERSION = Util.getWebGlVersion();
 // messages
 const MSG_NOT_RISING = "The weather is not aligned, please try again when the sun rises in this region.";
 
+const EXPLORER_COUNT = 8;
+
 export default {
   name: 'visualization',
 
@@ -126,10 +128,10 @@ export default {
       onboardIndex: 0, /* track onboard */
       startingDate: new Date(), /* initial date, current date on globe (use for sun position calculation) */
       targetDate: new Date(), /* target date for starting - time of sunrise */
-      windsLoaded: false,
       trajectoryLoaded: false,
-      textureLoaded: 0,
       loadingContent: "",
+      windsLoaded: false,
+      textureLoaded: 0
     };
   },
 
@@ -185,7 +187,10 @@ export default {
     archiveMuseoEnabled() { return this.$store.state.archive.archiveMuseoEnabled; }, 
     archiveMemberEnabled() { return this.$store.state.archive.archiveMemberEnabled; }, 
     archiveItemVisible() { return this.$store.state.archive.content.title !== undefined; },
-    errorContent() { return this.$store.state.general.errorContent; },
+    errorContent() {
+      console.log("Visualization: content error: " + this.$store.state.general.errorContent);
+      return this.$store.state.general.errorContent;
+    },
     animating() {
       /*
       * Render the next frame if playing, wind panel is hidden, textures are loaded, wind data are loaded.
@@ -205,6 +210,7 @@ export default {
     loading() {
       const v = this.windsLoaded * (this.trajectoryLoaded || this.visualizationState !== STATE_WAIT_FOR_FLIGHTS) * this.textureLoaded;
       this.$store.commit('flightSimulator/setLoading', v);
+      console.log("Visualization: loading: " + v);
       return v;
     },
     isArchive() { 
@@ -246,7 +252,10 @@ export default {
       set(value) { this.$store.commit('flightSimulator/setPlaying', value); },
     },
     saving: {
-      get() { return this.$store.state.flightSimulator.isSaving; },
+      get() {
+        console.log("Visualization: saving: " + this.$store.state.flightSimulator.isSaving);
+        return this.$store.state.flightSimulator.isSaving;
+      },
       set(value) { this.$store.commit('flightSimulator/setSaving', value); },
     },    
     winningExplorerData: {
@@ -485,7 +494,6 @@ export default {
         // update label position
         const t = Util.latLon2XYZPosition(d.lat, d.lng, earthSphereRadius);
         labels.departureLabel.set(d.city, t);
-
         
         
         // get sunrise from suncalc-library
@@ -495,7 +503,7 @@ export default {
         if (this.coordinatesValid)
         {
           // this is a valid date, use it
-          this.targetDate = suntimes.sunrise
+          this.targetDate = suntimes.sunrise;
         } 
         else
         {
@@ -671,7 +679,7 @@ export default {
         country: 'B State',
       };
 
-      console.log("webgl version: " + WEBGL_VERSION);      
+      console.log("init visualization: webgl version: " + WEBGL_VERSION);      
 
       this.selectedExplorer = 0;
 
@@ -1030,17 +1038,19 @@ export default {
     },
 
     /**
-     * Init the 8 explorers.
+     * Init the EXPLORER_COUNT explorers.
      */
-    initExplorers() {
-      for (let i = 0; i < 8; i += 1) {        
+    initExplorers()
+    {
+      for (let i = 0; i < EXPLORER_COUNT; i += 1)
+      {
         explorers.push(
           new Explorer(
             scene,
             colors[i], 
             i,
             pars, 
-            i * 8 * CATMULL_NUM_POINTS, 
+            i * EXPLORER_COUNT * CATMULL_NUM_POINTS, 
             CATMULL_NUM_POINTS
           )
         );
@@ -1518,9 +1528,10 @@ export default {
         this.setCamera(cameraOrtho);        
       }
 
-      switch (state) {
-
-        case STATE_ANIMATION_IDLE: {
+      switch (state)
+      {
+        case STATE_ANIMATION_IDLE:
+        {
           pars.auto_rotate = false;
           this.clear();
           break;
@@ -1530,54 +1541,72 @@ export default {
         case STATE_MOVING_TO_DEPARTURE: {
           this.clear();
 
-          if (departure.city !== undefined) {
+          if (departure.city !== undefined)
+          {
             labels.departureLabel.set(departure.city, labels.departureLabel.anchorObject.position.clone().multiplyScalar(1.003));
-          } else {
+          }
+          else
+          {
             labels.departureLabel.setVisible(false);
-            labels.departureSphere.visible =true;
+            labels.departureSphere.visible = true;
           }
 
-          /* hide the departure label if the flight is planned */
-          if (this.flightType === 'planned') {
-            if (destination.city) {
+          /* hide the destinationLabel label if the flight is planned */
+          if (this.flightType === 'planned')
+          {
+            if (destination.city)
+            {
               labels.destinationLabel.set(destination.city, labels.destinationLabel.anchorObject.position.clone().multiplyScalar(1.003));
-            } else {
-              labels.destinationLabel.setVisible(false);
-              labels.destinationSphere.visible =true;
             }
-          } else {
+            else
+            {
+              labels.destinationLabel.setVisible(false);
+              labels.destinationSphere.visible = true;
+            }
+          }
+          else
+          {
             labels.destinationLabel.setVisible(false);
           }
 
           pars.auto_rotate = false;
 
-          if (this.coordinatesValid) {
+          if (this.coordinatesValid)
+          {
             // download trajectories only with valid coords
             this.downloadMulti();
+
+            // move to lat/lan at noon
+            this.resetTo({
+              lat: departure.lat,
+              lng: departure.lng,
+              time: 0.5,
+              date: this.targetDate, 
+              onAnimationEnd: () =>
+              {
+                console.log("Visualization: STATE_MOVING_TO_DEPARTURE - globe move done - trajectories loaded: " + this.trajectoryLoaded);
+                // only set visualizationState to animation_active if we got all trajectories
+                // otherwise wait until we got trajectory-data
+                if (this.trajectoryLoaded === true)
+                {
+                  console.log("Visualization: trajectories loaded - set state to: STATE_ANIMATION_ACTIVE");
+                  this.visualizationState = STATE_ANIMATION_ACTIVE;
+                }
+                else
+                {
+                  console.log("Visualization: trajectories not loaded - wait");
+                  this.visualizationState = STATE_WAIT_FOR_FLIGHTS;
+                }
+              }
+            });
           }
-          // move to lat/lan at noon
-          this.resetTo({lat: departure.lat, 
-                        lng: departure.lng, 
-                        time: 0.5, 
-                        date: this.targetDate, 
-                        onAnimationEnd: () => { 
-                          // only set visualizationState to animation_active if we got all trajectories
-                          // otherwise wait until we got trajectory-data
-                          if (this.trajectoryLoaded === true)
-                          {
-                            this.visualizationState = STATE_ANIMATION_ACTIVE;
-                          }
-                          else
-                          {
-                            if (this.coordinatesValid) {
-                              this.visualizationState = STATE_WAIT_FOR_FLIGHTS;
-                            }
-                            else {
-                              this.$store.commit('general/setErrorContent', MSG_NOT_RISING);
-                            }
-                          }
-                        } 
-                      });
+          else
+          {
+            console.log("Visualization: invalid coordinates");
+            this.$store.commit('general/setErrorContent', MSG_NOT_RISING);
+            this.clear();
+          }
+
           break;
         }
 
@@ -2023,8 +2052,8 @@ export default {
     /**
     * animation function. Called 60 times per second, it's responsible for rendering and animating.
     */
-    animate() {
-      
+    animate()
+    {    
       fps += 1;
       /* by setting pars.skip_frame it's possible to reduce computation cost, lowering fps.
       * if pars.skip_frame == 0 -> fps = 60. If == 1  -> fps = 30, if == 2 -> fps = 20  */
@@ -2267,35 +2296,44 @@ export default {
     /**
     * Resets all the parameters and clear useless buffers. It gets at the beginning and we want to start the simulation again.
     */
-    clear() {
-      if (downloader) {
-        downloader.destroy();
-      }
+    clear()
+    {
+      if (downloader) downloader.destroy();
+      downloader = new TrajectoryDataDownloader();
+
       selectSphere.visible = false;
+
+      this.selecting = false;
+      this.minDist = 10000000000000000;
+      this.minTime = 0;
+      this.minTrack = 0;
+      this.onboardIndex = 0;
+      this.startingDate = new Date();
+      this.targetDate = new Date();
+      this.trajectoryLoaded = false;
+      this.loadingContent = "";
+
+      _.each(explorers, (e) => { e.reset(); });
+
       this.selectedExplorer = 0;
       this.focusedExplorer = 0;
-      downloader = new TrajectoryDataDownloader();
-      this.startingDate = new Date();
       pars.elapsed_days = 0;
       labels.daysLabels.setVisible(false);
       labels.setVisible(false);
-      _.each(explorers, (e) => { e.reset(); });
-      this.minDist = 10000000000000000;
       this.bestDropOff = {lat: 0, lng: 0};
       dropOffMarker.visible = false;
-      this.minTrack = 0;
-      this.minTime = 0;
-      this.onboardIndex = 0;
       this.api_data = [];
       this.setOnboard(false);
-      this.loadingContent = "";
-      if (this.cachedWinds) {
-        this.winds = this.cachedWinds;
-        this.cachedWinds = undefined;
-      }
       this.realLaunchTime = undefined;
       this.setGlobeToCurrentTimezone();
       this.$store.commit('flightSimulator/changeFlightType', 'planned');
+
+      if (this.cachedWinds)
+      {
+        this.winds = this.cachedWinds;
+        this.cachedWinds = undefined;
+      }
+
     },
 
     /**
@@ -2312,34 +2350,37 @@ export default {
     },
 
     /**
-    * Download the trajectory data for the 8 explorers, create curves using Catmull Rom Curves algorithm and
+    * Download the trajectory data for the EXPLORER_COUNT explorers, create curves using Catmull Rom Curves algorithm and
     * compute explorer movement in altitude based on the angle between the explorer and the sun position (point light)
     */
     downloadMulti()
     {
-      const dest_point = Util.latLon2XYZPosition(destination.lat, 
-                                                destination.lng, 
-                                                earthSphereRadius);
+      const dest_point = Util.latLon2XYZPosition(destination.lat, destination.lng, earthSphereRadius);
 
       this.loadingContent = "0%";
-      const color = this.$store.state.flightSimulator.balloonColor
+      const color = this.$store.state.flightSimulator.balloonColor;
+
+      console.log("downloadMulti: " + JSON.stringify(dest_point) + " - " + color);
 
       downloader.downloadMulti(departure, destination, altitudeLevels[this.initialAltitudeLevel], color,
         // on update callback
-        (data, explorerIndex) => {
-
+        (data, explorerIndex) =>
+        {
           // ON UPDATE
 
-          if (explorerIndex === 0) {
+          if (explorerIndex === 0)
+          {
             this.realLaunchTime = new Date(data.request.launch_datetime);
           }
 
           // set loadingContent
-          this.loadingContent = (100*(explorerIndex+1)/8).toFixed(0) + "%";
+          this.loadingContent = (100 * (explorerIndex + 1) / EXPLORER_COUNT).toFixed(0) + "%";
+
+          console.log("downloaded trajectory: " + explorerIndex);
           
-          const launch_datetime = new Date(data.request.launch_datetime);
-          const duration = new Date(data.request.stop_datetime).getTime() - launch_datetime.getTime();
-          const float_alt = data.request.float_altitude;
+          // const launch_datetime = new Date(data.request.launch_datetime);
+          // const duration = new Date(data.request.stop_datetime).getTime() - launch_datetime.getTime();
+          // const float_alt = data.request.float_altitude;
 
           let explorerH = 0;
 
@@ -2446,10 +2487,13 @@ export default {
           
           // ON END
 
+          console.log("trajectory download done");
+
           this.loadingContent = "100%";
           this.trajectoryLoaded = true;
 
-          if (this.visualizationState === STATE_WAIT_FOR_FLIGHTS) {
+          if (this.visualizationState === STATE_WAIT_FOR_FLIGHTS)
+          {
             this.visualizationState = STATE_ANIMATION_ACTIVE;
           }
           
@@ -2461,8 +2505,10 @@ export default {
           {
             let maxDistance = -1;
             let winningIndex = 0;
-            _.each(explorers, (e, index) => {
-              if (e.getTotalDistance() > maxDistance) {
+            _.each(explorers, (e, index) =>
+            {
+              if (e.getTotalDistance() > maxDistance)
+              {
                 maxDistance = e.getTotalDistance();
                 winningIndex = index;
               }

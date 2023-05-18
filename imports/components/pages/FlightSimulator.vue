@@ -324,18 +324,21 @@ export default {
     onSubmit(e) {
       e.preventDefault();
       this.validateForm()
-        .then(() => {
-          this.form.errors = {}; // reset previous errors
+        .then(() =>
+        {
+          // reset previous errors
+          this.form.errors = {};
+
           // reset elapsed days from previous simulation if necessary
           this.$store.commit('flightSimulator/setElapsedDays', 0);
+
           // this.$store.commit('flightSimulator/setAltitudeLevel', this.selectedAlt);
           console.log("alt level: " + this.selectedAlt);
           
           this.startAnimation();
           this.upperHeight = 0;
-        }).catch((errors) => {
-          this.form.errors = errors;
-        });
+
+        }).catch((errors) => this.form.errors = errors);
     },
     isValidGps(text, cb) {
 
@@ -405,28 +408,29 @@ export default {
       map.value = e.locality + ', ' + e.country;
       this.destinationString = map.value;
     },
-    validateForm() {
-      const errors = {};
-      let hasErrors = false;
-      return new Promise((resolve, reject) => {
-        if (_.isEmpty(this.departure)) { // departure always filled
+    validateForm()
+    {
+      let errors = undefined;
+
+      return new Promise((resolve, reject) =>
+      {
+        if (_.isEmpty(this.departure))
+        {
+          // departure always filled
+          errors = {};
           errors.departure = 'Invalid location';
-          hasErrors = true;
         }
 
+        // set flight-type base on if destination is set
+        this.flightType = _.isEmpty(this.destination) ? "free" : "planned";
+
+        console.log("--- validate form ---");
+        console.log("flight type: " + this.flightType);
+        console.log("departure: " + JSON.stringify(this.departure));
         console.log("destination: " + JSON.stringify(this.destination));
 
-        if (_.isEmpty(this.destination)) {
-          this.flightType = "free";
-        } else {
-          this.flightType = "planned";
-        }
-        
-        if (hasErrors) {
-          reject(errors);
-        } else {
-          resolve();
-        }
+        // check errora
+        errors !== undefined ? reject(errors) : resolve();
       });
     },
     startAnimation() {

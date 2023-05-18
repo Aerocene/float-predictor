@@ -48,14 +48,10 @@
           </div>
 
           <!-- archive content -->
-          <ArchiveEntry 
-            v-if="archiveTitle" 
-          />
+          <ArchiveEntry v-if="archiveTitle" />
 
           <!-- globe -->
-          <visualization 
-            v-if="isExhibitionClient"
-          />
+          <visualization v-if="isExhibitionClient"/>
         </div>
 
         <!-- error -->
