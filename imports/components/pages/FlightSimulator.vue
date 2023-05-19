@@ -323,6 +323,9 @@ export default {
     },
     onSubmit(e) {
       e.preventDefault();
+
+      (window.getSelection ? window.getSelection() : document.selection).empty();
+
       this.validateForm()
         .then(() =>
         {
