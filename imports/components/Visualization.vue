@@ -253,7 +253,6 @@ export default {
     },
     saving: {
       get() {
-        console.log("Visualization: saving: " + this.$store.state.flightSimulator.isSaving);
         return this.$store.state.flightSimulator.isSaving;
       },
       set(value) { this.$store.commit('flightSimulator/setSaving', value); },
@@ -1584,7 +1583,6 @@ export default {
               date: this.targetDate, 
               onAnimationEnd: () =>
               {
-                console.log("Visualization: STATE_MOVING_TO_DEPARTURE - globe move done - trajectories loaded: " + this.trajectoryLoaded);
                 // only set visualizationState to animation_active if we got all trajectories
                 // otherwise wait until we got trajectory-data
                 if (this.trajectoryLoaded === true)
@@ -2360,8 +2358,6 @@ export default {
       this.loadingContent = "0%";
       const color = this.$store.state.flightSimulator.balloonColor;
 
-      console.log("downloadMulti: " + JSON.stringify(dest_point) + " - " + color);
-
       downloader.downloadMulti(departure, destination, altitudeLevels[this.initialAltitudeLevel], color,
         // on update callback
         (data, explorerIndex) =>
@@ -2375,8 +2371,6 @@ export default {
 
           // set loadingContent
           this.loadingContent = (100 * (explorerIndex + 1) / EXPLORER_COUNT).toFixed(0) + "%";
-
-          console.log("downloaded trajectory: " + explorerIndex);
           
           // const launch_datetime = new Date(data.request.launch_datetime);
           // const duration = new Date(data.request.stop_datetime).getTime() - launch_datetime.getTime();
