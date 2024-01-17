@@ -122,7 +122,8 @@
     "npm": ">= 3.0.0"
   },
   "browserslist": [
-    "defaults and fully supports es6-module",
-    "maintained node versions"
+    "> 1%",
+    "last 2 versions",
+    "not ie <= 8"
   ]
 }
