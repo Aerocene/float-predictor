@@ -78,6 +78,27 @@ const STATE_WAIT_FOR_FLIGHTS = 9;
 const STATE_GLOBE_ARCHIVE = 10;
 const STATE_GLOBE_PROFILE = 11;
 
+function stateToString(state)
+{
+  switch (state)
+  {
+    case STATE_ANIMATION_IDLE: return "STATE_ANIMATION_IDLE";
+    case STATE_MOVING_TO_DEPARTURE: return "STATE_MOVING_TO_DEPARTURE";
+    case STATE_ANIMATION_ACTIVE: return "STATE_ANIMATION_ACTIVE";
+    case STATE_MOVING_TO_DESTINATION: return "STATE_MOVING_TO_DESTINATION";
+    case STATE_ANIMATION_END: return "STATE_ANIMATION_END";
+    case STATE_UNFOCUSED: return "STATE_UNFOCUSED";
+    case STATE_UNFOCUSED_PAGES: return "STATE_UNFOCUSED_PAGES";
+    case STATE_UNFOCUSED_GALLERY: return "STATE_UNFOCUSED_GALLERY";
+    case STATE_INITIAL: return "STATE_INITIAL";
+    case STATE_WAIT_FOR_FLIGHTS: return "STATE_WAIT_FOR_FLIGHTS";
+    case STATE_GLOBE_ARCHIVE: return "STATE_GLOBE_ARCHIVE";
+    case STATE_GLOBE_PROFILE: return "STATE_GLOBE_PROFILE";
+  }
+
+  return "Unknown state";
+}
+
 const pressureLevels = [1000, 850, 500, 250, 100, 30, 10];
 const altitudeLevels = [100, 1500, 5500, 10000, 16000, 21500, 26500];
 const CATMULL_NUM_POINTS = 3;
@@ -392,12 +413,17 @@ export default {
       if (gv) this.addDebugTools();
     },
 
-    active(isActive) {
-      if (isActive) {
+    active(isActive)
+    {
+      if (isActive)
+      {
         this.visualizationState = STATE_INITIAL;
         this.visualizationState = STATE_MOVING_TO_DEPARTURE;
-      } else {
-        if (this.visualizationState !== STATE_GLOBE_ARCHIVE) {
+      }
+      else
+      {
+        if (this.visualizationState !== STATE_GLOBE_ARCHIVE)
+        {
           this.visualizationState = STATE_INITIAL;
         }
       }
@@ -1503,6 +1529,8 @@ export default {
      */
     setState(state)
     {
+      // console.log("set state: " + stateToString(state));
+ 
       // clear archive content
       this.showArchiveContent();
 
@@ -2295,7 +2323,7 @@ export default {
     * Resets all the parameters and clear useless buffers. It gets at the beginning and we want to start the simulation again.
     */
     clear()
-    {
+    {      
       if (downloader) downloader.destroy();
       downloader = new TrajectoryDataDownloader();
 
