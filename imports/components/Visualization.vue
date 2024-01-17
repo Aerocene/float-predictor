@@ -1566,7 +1566,6 @@ export default {
 
         /* move to departure point after departure/destination selection and start downloading the trajectory data */
         case STATE_MOVING_TO_DEPARTURE: {
-          this.clear();
 
           if (departure.city !== undefined)
           {
@@ -2329,14 +2328,14 @@ export default {
 
       selectSphere.visible = false;
 
-      this.selecting = false;
+      // this.selecting = false;
       this.minDist = 10000000000000000;
       this.minTime = 0;
       this.minTrack = 0;
       this.onboardIndex = 0;
       this.startingDate = new Date();
-      this.targetDate = new Date();
-      this.trajectoryLoaded = false;
+      // this.targetDate = new Date();
+      // this.trajectoryLoaded = false;
       this.loadingContent = "";
 
       _.each(explorers, (e) => { e.reset(); });
@@ -2351,15 +2350,15 @@ export default {
       this.api_data = [];
       this.setOnboard(false);
       this.realLaunchTime = undefined;
-      this.setGlobeToCurrentTimezone();
-      this.$store.commit('flightSimulator/changeFlightType', 'planned');
-
+      
       if (this.cachedWinds)
       {
         this.winds = this.cachedWinds;
         this.cachedWinds = undefined;
       }
-
+      
+      this.setGlobeToCurrentTimezone();
+      this.$store.commit('flightSimulator/changeFlightType', 'planned');
     },
 
     /**
