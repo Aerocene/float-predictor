@@ -448,9 +448,9 @@ export default {
   props: ['page'],
   mounted() {
     // disable all events on the legend
-    $('main-archive').bind('blur change click dblclick error focus focusin focusout hover keydown keypress keyup load mousedown mouseenter mouseleave mousemove mouseout mouseover mouseup resize scroll select submit', function(event){
-      event.stopPropagation();
-    });
+    // $('main-archive').bind('blur change click dblclick error focus focusin focusout hover keydown keypress keyup load mousedown mouseenter mouseleave mousemove mouseout mouseover mouseup resize scroll select submit', function(event){
+    //   event.stopPropagation();
+    // });
 
     // if "page"
     if (this.page) {
