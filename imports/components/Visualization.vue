@@ -584,7 +584,7 @@ export default {
       } 
       else
       {
-        destination = undefined;
+        destination = {};
       }
     },
 
@@ -2334,8 +2334,8 @@ export default {
       this.minTrack = 0;
       this.onboardIndex = 0;
       this.startingDate = new Date();
-      // this.targetDate = new Date();
-      // this.trajectoryLoaded = false;
+      this.targetDate = new Date();
+      this.trajectoryLoaded = false;
       this.loadingContent = "";
 
       _.each(explorers, (e) => { e.reset(); });
@@ -2380,8 +2380,6 @@ export default {
     */
     downloadMulti()
     {
-      const dest_point = Util.latLon2XYZPosition(destination.lat, destination.lng, earthSphereRadius);
-
       this.loadingContent = "0%";
       const color = this.$store.state.flightSimulator.balloonColor;
 
@@ -2479,8 +2477,10 @@ export default {
               // add data sample
               explorers[explorerIndex].addDataSample(point, altitudeRatio, data_point.altitude);
 
-              if (this.flightType === 'planned')
+              if (this.flightType === 'planned' && destination !== undefined)
               {
+                const dest_point = Util.latLon2XYZPosition(destination.lat, destination.lng, earthSphereRadius);
+
                 // calculate distance to target
                 const d = point.distanceTo(dest_point);
 

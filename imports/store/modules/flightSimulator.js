@@ -118,6 +118,8 @@ export default {
   actions: {
     // for async operations, https://vuex.vuejs.org/en/actions.html
     resetVisualization({ commit }) {
+      commit('setDeparture', {});
+      commit('setDestination', {});
       commit('setPlaying', true); // if was stopped
       commit('setFocusedExplorer', 0);
       commit('setActive', false);
