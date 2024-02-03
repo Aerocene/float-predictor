@@ -57,7 +57,7 @@ export default {
   methods: {
     startNew() {
       if (this.$store.state.flightSimulator.isActive) {
-        this.$dialog.confirm('This Action will reset the current simulation and start a new one. Please confirm to continue')
+        this.$dialog.confirm('This Action will reset the current simulation and start a new one. Please confirm to continue.')
           .then(() => {
             this.initNew();
           });
