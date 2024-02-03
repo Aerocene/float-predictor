@@ -432,7 +432,10 @@ export default {
             this.initNew();
         }
 
-        router.push('/flight-simulator');
+        if (router.currentRoute.name !== "flight-simulator")
+        {
+            router.push('/flight-simulator');
+        }
     },
     clickAR() {
         this.$store.commit('general/setAR');
