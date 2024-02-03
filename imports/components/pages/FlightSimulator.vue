@@ -47,17 +47,25 @@
                   <!-- <label class="small">From</label> -->
                   <div class="place-input">
 
-                    <vue-google-autocomplete
-                            id="map" classname="form-control"
-                            ref="departureBox"
-                            :placeholder="placeholder.departure"
-                            @placechanged="setDeparture"
-                            @focus="setFocus"
-                            @blur="removeFocus"
-                            @change="mapChanged"
-                            types="(cities)"
-                            rtypes="geocode">
-                    </vue-google-autocomplete>
+                    <google-places-autocomplete
+                      @resultChanged="setDeparture"
+                      @resultCleared="clearDeparture"
+                      >
+                      <div slot="input" slot-scope="{ context, events, actions }">
+                      <input
+                      class="location-input"
+                      id="departureInput"
+                          v-model="context.input"
+                          @focus="events.inputHasReceivedFocus"
+                          @input="events.inputHasChanged"
+                          @keydown.enter.prevent="actions.selectItemFromList"
+                          @keydown.down.prevent="actions.shiftResultsSelection"
+                          @keydown.up.prevent="actions.unshiftResultsSelection"
+                          type="search"
+                          :placeholder="placeholder.departure"
+                      />
+                    </div>
+                    </google-places-autocomplete>
 
                     <!-- <button class="locationBtn" @click="getLocationDep">⦿</button> -->
 
@@ -69,18 +77,26 @@
                         <!-- <label  class="small">To</label> -->
                         <div class="place-input">
 
-                          <vue-google-autocomplete
-                            id="map2" classname="form-control"
-                            ref="destinationBox"
-                            :placeholder="placeholder.destination"
-                            @placechanged="setDestination"
-                            @focus="setFocus"
-                            @blur="removeFocus"
-                            @change="map2Changed"
-                            types="(cities)"
-                            rtypes="geocode">
-                          </vue-google-autocomplete>
-                          
+                          <google-places-autocomplete
+                            @resultChanged="setDestination"
+                            @resultCleared="clearDestination"
+                            >
+                            <div slot="input" slot-scope="{ context, events, actions }">
+                            <input
+                            class="location-input"
+                            id="destinationInput"
+                                v-model="context.input"
+                                @focus="events.inputHasReceivedFocus"
+                                @input="events.inputHasChanged"
+                                @keydown.enter.prevent="actions.selectItemFromList"
+                                @keydown.down.prevent="actions.shiftResultsSelection"
+                                @keydown.up.prevent="actions.unshiftResultsSelection"
+                                type="search"
+                                :placeholder="placeholder.destination"
+                            />
+                          </div>
+                          </google-places-autocomplete>
+
                           <!-- <button class="locationBtn" @click="getLocationDest">⦿</button> -->
 
                         </div>
@@ -148,8 +164,11 @@
  * @author Iacopo Leardini - @iacopolea
  * @author Angelo Semeraro - @angeloseme / http://angelosemeraro.info
 */
-import VueGoogleAutocomplete from 'vue-google-autocomplete';
 import _ from 'lodash';
+import Vue from 'vue'
+import { GooglePlacesAutocomplete } from 'vue-better-google-places-autocomplete'
+ 
+Vue.component('google-places-autocomplete', GooglePlacesAutocomplete)
 
 export const COLOR_OPTION_1 = "Silver/Transparent - Fly day-night";
 export const COLOR_OPTION_2 = "Black - Fly during daytime";
@@ -157,7 +176,6 @@ export const COLOR_OPTION_2 = "Black - Fly during daytime";
 export default {
   name: 'FlightSimulator',
   components: { 
-    VueGoogleAutocomplete, 
   },
   data() {
     return {
@@ -283,32 +301,6 @@ export default {
     onAltSelect(e) {         
       this.selectedAlt = this.form.altValues.indexOf(e.target.innerText);
     },
-    setFocus() {
-      const ua = navigator.userAgent.toLowerCase();
-      if (ua.indexOf('android') > -1
-        && window.matchMedia('(max-height: 768px)').matches
-        && ua.indexOf('mobile'))
-      {
-        // this.$refs.content.style.marginTop = '-60px';
-        // const header = document.getElementsByClassName('site-header')[0];
-        // const logo = document.getElementById('fp-logo');
-        // header.classList.add('to-top');
-        // logo.classList.add('to-top');
-      }
-    },
-    removeFocus() {
-      const ua = navigator.userAgent.toLowerCase();
-      if (ua.indexOf('android') > -1
-        && window.matchMedia('(max-height: 768px)').matches
-        && ua.indexOf('mobile'))
-      {
-        // this.$refs.content.style.marginTop = '40px';
-        // const header = document.getElementsByClassName('site-header')[0];
-        // const logo = document.getElementById('fp-logo');
-        // header.classList.remove('to-top');
-        // logo.classList.remove('to-top');
-      }
-    },
     closeAltPanel() {
       this.isAltPanelOpen = false;
     },
@@ -343,73 +335,73 @@ export default {
 
         }).catch((errors) => this.form.errors = errors);
     },
-    isValidGps(text, cb) {
+    // isValidGps(text, cb) {
 
-      const arr = text.split(',');
-      if (arr.length == 2) {
-        const lat = parseFloat(arr[0]);
-        const lng = parseFloat(arr[1]);
-        if (!isNaN(lat) && !isNaN(lng)) {
-          // use this!
-          if (cb) {
-            cb(lat, lng);
-            return true;
-          }
-        }
-      }
-      return false;
-    },
-    mapChanged(text) {
-
-      if (this.isValidGps(text, 
-        (lat, lng) => this.setDepartureLocation(lat, lng)) === true)
+    //   const arr = text.split(',');
+    //   if (arr.length == 2) {
+    //     const lat = parseFloat(arr[0]);
+    //     const lng = parseFloat(arr[1]);
+    //     if (!isNaN(lat) && !isNaN(lng)) {
+    //       // use this!
+    //       if (cb) {
+    //         cb(lat, lng);
+    //         return true;
+    //       }
+    //     }
+    //   }
+    //   return false;
+    // },
+    getCountry(place) {      
+      for (var i = 0; i < place.address_components.length; i++)
       {
-        return;
-      }
-
-      if (text !== this.departureString) {
-        this.departure = {};
-        this.departureString = undefined;
-        const map_input = document.getElementById('map');
-        if (map_input !== undefined) {
-          map_input.value = "";
+        const e = place.address_components[i];
+        if (e.types.find(c => c === "country") != undefined
+          && e.long_name !== undefined)
+        {
+          return e.long_name;
         }
       }
-    },
-    map2Changed(text) {
-      
-      if (this.isValidGps(text, 
-        (lat, lng) => this.setDestinationLocation(lat, lng)) === true)
-      {
-        return;
-      }
 
-      if (text !== this.destinationString) {
-        this.destination = {};
-        this.destinationString = undefined;
-        const map_input = document.getElementById('map2');
-        if (map_input !== undefined) {
-          map_input.value = "";
-        }
-      }
+      return "";
     },
-    setDeparture(e) {    
-      this.departure =
-        { lat: e.latitude, lng: e.longitude, city: e.locality, country: e.country };
+    toLocationObject(place)
+    {
+      return {
+        lat: place.geometry.location.lat(),
+        lng: place.geometry.location.lng(),
+        city: place.name,
+        country: this.getCountry(place)
+      };
+    },
+    setDeparture(place) {   
+
+      // console.log("departure:" + place.geometry.location.lat);
+
+      this.departure = this.toLocationObject(place);
 
       // get actual string from inputfield
-      const map = document.getElementById('map');
-      map.value = e.locality + ', ' + e.country;
-      this.departureString = map.value;
+      // const map = document.getElementById('map');
+      // map.value = place.locality + ', ' + place.country;
+      // this.departureString = map.value;
     },
-    setDestination(e) {
-      this.destination =
-        { lat: e.latitude, lng: e.longitude, city: e.locality, country: e.country };
+    clearDeparture() {
+      console.log("clear departure");
+      this.departure = {};
+    },
+    setDestination(place) {
+
+      // console.log("destination:" + JSON.stringify(place));
+
+      this.destination = this.toLocationObject(place);
 
       // get actual string from inputfield
-      const map = document.getElementById('map2');
-      map.value = e.locality + ', ' + e.country;
-      this.destinationString = map.value;
+      // const map = document.getElementById('map2');
+      // map.value = e.locality + ', ' + e.country;
+      // this.destinationString = map.value;
+    },
+    clearDestination() {
+      console.log("clear destination");
+      this.destination = {};
     },
     validateForm()
     {
@@ -430,7 +422,10 @@ export default {
         console.log("--- validate form ---");
         console.log("flight type: " + this.flightType);
         console.log("departure: " + JSON.stringify(this.departure));
-        console.log("destination: " + JSON.stringify(this.destination));
+        if (!_.isEmpty(this.destination))
+        {
+          console.log("destination: " + JSON.stringify(this.destination));
+        }
 
         // check errora
         errors !== undefined ? reject(errors) : resolve();
@@ -441,46 +436,57 @@ export default {
       this.$store.commit('general/setFormStatus', false);
       this.$store.commit('general/setAnimationHeight', 'normal');
     },
-    getLocationDep() {
-      navigator.geolocation.getCurrentPosition(
-        location => {        
-          this.setDepartureLocation(location.coords.latitude, location.coords.longitude);
-        },
-        error => {
-          console.error("error getting location for departure: " + error);
-        }
-      );
-    },
-    getLocationDest() {
-      navigator.geolocation.getCurrentPosition(
-        location => {
-          this.setDestinationLocation(location.coords.latitude, location.coords.longitude);
-        },
-        error => {
-          console.error("error getting location for destination: " + error);
-        }
-      );
-    },
-    setDepartureLocation(lat, lng) {
-      this.departure = {lat: lat, lng: lng}
-      this.departureString = lat + ', ' + lng;
-      this.$refs.departureBox.update(this.departureString)
-    },
-    setDestinationLocation(lat, lng) {
-      this.destination = {lat: lat, lng: lng}
-      this.destinationString = lat + ', ' + lng;
-      this.$refs.destinationBox.update(this.destinationString)
-    },
+    // getLocationDep() {
+    //   navigator.geolocation.getCurrentPosition(
+    //     location => {        
+    //       this.setDepartureLocation(location.coords.latitude, location.coords.longitude);
+    //     },
+    //     error => {
+    //       console.error("error getting location for departure: " + error);
+    //     }
+    //   );
+    // },
+    // getLocationDest() {
+    //   navigator.geolocation.getCurrentPosition(
+    //     location => {
+    //       this.setDestinationLocation(location.coords.latitude, location.coords.longitude);
+    //     },
+    //     error => {
+    //       console.error("error getting location for destination: " + error);
+    //     }
+    //   );
+    // },
+    // setDepartureLocation(lat, lng) {
+    //   this.departure = {lat: lat, lng: lng}
+    //   // this.departureString = lat + ', ' + lng;
+    //   // this.$refs.departureBox.update(this.departureString);
+    // },
+    // setDestinationLocation(lat, lng) {
+    //   this.destination = {lat: lat, lng: lng}
+    //   // this.destinationString = lat + ', ' + lng;
+    //   // this.$refs.destinationBox.update(this.destinationString)
+    // },
   },
   mounted() {
     this.upperHeight = (this.$refs.content) ? `${this.$refs.content.clientHeight + 80}px` : 0;
-  },  
+  },
 };
 </script>
 
 <style lang="scss">
 /* @import "../css/_typography.scss"; */
 @import "../css/_variables_and_mixins.scss";
+
+
+
+.vbga-results {
+color: lightgray;
+position: fixed;
+z-index: 100;
+background: black;
+max-width: 80%;
+}
+
 
 .input-group.altitude-select.disabled * {
   color:rgb(97, 97, 97);
@@ -570,6 +576,10 @@ export default {
   display: flex;
   flex-direction: row;
   align-items: stretch;
+
+  div {
+    flex-grow: 1;
+  }
 }
 .locationBtn {
   color: white;
@@ -688,6 +698,26 @@ export default {
     text-align: left;
     .form-group {
         margin-top: 1em;
+    }
+    .location-input {
+      color: white;
+      background: black;
+      
+      /* width: 450px; */
+      font-size: 1em;
+      margin-bottom: 1em;
+      padding: 0.1em 0 0.3em 0;
+
+      min-width: 100%;
+      max-width: 100%;
+      
+      border: none;
+      border-radius: 0px;
+      border-bottom-color: currentcolor;
+      border-bottom-style: none;
+      border-bottom-width: medium;
+
+      border-bottom: 1px solid #979797
     }
     .form-control {
         font-size: 1em;

@@ -3,14 +3,15 @@
     <div class="bottom-left-panel">
       <h4>GENERAL</h4>
       <span class="subtext">From</span>
-      <vue-google-autocomplete id="map" classname="form-control" placeholder="Departure point"
-          v-on:placechanged="setDeparture"
-          types="(cities)"
-          rtypes="geocode"></vue-google-autocomplete>
+      <google-places-autocomplete
+        @resultChanged="setDeparture"
+        @resultCleared="clearDeparture"
+        />
       <span class="subtext">To</span>
-      <vue-google-autocomplete id="map2" classname="form-control" placeholder="Destination point"
-          v-on:placechanged="setDestination"
-          types="(cities)" rtypes="geocode"></vue-google-autocomplete>
+      <google-places-autocomplete
+        @resultChanged="setDestination"
+        @resultCleared="clearDestination"
+        />
       <ul>
         <li  v-on:click="active = true;">
           <a>START ></a>
@@ -56,8 +57,11 @@
 * @author Studio Folder - @StudioFolder / http://studiofolder.it
 * @author Iacopo Leardini - @iacopolea
 */
-import VueGoogleAutocomplete from 'vue-google-autocomplete';
 import Visualization from '../Visualization';
+import Vue from 'vue'
+import { GooglePlacesAutocomplete } from 'vue-better-google-places-autocomplete'
+ 
+Vue.component('google-places-autocomplete', GooglePlacesAutocomplete)
 
 export default {
   name: 'TestInterface',
@@ -66,7 +70,7 @@ export default {
     };
   },  
   components: {
-    VueGoogleAutocomplete, Visualization,
+    Visualization,
   },
   computed: {
     colors() {
@@ -158,14 +162,40 @@ export default {
     }, 1000);
   },
   methods: {
+    getCountry(place) {      
+      for (var i = 0; i < place.address_components.length; i++)
+      {
+        const e = place.address_components[i];
+        if (e.types.find(c => c === "country") != undefined
+          && e.long_name !== undefined)
+        {
+          return e.long_name;
+        }
+      }
+
+      return "";
+    },
+    toLocationObject(place)
+    {
+      return {
+        lat: place.geometry.location.lat(),
+        lng: place.geometry.location.lng(),
+        city: place.name,
+        country: this.getCountry(place)
+      };
+    },
     setDeparture(e) {
-      this.departure =
-        { lat: e.latitude, lng: e.longitude, city: e.locality, country: e.country };
+      this.departure = this.toLocationObject(e);
+    },
+    clearDeparture() {
+      this.departure = {};
     },
     setDestination(e) {
-      this.destination =
-        { lat: e.latitude, lng: e.longitude, city: e.locality, country: e.country };
+      this.destination = this.toLocationObject(e);
     },
+    clearDestination() {
+      this.destination = {};
+    }
   },
 };
 </script>
