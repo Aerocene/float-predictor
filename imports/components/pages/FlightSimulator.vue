@@ -166,7 +166,7 @@
 */
 import _ from 'lodash';
 import Vue from 'vue'
-import { GooglePlacesAutocomplete } from 'vue-better-google-places-autocomplete'
+import { GooglePlacesAutocomplete } from '../../custom_modules/vue-better-google-places-autocomplete/src'
  
 Vue.component('google-places-autocomplete', GooglePlacesAutocomplete)
 
