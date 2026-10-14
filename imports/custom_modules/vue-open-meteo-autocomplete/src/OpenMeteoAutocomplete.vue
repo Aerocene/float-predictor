@@ -5,7 +5,7 @@
             :context="context"
             :actions="{ selectItemFromList, shiftResultsSelection, unshiftResultsSelection }"
             :events="{ inputHasReceivedFocus, inputHasChanged }"
-        >
+        >        
             <input        
                 type="text"
                 v-model="context.input"
@@ -25,10 +25,10 @@
                 @click="resultHasBeenSelected(result)"
             >
                 <slot name="item" :place="result" v-if="index !== autocomplete.resultsHighlight">
-                    {{ result.description }}
+                    {{ placeName(result) }}
                 </slot>
                 <slot name="activeItem" :place="result" v-if="index === autocomplete.resultsHighlight">
-                    {{ result.description }}
+                    {{ placeName(result) }}
                 </slot>
             </li>
         </ul>
@@ -38,7 +38,7 @@
 <script>
 export default {
 
-    name: "GooglePlacesAutocomplete",
+    name: "OpenMeteoAutocomplete",
 
     data() {
         return {
@@ -137,10 +137,8 @@ export default {
 
     methods: {
 
-        initGoogleAutoCompleteService() {
-            console.log("initGoogleAutoCompleteService");
-            this.$set(this.autocomplete, 'sessionToken', new window.google.maps.places.AutocompleteSessionToken())
-            this.$set(this.autocomplete, 'service', new window.google.maps.places.AutocompleteService())
+        placeName(place) {
+            return `${place.name} (${place.country})`;
         },
 
         selectItemFromList() {
@@ -171,7 +169,7 @@ export default {
             /**
              * The expected standard user journey. The user selected a result from the list.
              */
-            this.resultHasBeenSelected(results[resultsHighlight] || place)
+            this.resultHasBeenSelected(results[resultsHighlight] || "")
         },
 
         shiftResultsSelection() {
@@ -193,56 +191,45 @@ export default {
         },
 
         inputHasReceivedFocus() {
-            console.log("inputHasReceivedFocus");
-            if (this.autocomplete.service) return
-
-            this.initGoogleAutoCompleteService()
         },
 
-        inputHasChanged() {
-            console.log("inputHasChanged::: " + this.value);
-            const { service, sessionToken } = this.autocomplete
+        inputHasChanged() 
+        {
             const { input } = this.context
-            const { bounds } = this
 
-            console.log("inputHasChanged: " + input);
-
+            // console.log("inputHasChanged: " + input);
             this.$set(this.autocomplete, 'resultsHighlight', 0)
 
-            if (!input) {
+            if (!input ||
+                input.length < 2)
+            {
                 this.$set(this.autocomplete, 'selected', {})
                 this.$set(this.autocomplete, 'results', [])
                 return
             }
 
-            console.log("get prediction: ");
-
-            service.getPlacePredictions({
-                input,
-                sessionToken,
-                bounds,
-            }, (predictions, status) => {
-                this.$set(this.autocomplete, 'status', status)
-
-                if (status !== window.google.maps.places.PlacesServiceStatus.OK) return
-
-                this.$set(this.autocomplete, 'results', predictions)
+            fetch(`https://geocoding-api.open-meteo.com/v1/search?name=${input}&count=10`)
+            .then(response => response.json())
+            .then(predictions => {
+                console.log("result:", JSON.stringify(predictions))
+                this.$set(this.autocomplete, 'results', predictions.results || [])
             })
+            .catch(error => {
+                console.error('Error fetching users:', error);
+                this.loading = false;
+            });
         },
 
-        resultHasBeenSelected({ place_id: placeId, description }) {
-            const placeService = new window.google.maps.places.PlacesService(document.createElement('div'))
+        resultHasBeenSelected(place) {
 
-            placeService.getDetails({
-                placeId,
-                fields: this.resultFields,
-            }, (place) => {
-                this.$set(this.autocomplete, 'selected', place)
-                this.$set(this.context, 'input', description)
-                this.$set(this.autocomplete, 'results', [])
-                this.$emit('resultChanged', place)
-            })
-            
+            // place.latitude
+            // place.longitude
+            // place.elevation
+
+            this.$set(this.autocomplete, 'selected', place)
+            this.$set(this.context, 'input', this.placeName(place))
+            this.$set(this.autocomplete, 'results', [])
+            this.$emit('resultChanged', place)
         },
 
         returnLastSelection() {
@@ -252,7 +239,6 @@ export default {
 
             this.$emit('resultChanged', place)
         }
-
     },
 
 }

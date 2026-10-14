@@ -1,11 +1,7 @@
 {
-    "name": "vue-better-google-places-autocomplete",
-    "version": "1.1.0",
-    "description": "Google Places auto completion for Vue.js with better user experience",
-    "repository": {
-        "type": "git",
-        "url": "git+https://github.com/dewsign/vue-better-google-places-autocomplete.git"
-    },
+    "name": "vue-open-meteo-autocomplete",
+    "version": "1.0.0",
+    "description": "Open-meteo auto completion for Vue.js based on vue-better-google-places-autocomplete written by Marco Mark",
     "main": "dist/index.js",
     "files": [
         "dist",
@@ -24,7 +20,7 @@
         "map",
         "autocomplete"
     ],
-    "author": "Marco Mark <m2de@outlook.com>",
+    "author": "Ingo Randolf",
     "license": "MIT",
     "dependencies": {},
     "devDependencies": {

@@ -3,12 +3,12 @@
     <div class="bottom-left-panel">
       <h4>GENERAL</h4>
       <span class="subtext">From</span>
-      <google-places-autocomplete
+      <open-meteo-autocomplete
         @resultChanged="setDeparture"
         @resultCleared="clearDeparture"
         />
       <span class="subtext">To</span>
-      <google-places-autocomplete
+      <open-meteo-autocomplete
         @resultChanged="setDestination"
         @resultCleared="clearDestination"
         />
@@ -59,9 +59,9 @@
 */
 import Visualization from '../Visualization';
 import Vue from 'vue'
-import { GooglePlacesAutocomplete } from '../../custom_modules/vue-better-google-places-autocomplete/src'
+import { OpenMeteoAutocomplete } from '../../custom_modules/vue-open-meteo-autocomplete/src'
  
-Vue.component('google-places-autocomplete', GooglePlacesAutocomplete)
+Vue.component('open-meteo-autocomplete', OpenMeteoAutocomplete)
 
 export default {
   name: 'TestInterface',

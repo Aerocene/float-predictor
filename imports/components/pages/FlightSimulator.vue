@@ -47,7 +47,7 @@
                   <!-- <label class="small">From</label> -->
                   <div class="place-input">
 
-                    <google-places-autocomplete
+                    <open-meteo-autocomplete
                       @resultChanged="setDeparture"
                       @resultCleared="clearDeparture"
                       >
@@ -65,7 +65,7 @@
                           :placeholder="placeholder.departure"
                       />
                     </div>
-                    </google-places-autocomplete>
+                    </open-meteo-autocomplete>
 
                     <!-- <button class="locationBtn" @click="getLocationDep">⦿</button> -->
 
@@ -77,7 +77,7 @@
                         <!-- <label  class="small">To</label> -->
                         <div class="place-input">
 
-                          <google-places-autocomplete
+                          <open-meteo-autocomplete
                             @resultChanged="setDestination"
                             @resultCleared="clearDestination"
                             >
@@ -95,7 +95,7 @@
                                 :placeholder="placeholder.destination"
                             />
                           </div>
-                          </google-places-autocomplete>
+                          </open-meteo-autocomplete>
 
                           <!-- <button class="locationBtn" @click="getLocationDest">⦿</button> -->
 
@@ -166,9 +166,9 @@
 */
 import _ from 'lodash';
 import Vue from 'vue'
-import { GooglePlacesAutocomplete } from '../../custom_modules/vue-better-google-places-autocomplete/src'
+import { OpenMeteoAutocomplete } from '../../custom_modules/vue-open-meteo-autocomplete/src'
  
-Vue.component('google-places-autocomplete', GooglePlacesAutocomplete)
+Vue.component('open-meteo-autocomplete', OpenMeteoAutocomplete)
 
 export const COLOR_OPTION_1 = "Silver/Transparent - Fly day-night";
 export const COLOR_OPTION_2 = "Black - Fly during daytime";
@@ -350,27 +350,28 @@ export default {
     //     }
     //   }
     //   return false;
-    // },
-    getCountry(place) {      
-      for (var i = 0; i < place.address_components.length; i++)
-      {
-        const e = place.address_components[i];
-        if (e.types.find(c => c === "country") != undefined
-          && e.long_name !== undefined)
-        {
-          return e.long_name;
-        }
-      }
+    // },    
+    // getCountry(place) {      
+    // // get country from google places
+    //   for (var i = 0; i < place.address_components.length; i++)
+    //   {
+    //     const e = place.address_components[i];
+    //     if (e.types.find(c => c === "country") != undefined
+    //       && e.long_name !== undefined)
+    //     {
+    //       return e.long_name;
+    //     }
+    //   }
 
-      return "";
-    },
+    //   return "";
+    // },
     toLocationObject(place)
     {
       return {
-        lat: place.geometry.location.lat(),
-        lng: place.geometry.location.lng(),
+        lat: place.latitude,
+        lng: place.longitude,
         city: place.name,
-        country: this.getCountry(place)
+        country: place.country
       };
     },
     setDeparture(place) {   
